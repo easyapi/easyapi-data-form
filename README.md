@@ -9,6 +9,7 @@ easyapi-json-form
 EasyAPI JSON表单编辑组建，使用表格形式编辑JSON数据，另外还包括数据类型（字段类型），数据注释（字段描述），是否必填，示例值，默认值。
 
 ## 组建效果图
+![image](https://qiniu.easyapi.com/easyapi-json-form.png)
 
 > 本组建重点在于下一级数据的显示风格
 
