@@ -10,7 +10,7 @@
       :tree-props="{children: 'childs', hasChildren: 'hasChildren'}"
       ref="singleTable"
     >
-      <el-table-column prop="name" label="参数名称" width="240">
+      <el-table-column prop="name" label="参数名称">
         <template slot-scope="scope">
           <el-input style="flex: 1" v-model="scope.row.name" placeholder="请输入内容"></el-input>
         </template>
@@ -22,12 +22,12 @@
               v-for="item in paramType"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
-            </el-option>
+              :value="item.value"
+            ></el-option>
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="参数说明" width="180">
+      <el-table-column prop="description" label="参数说明">
         <template slot-scope="scope">
           <el-input v-model="scope.row.description" placeholder="请输入内容"></el-input>
         </template>
@@ -37,12 +37,12 @@
           <el-checkbox v-model="scope.row.required"></el-checkbox>
         </template>
       </el-table-column>
-      <el-table-column prop="sample" label="示例" width="180">
+      <el-table-column prop="sample" label="示例">
         <template slot-scope="scope">
           <el-input v-model="scope.row.sample" placeholder="请输入内容"></el-input>
         </template>
       </el-table-column>
-      <el-table-column prop="demo" label="默认值" width="180">
+      <el-table-column prop="demo" label="默认值">
         <template slot-scope="scope">
           <el-input v-model="scope.row.demo" placeholder="请输入内容"></el-input>
         </template>
@@ -54,31 +54,20 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="json-form-tools">
+    <div class="json-form-tools tools">
       <el-button size="mini" @click="addNew">添加属性</el-button>
       <el-button size="mini" @click="toQuickAdd">快速添加</el-button>
 
       <el-button size="mini" @click="move(0)">上移</el-button>
       <el-button size="mini" @click="move(1)">下移</el-button>
     </div>
-    <el-dialog
-      title="快速添加"
-      :visible.sync="dialogVisible"
-      width="50%">
-      <el-input
-        type="textarea"
-        placeholder="请输入内容"
-        v-model="quickText"
-        rows=8
-        show-word-limit
-      >
-      </el-input>
+    <el-dialog title="快速添加" :visible.sync="dialogVisible" width="50%">
+      <el-input type="textarea" placeholder="请输入内容" v-model="quickText" rows="8" show-word-limit></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmQuickAdd">确 定</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
@@ -149,7 +138,7 @@ export default {
   },
   props: ["jsonData"],
   created() {
-    this.renderData = this.jsonData
+    this.renderData = this.jsonData;
   },
   watch: {
     renderData: function() {
@@ -187,9 +176,12 @@ export default {
 
     // 插入行
     insertRow: function(scope) {
-      if (! scope.row.childs ) { scope.row.childs = [] }
+      if (!scope.row.childs) {
+        scope.row.childs = [];
+      }
       scope.row.childs.push({
-        id: + `${scope.row.id}${new Date().getTime()}${Math.random().toFixed(2)*100}`,
+        id: +`${scope.row.id}${new Date().getTime()}${Math.random().toFixed(2) *
+          100}`,
         name: "",
         type: "int",
         category: null,
@@ -203,27 +195,27 @@ export default {
 
     // 删除行
     delRow: function(scope) {
-      this.delRowItem(scope.row.id)
+      this.delRowItem(scope.row.id);
     },
 
     delRowItem: function(id) {
       const dealArr = (arr, id) => {
         arr.forEach((el, index) => {
           if (el.id === id) {
-            arr.splice(index, 1)
+            arr.splice(index, 1);
           } else if (el.childs && el.childs.length) {
-            dealArr(el.childs, id)
+            dealArr(el.childs, id);
           }
-        })
-      }
-      let tmp = this.renderData
-      dealArr(tmp, id)
-      this.renderData = tmp
+        });
+      };
+      let tmp = this.renderData;
+      dealArr(tmp, id);
+      this.renderData = tmp;
     },
 
     addNew: function() {
       this.renderData.push({
-        id: + `${this.renderData.length + 1}${new Date().getTime()}`,
+        id: +`${this.renderData.length + 1}${new Date().getTime()}`,
         name: "title",
         type: "string",
         description: "标题",
@@ -232,7 +224,7 @@ export default {
         demo: "",
         sequence: 1,
         childs: []
-      })
+      });
     },
 
     // 快速添加
@@ -243,11 +235,10 @@ export default {
 
     confirmQuickAdd: function() {
       try {
-        this.renderData = JSON.parse(this.quickText)
-        this.dialogVisible = false
-
-      } catch(e) {
-        this.$message.error('请输入合法的JSON')
+        this.renderData = JSON.parse(this.quickText);
+        this.dialogVisible = false;
+      } catch (e) {
+        this.$message.error("请输入合法的JSON");
       }
     },
 
@@ -266,38 +257,39 @@ export default {
     },
 
     handleCurrentChange: function(row) {
-      this.selectedRow = row
+      this.selectedRow = row;
     },
 
     move(dir) {
       const changeDir = (arr, index) => {
         if (dir === 0) {
-          if (index === 0) return
-          let t = arr[index - 1]
-          arr[index - 1] = arr[index]
-          arr[index] = t
+          if (index === 0) return;
+          let t = arr[index - 1];
+          arr[index - 1] = arr[index];
+          arr[index] = t;
         } else {
-          if (index === arr.length - 1) return
-          let t = arr[index + 1]
-          arr[index + 1] = arr[index]
-          arr[index] = t
+          if (index === arr.length - 1) return;
+          let t = arr[index + 1];
+          arr[index + 1] = arr[index];
+          arr[index] = t;
         }
-      }
+      };
+      let isChange = false;
       const dealArr = (arr, id) => {
         arr.forEach((el, index) => {
-          if (el.id === id) {
-            changeDir(arr, index)
-
+          if (el.id === id && !isChange) {
+            changeDir(arr, index);
+            isChange = true;
           } else if (el.childs && el.childs.length) {
-            dealArr(el.childs, id)
+            dealArr(el.childs, id);
           }
-        })
-      }
-      let tmp = this.renderData
-      dealArr(tmp, this.selectedRow.id)
-      this.renderData = tmp
-      this.$refs.singleTable.setCurrentRow()
-    },
+        });
+      };
+      let tmp = this.renderData;
+      dealArr(tmp, this.selectedRow.id);
+      this.renderData = tmp;
+      this.$refs.singleTable.setCurrentRow();
+    }
   }
 };
 </script>
