@@ -1,254 +1,70 @@
 <template>
-  <el-table
-    :data="renderData"
-    style="width: 100%;margin-bottom: 20px;"
-    row-key="id"
-    border
-    default-expand-all
-    :tree-props="{children: 'childs', hasChildren: 'hasChildren'}"
-  >
-    <el-table-column prop="name" label="参数名称" width="240">
-      <template slot-scope="scope">
-        <el-input style="width: 80%;" v-model="scope.row.name" placeholder="请输入内容"></el-input>
-      </template>
-    </el-table-column>
-    <el-table-column prop="type" label="参数类型" width="180">
-      <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.date }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column prop="description" label="参数说明" width="180">
-      <template slot-scope="scope">
-        <el-input v-model="scope.row.description" placeholder="请输入内容"></el-input>
-      </template>
-    </el-table-column>
-    <el-table-column prop="required" label="必填">
-      <template slot-scope="scope">
-        <el-checkbox v-model="scope.row.required"></el-checkbox>
-      </template>
-    </el-table-column>
-    <el-table-column prop="sample" label="示例" width="180">
-      <template slot-scope="scope">
-        <el-input v-model="scope.row.sample" placeholder="请输入内容"></el-input>
-      </template>
-    </el-table-column>
-    <el-table-column prop="demo" label="默认值" width="180">
-      <template slot-scope="scope">
-        <el-input v-model="scope.row.demo" placeholder="请输入内容"></el-input>
-      </template>
-    </el-table-column>
-    <el-table-column prop="options" label="操作"></el-table-column>
-  </el-table>
-  <!-- <div
-    class="el-table el-table--fit el-table--border el-table--enable-row-hover el-table--enable-row-transition"
-  >
-    <div class="el-table__header-wrapper">
-      <table cellspacing="0" cellpadding="0" border="0" class="el-table__header">
-        <colgroup>
-          <col name="el-table_28_column_111" width="180" />
-          <col name="el-table_28_column_112" width="180" />
-          <col name="el-table_28_column_113" width="459" />
-        </colgroup>
-        <thead class>
-          <tr class>
-            <th colspan="1" rowspan="1" class="el-table_28_column_111 is-leaf">
-              <div class="cell params-name">
-                <span>字段名称</span>
-              </div>
-            </th>
-            <th colspan="1" rowspan="1" class="el-table_28_column_112 is-leaf">
-              <div class="cell">
-                <span>字段类型</span>
-              </div>
-            </th>
-            <th colspan="1" rowspan="1" class="el-table_28_column_113 is-leaf">
-              <div class="cell">
-                <span>字段说明</span>
-              </div>
-            </th>
-            <th colspan="1" rowspan="1" class="el-table_28_column_113 is-leaf">
-              <div class="cell">
-                <span>必填</span>
-              </div>
-            </th>
-            <th colspan="1" rowspan="1" class="el-table_28_column_113 is-leaf">
-              <div class="cell">
-                <span>示例</span>
-              </div>
-            </th>
-            <th colspan="1" rowspan="1" class="el-table_28_column_113 is-leaf">
-              <div class="cell">
-                <span>默认值</span>
-              </div>
-            </th>
-            <th colspan="1" rowspan="1" class="el-table_28_column_113 is-leaf">
-              <div class="cell">
-                <span>操作</span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-      </table>
+  <div class="json-form">
+    <el-table
+      :data="renderData"
+      style="width: 100%;margin-bottom: 20px;"
+      row-key="id"
+      border
+      default-expand-all
+      :tree-props="{children: 'childs', hasChildren: 'hasChildren'}"
+    >
+      <el-table-column prop="name" label="参数名称">
+        <template slot-scope="scope">
+          <el-input style="flex: 1" v-model="scope.row.name" placeholder="请输入内容"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column prop="type" label="参数类型" width="180">
+        <template slot-scope="scope">
+          <el-select v-model="scope.row.type" placeholder="请选择">
+            <el-option
+              v-for="item in paramType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column prop="description" label="参数说明" width="180">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.description" placeholder="请输入内容"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column prop="required" label="必填" width="70">
+        <template slot-scope="scope">
+          <el-checkbox v-model="scope.row.required"></el-checkbox>
+        </template>
+      </el-table-column>
+      <el-table-column prop="sample" label="示例" width="180">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.sample" placeholder="请输入内容"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column prop="demo" label="默认值" width="180">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.demo" placeholder="请输入内容"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column prop="options" label="操作" width="120">
+        <template slot-scope="scope">
+          <el-button @click="insertRow(scope)" type="text" size="small">插入</el-button>
+          <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="json-form-tools">
+      <el-button size="mini" @click="addNew">添加属性</el-button>
+      <el-button size="mini">快速添加</el-button>
+      <el-button size="mini">预览</el-button>
+      <el-button size="mini">导出</el-button>
+
+      <el-button size="mini">上移</el-button>
+      <el-button size="mini">下移</el-button>
     </div>
-
-    <div class="el-table__body-wrapper is-scrolling-none">
-      <table cellspacing="0" cellpadding="0" border="0" class="el-table__body">
-        <tbody class="ivu-table-tbody" ref="rawTableList">
-          <tr
-            v-for="(item, index) in renderData"
-            :class="['raw-table el-table__row clearfix']"
-            :data-deepIndex="getCellClass(item.deepIndex)"
-            :key="index"
-          >
-            <template>
-              <td class="el-table_28_column_111 params-name">
-                <div class="clearfix name-cell cell">
-                  <div
-                    class="arrow"
-                    :style="`width: ${(item.childs && item.childs.length>0?item.deepIndex.length:item.deepIndex.length-1)*10}px;`"
-                  >
-                    <i
-                      v-if="item.childs && item.childs.length > 0"
-                      class="el-icon-caret-right"
-                      @click="collapseRow(index, $event)"
-                    ></i>
-                  </div>
-                  <el-input
-                    class="ivu-el-input"
-                    type="text"
-                    placeholder="输入字段名称"
-                    @on-change="modelChange(item, 'name', $event)"
-                    v-model="item.name"
-                  />
-                </div>
-              </td>
-              <td class="el-table_28_column_111">
-                <div class="cell">
-                  <el-select @on-change="modelChange(item, 'type', $event)" v-model="item.type">
-                    <el-option
-                      v-for="param in paramType"
-                      :key="param.label"
-                      :label="param.label"
-                      :value="param.value"
-                    ></el-option>
-                  </el-select>
-                </div>
-              </td>
-              <td class="el-table_28_column_111">
-                <div class="cell">
-                  <el-input
-                    type="text"
-                    placeholder="输入字段说明"
-                    class="ivu-el-input"
-                    v-model="item.description"
-                    @on-change="modelChange(item, 'description', $event)"
-                  />
-                </div>
-              </td>
-              <td class="el-table_28_column_111">
-                <div class="cell">
-                  <el-checkbox
-                    @on-change="modelChange(item, 'required', $event)"
-                    v-model="item.required"
-                  ></el-checkbox>
-                </div>
-              </td>
-              <td class="el-table_28_column_111">
-                <div class="cell">
-                  <el-input
-                    type="text"
-                    placeholder="输入示例"
-                    class="ivu-el-input"
-                    v-model="item.sample"
-                    @on-change="modelChange(item, 'sample', $event)"
-                  />
-                </div>
-              </td>
-              <td class="el-table_28_column_111">
-                <div class="cell">
-                  <el-input
-                    type="text"
-                    placeholder="输入默认值"
-                    class="ivu-el-input"
-                    v-model="item.remark"
-                    @on-change="modelChange(item, 'remark', $event)"
-                  />
-                </div>
-              </td>
-              <td class="el-table_28_column_111">
-                <div class="cell">
-                  <a href="javascript:;" @click="insertRow(item)" style="margin-right: 10px;">插入</a>
-                  <a href="javascript:;" @click="delRow(item)">删除</a>
-                </div>
-              </td>
-            </template>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="tools">
-      <div class="add" @click="addParam">
-        <i class="a-icon">
-          <i class="add-plus fa fa-plus-circle" aria-hidden="true"></i>
-        </i>
-        <p>添加属性</p>
-      </div>
-      <div class="add" @click="toQuickAdd">
-        <span class="a-icon">
-          <i class="add-plus fa fa-plus-circle" aria-hidden="true"></i>
-        </span>
-        <p>快速添加</p>
-      </div>
-  <!-- <el-button size="mini" @click="move(0)">上移</el-button>-->
-  <!-- <el-button size="mini" @click="move(1)">下移</el-button> -->
-  <!-- </div> -->
-
-  <!-- <Modal v-model="quickAddParams" title="快速添加" width="600">
-      <div>
-        <el-input
-          class="dialog-row"
-          v-model="quickJson"
-          type="textarea"
-          :rows="6"
-          placeholder="复制JSON数据"
-        />
-        <ea-button class="btn" :size="'sml'" text="导入" @click="confirmInsert" />
-      </div>
-      <div slot="footer"></div>
-    </Modal>
-  </div>-->
+  </div>
 </template>
 
 <script>
-let makeParamsList = function(data) {
-  let result = [];
-  let deepIndex = [0];
-  let map = [...data];
-  console.log(map);
-  map.forEach((el, index) => {
-    el["deepIndex"] = [...deepIndex];
-    result.push(el);
-    if (el.childs && el.childs.length > 0) {
-      makeParamsChild(el.childs, result, deepIndex);
-    }
-    deepIndex[0]++;
-  });
-  return result;
-};
-
-let makeParamsChild = function(childMap, result, deepArr) {
-  let deepIndex = [...deepArr, 0];
-  childMap.forEach(el => {
-    el["deepIndex"] = [...deepIndex];
-    result.push(el);
-    if (el.childs && el.childs.length > 0) {
-      makeParamsChild(el.childs, result, deepIndex);
-    }
-    deepIndex[deepIndex.length - 1]++;
-  });
-};
-
 export default {
   name: "JsonForm",
   data: function() {
@@ -316,19 +132,42 @@ export default {
           sequence: 1,
           childs: [
             {
-              id: 11,
+              id: 10,
               name: "title",
               type: "string",
               description: "标题",
               required: true,
               sample: "我和我的祖国",
               demo: "",
-              sequence: 1
+              sequence: 1,
+              childs: [
+                {
+                  id: 110,
+                  name: "title",
+                  type: "string",
+                  description: "标题",
+                  required: true,
+                  sample: "我和我的祖国",
+                  demo: "",
+                  sequence: 1,
+                  childs: []
+                }
+              ]
             }
           ]
+        },
+        {
+          id: 2,
+          name: "title",
+          type: "string",
+          description: "标题",
+          required: true,
+          sample: "我和我的祖国",
+          demo: "",
+          sequence: 1,
+          childs: []
         }
       ],
-      selfRowData: [],
       quickAddParams: false,
       quickJson: ""
     };
@@ -354,9 +193,6 @@ export default {
         required: false,
         sample: "",
         demo: "",
-        formatJson: false,
-        dataModel: null,
-        remark: "",
         childParams: []
       });
       this.renderData = makeParamsList(this.selfRowData);
@@ -375,49 +211,62 @@ export default {
       target[field] = typeof e == "object" ? e.target.value : e;
     },
     // 插入行
-    insertRow: function(item) {
-      let _deepIndex = [...item.deepIndex];
-      _deepIndex[_deepIndex.length - 1] += 1;
-      if (!item.childs) {
-        item["childs"] = [];
-      }
-      item.childs.push({
+    insertRow: function(scope) {
+      console.log(scope)
+
+      if (! scope.row.childs ) { scope.row.childs = [] }
+      scope.row.childs.push({
+        id: + `${scope.row.id}${new Date().getTime()}`,
         name: "",
-        deepIndex: _deepIndex,
-        category: null,
         type: "int",
+        category: null,
         description: "",
         required: false,
         sample: "",
         demo: "",
-        formatJson: false,
-        dataModel: null,
-        remark: "",
         childs: []
       });
-      this.renderData = makeParamsList(this.selfRowData);
     },
     // 删除行
-    delRow: function(item) {
-      let deepIndex = item.deepIndex;
-      let targetWrapper = this.selfRowData;
-      deepIndex.forEach((deep, index) => {
-        if (deepIndex.length > 1) {
-          if (deepIndex.length - 1 == index) {
-            targetWrapper = targetWrapper["childs"];
-          } else {
-            if (index == 0) {
-              targetWrapper = targetWrapper[deep];
-            } else {
-              targetWrapper = targetWrapper["childs"][deep];
-            }
-          }
-        }
-      });
-      let target = item.deepIndex[item.deepIndex.length - 1];
-      console.log(targetWrapper);
-      targetWrapper.splice(target, 1);
-      this.renderData = makeParamsList(this.selfRowData);
+    delRow: function(scope) {
+      // console.log('scope', scope)
+      // const data = JSON.stringify(this.renderData)
+      // const targetId = scope.row.id
+      // // console.log(JSON.stringify(data))
+      // const arr = data.split(`{"id":${scope.row.id}`)
+      // // console.log(arr)
+      // const r = arr[1].split('')
+      // let trueR = []
+      // // console.log(r)
+      // let c = false
+      // r.forEach(el => {
+      //   if (el !== '}' && !c) {
+      //     return
+      //   }
+      //   c = true
+      //   trueR.push(el)
+      // })
+      // console.log(trueR)
+      // console.log(trueR.join(""))
+      // console.log(arr[1])
+      // console.log(arr[0])
+      // const f = `${arr[0]}${trueR.join("")}`
+      // console.log('f', f)
+      // this.renderData = JSON.parse(f)
+    },
+
+    addNew: function() {
+      this.renderData.push({
+        id: + `${this.renderData.length + 1}${new Date().getTime()}`,
+        name: "title",
+        type: "string",
+        description: "标题",
+        required: true,
+        sample: "我和我的祖国",
+        demo: "",
+        sequence: 1,
+        childs: []
+      })
     },
 
     // 生成Cell Class
@@ -479,43 +328,8 @@ export default {
         this.$Message.error("请输入合法的JSON");
       }
     },
-
-    parseJson: function(data, set) {
-      let keys = Object.keys(data);
-      keys.forEach(key => {
-        if (Object.prototype.toString.call(data[key]) == "[object Object]") {
-          this.parseJson(data[key], set);
-        } else {
-          if (typeof data[key] !== "object") {
-            set.push({
-              name: key,
-              type: typeof data[key],
-              category: "query",
-              description: "",
-              required: false,
-              sample: data[key],
-              demo: data[key],
-              formatJson: false,
-              dataModel: null,
-              remark: data[key],
-              childs: []
-            });
-          }
-        }
-      });
-    }
   }
 };
-
-function hasTag(deepIndex, targetTag) {
-  return deepIndex.indexOf(targetTag) >= 0;
-}
-
-function hasClass(classList, targetClass) {
-  // the type of classList is DOMTokenList
-  let _ = classList.value.split(" ");
-  return _.indexOf(targetClass) < 0;
-}
 </script>
 
 <style lang="less" scoped>
@@ -554,68 +368,6 @@ function hasClass(classList, targetClass) {
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-right: 5px;
-  }
-}
-
-.ivu-table-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.ivu-table-cell {
-  display: flex;
-  flex: 1;
-  padding: 10px;
-  min-height: 55px;
-  border-right: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  justify-content: center;
-  align-items: center;
-
-  &.params-name {
-    min-width: 200px;
-  }
-
-  &:first-child {
-    border-left: 1px solid #ddd;
-  }
-}
-
-.name-cell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .ivu-el-input {
-    flex: 1;
-    padding-left: 0;
-  }
-
-  .arrow {
-    text-align: right;
-    color: blue;
-    cursor: pointer;
-
-    &:hover {
-      opacity: 0.5;
-    }
-  }
-}
-
-.raw-table {
-  .arrow-icon {
-    transition: all 0.4s ease;
-  }
-
-  &.hide {
-    display: none;
-  }
-
-  &.collapse {
-    .arrow-icon {
-      transform: rotate(-90deg);
-    }
   }
 }
 </style>

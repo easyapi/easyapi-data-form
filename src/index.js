@@ -2,6 +2,7 @@ import Vue from 'vue'
 import JsonForm from './JsonForm.vue'
 import PackageFile from '../package.json'
 import 'element-ui/lib/theme-chalk/index.css';
+import './assets/styles/common.less';
 import {
   Checkbox,
   Select,
