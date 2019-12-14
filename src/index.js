@@ -11,7 +11,8 @@ import {
   Icon,
   Button,
   Table,
-  TableColumn
+  TableColumn,
+  Dialog
 
 } from "element-ui"
 
@@ -25,6 +26,8 @@ Vue.use(Icon)
 Vue.use(Button)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Dialog)
+
 
 const install = (Vue) => {
   if (install.installed) return

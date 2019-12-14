@@ -1,5 +1,5 @@
 <template>
-  <el-json-form :rawData="jsonData"></el-json-form>
+  <el-json-form :jsonData="jsonData"></el-json-form>
 </template>
 
 <script>
@@ -10,41 +10,49 @@ export default {
       jsonData: [
         {
           id: 1,
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          id: 2,
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          id: 3,
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-          children: [
+          name: "blog",
+          type: "object",
+          description: "博客",
+          required: false,
+          sample: "",
+          demo: "",
+          sequence: 1,
+          childs: [
             {
-              id: 31,
-              date: "2016-05-01",
-              name: "王小虎",
-              address: "上海市普陀区金沙江路 1519 弄"
-            },
-            {
-              id: 32,
-              date: "2016-05-01",
-              name: "王小虎",
-              address: "上海市普陀区金沙江路 1519 弄"
+              id: 10,
+              name: "title",
+              type: "string",
+              description: "标题",
+              required: true,
+              sample: "我和我的祖国",
+              demo: "",
+              sequence: 1,
+              childs: [
+                {
+                  id: 110,
+                  name: "title",
+                  type: "string",
+                  description: "标题",
+                  required: true,
+                  sample: "我和我的祖国",
+                  demo: "",
+                  sequence: 1,
+                  childs: []
+                }
+              ]
             }
           ]
         },
         {
-          id: 4,
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
+          id: 2,
+          name: "title",
+          type: "string",
+          description: "标题",
+          required: true,
+          sample: "我和我的祖国",
+          demo: "",
+          sequence: 1,
+          childs: []
         }
       ]
     };

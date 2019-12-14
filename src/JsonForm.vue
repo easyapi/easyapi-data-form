@@ -2,18 +2,20 @@
   <div class="json-form">
     <el-table
       :data="renderData"
-      style="width: 100%;margin-bottom: 20px;"
+      highlight-current-row
+      @current-change="handleCurrentChange"
       row-key="id"
       border
       default-expand-all
       :tree-props="{children: 'childs', hasChildren: 'hasChildren'}"
+      ref="singleTable"
     >
-      <el-table-column prop="name" label="参数名称">
+      <el-table-column prop="name" label="参数名称" width="240">
         <template slot-scope="scope">
           <el-input style="flex: 1" v-model="scope.row.name" placeholder="请输入内容"></el-input>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="参数类型" width="180">
+      <el-table-column prop="type" label="参数类型" width="120">
         <template slot-scope="scope">
           <el-select v-model="scope.row.type" placeholder="请选择">
             <el-option
@@ -45,7 +47,7 @@
           <el-input v-model="scope.row.demo" placeholder="请输入内容"></el-input>
         </template>
       </el-table-column>
-      <el-table-column prop="options" label="操作" width="120">
+      <el-table-column prop="options" label="操作" width="100">
         <template slot-scope="scope">
           <el-button @click="insertRow(scope)" type="text" size="small">插入</el-button>
           <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
@@ -54,13 +56,29 @@
     </el-table>
     <div class="json-form-tools">
       <el-button size="mini" @click="addNew">添加属性</el-button>
-      <el-button size="mini">快速添加</el-button>
-      <el-button size="mini">预览</el-button>
-      <el-button size="mini">导出</el-button>
+      <el-button size="mini" @click="toQuickAdd">快速添加</el-button>
 
-      <el-button size="mini">上移</el-button>
-      <el-button size="mini">下移</el-button>
+      <el-button size="mini" @click="move(0)">上移</el-button>
+      <el-button size="mini" @click="move(1)">下移</el-button>
     </div>
+    <el-dialog
+      title="快速添加"
+      :visible.sync="dialogVisible"
+      width="50%">
+      <el-input
+        type="textarea"
+        placeholder="请输入内容"
+        v-model="quickText"
+        rows=8
+        show-word-limit
+      >
+      </el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirmQuickAdd">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -69,6 +87,8 @@ export default {
   name: "JsonForm",
   data: function() {
     return {
+      dialogVisible: false,
+      quickText: "",
       // 字段类型
       paramType: [
         {
@@ -120,66 +140,20 @@ export default {
           label: "Array"
         }
       ],
-      renderData: [
-        {
-          id: 1,
-          name: "blog",
-          type: "object",
-          description: "博客",
-          required: false,
-          sample: "",
-          demo: "",
-          sequence: 1,
-          childs: [
-            {
-              id: 10,
-              name: "title",
-              type: "string",
-              description: "标题",
-              required: true,
-              sample: "我和我的祖国",
-              demo: "",
-              sequence: 1,
-              childs: [
-                {
-                  id: 110,
-                  name: "title",
-                  type: "string",
-                  description: "标题",
-                  required: true,
-                  sample: "我和我的祖国",
-                  demo: "",
-                  sequence: 1,
-                  childs: []
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: 2,
-          name: "title",
-          type: "string",
-          description: "标题",
-          required: true,
-          sample: "我和我的祖国",
-          demo: "",
-          sequence: 1,
-          childs: []
-        }
-      ],
+      renderData: [],
       quickAddParams: false,
-      quickJson: ""
+      quickJson: "",
+
+      selectedRow: null
     };
   },
-  props: ["rawData"],
+  props: ["jsonData"],
   created() {
-    // this.selfRowData = this.rawData;
-    // this.renderData = makeParamsList(this.selfRowData);
+    this.renderData = this.jsonData
   },
   watch: {
-    selfRowData: function() {
-      this.$emit("el-input", this.selfRowData);
+    renderData: function() {
+      this.$emit("input", this.renderData);
     }
   },
   methods: {
@@ -210,13 +184,12 @@ export default {
       });
       target[field] = typeof e == "object" ? e.target.value : e;
     },
+
     // 插入行
     insertRow: function(scope) {
-      console.log(scope)
-
       if (! scope.row.childs ) { scope.row.childs = [] }
       scope.row.childs.push({
-        id: + `${scope.row.id}${new Date().getTime()}`,
+        id: + `${scope.row.id}${new Date().getTime()}${Math.random().toFixed(2)*100}`,
         name: "",
         type: "int",
         category: null,
@@ -227,32 +200,25 @@ export default {
         childs: []
       });
     },
+
     // 删除行
     delRow: function(scope) {
-      // console.log('scope', scope)
-      // const data = JSON.stringify(this.renderData)
-      // const targetId = scope.row.id
-      // // console.log(JSON.stringify(data))
-      // const arr = data.split(`{"id":${scope.row.id}`)
-      // // console.log(arr)
-      // const r = arr[1].split('')
-      // let trueR = []
-      // // console.log(r)
-      // let c = false
-      // r.forEach(el => {
-      //   if (el !== '}' && !c) {
-      //     return
-      //   }
-      //   c = true
-      //   trueR.push(el)
-      // })
-      // console.log(trueR)
-      // console.log(trueR.join(""))
-      // console.log(arr[1])
-      // console.log(arr[0])
-      // const f = `${arr[0]}${trueR.join("")}`
-      // console.log('f', f)
-      // this.renderData = JSON.parse(f)
+      this.delRowItem(scope.row.id)
+    },
+
+    delRowItem: function(id) {
+      const dealArr = (arr, id) => {
+        arr.forEach((el, index) => {
+          if (el.id === id) {
+            arr.splice(index, 1)
+          } else if (el.childs && el.childs.length) {
+            dealArr(el.childs, id)
+          }
+        })
+      }
+      let tmp = this.renderData
+      dealArr(tmp, id)
+      this.renderData = tmp
     },
 
     addNew: function() {
@@ -269,49 +235,20 @@ export default {
       })
     },
 
-    // 生成Cell Class
-    getCellClass: function(deepIndex) {
-      let _c = [];
-      let _tmp = "row";
-      deepIndex.forEach(el => {
-        _tmp += `-${el}`;
-        _c.push(_tmp);
-      });
-      return _c.join(" ");
-    },
-
-    // 折叠row
-    collapseRow: function(index, e) {
-      let direction = 0; // 0 is up, 1 is down
-      let allRow = this.$refs.rawTableList.querySelectorAll(".raw-table");
-      // 触发元素
-      let target = allRow[index];
-      direction = hasClass(target.classList, "collapse") ? 0 : 1;
-      target.classList.toggle("collapse");
-      // 触发元素Deep Tag
-      let targetTag = target.dataset.deepindex;
-      //
-      console.log(target, targetTag);
-      let firstRow = true;
-      for (let i = 0; i < allRow.length; ++i) {
-        console.log(allRow[i].dataset);
-        if (hasTag(allRow[i].dataset.deepindex, targetTag)) {
-          if (firstRow) {
-            firstRow = false;
-            continue;
-          }
-          if (direction == 0) {
-            allRow[i].classList.add("hide");
-          } else {
-            allRow[i].classList.remove("hide");
-          }
-        }
-      }
-    },
-
     // 快速添加
     toQuickAdd: function() {
-      this.quickAddParams = true;
+      this.quickText = "";
+      this.dialogVisible = true;
+    },
+
+    confirmQuickAdd: function() {
+      try {
+        this.renderData = JSON.parse(this.quickText)
+        this.dialogVisible = false
+
+      } catch(e) {
+        this.$message.error('请输入合法的JSON')
+      }
     },
 
     confirmInsert: function() {
@@ -324,9 +261,42 @@ export default {
         this.renderData = makeParamsList(this.selfRowData);
         this.quickAddParams = false;
       } catch (e) {
-        console.log(e);
         this.$Message.error("请输入合法的JSON");
       }
+    },
+
+    handleCurrentChange: function(row) {
+      this.selectedRow = row
+    },
+
+    move(dir) {
+      const changeDir = (arr, index) => {
+        if (dir === 0) {
+          if (index === 0) return
+          let t = arr[index - 1]
+          arr[index - 1] = arr[index]
+          arr[index] = t
+        } else {
+          if (index === arr.length - 1) return
+          let t = arr[index + 1]
+          arr[index + 1] = arr[index]
+          arr[index] = t
+        }
+      }
+      const dealArr = (arr, id) => {
+        arr.forEach((el, index) => {
+          if (el.id === id) {
+            changeDir(arr, index)
+
+          } else if (el.childs && el.childs.length) {
+            dealArr(el.childs, id)
+          }
+        })
+      }
+      let tmp = this.renderData
+      dealArr(tmp, this.selectedRow.id)
+      this.renderData = tmp
+      this.$refs.singleTable.setCurrentRow()
     },
   }
 };
