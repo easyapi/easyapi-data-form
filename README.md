@@ -20,6 +20,7 @@ EasyAPI JSON表单编辑组建，使用表格形式编辑JSON数据，另外还�
 > JSON示例如下：
 ```json
 {
+  "id": 0,
   "name": "blog",
   "type": "object",      
   "description": "博客",
@@ -29,6 +30,7 @@ EasyAPI JSON表单编辑组建，使用表格形式编辑JSON数据，另外还�
   "sequence": 1,
   "childs":[
     {
+      "id": 00,
       "name": "title",
       "type": "string",
       "description": "标题",
@@ -55,3 +57,72 @@ EasyAPI JSON表单编辑组建，使用表格形式编辑JSON数据，另外还�
 
 *数据类型（字段类型）*
 > string, number, boolean, integer, float, double, object, array
+
+## Example
+
+```
+<template>
+  <el-json-form :jsonData="jsonData" v-model="jsonData"></el-json-form>
+</template>
+
+<script>
+export default {
+  name: "app",
+  data: function() {
+    return {
+      jsonData: [
+        {
+          id: 1,
+          name: "blog",
+          type: "object",
+          description: "博客",
+          required: false,
+          sample: "",
+          demo: "",
+          sequence: 1,
+          childs: [
+            {
+              id: 10,
+              name: "title",
+              type: "string",
+              description: "标题",
+              required: true,
+              sample: "我和我的祖国",
+              demo: "",
+              sequence: 1,
+              childs: [
+                {
+                  id: 110,
+                  name: "title",
+                  type: "string",
+                  description: "标题",
+                  required: true,
+                  sample: "我和我的祖国",
+                  demo: "",
+                  sequence: 1,
+                  childs: []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: "title",
+          type: "string",
+          description: "标题",
+          required: true,
+          sample: "我和我的祖国",
+          demo: "",
+          sequence: 1,
+          childs: []
+        }
+      ]
+    };
+  },
+  mounted: function() {}
+};
+</script>
+
+```
+

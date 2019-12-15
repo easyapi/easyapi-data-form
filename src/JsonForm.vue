@@ -157,21 +157,6 @@ export default {
     }
   },
   methods: {
-    // 添加属性
-    addParam: function() {
-      this.selfRowData.push({
-        name: "",
-        type: "int",
-        category: null,
-        description: "",
-        required: false,
-        sample: "",
-        demo: "",
-        childParams: []
-      });
-      this.renderData = makeParamsList(this.selfRowData);
-    },
-
     modelChange: function(item, field, e) {
       let deepIndex = item.deepIndex;
       let target = this.selfRowData;
