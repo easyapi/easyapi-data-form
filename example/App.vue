@@ -1,5 +1,8 @@
 <template>
-  <el-json-form :jsonData="jsonData"></el-json-form>
+  <div>
+    <el-json-form :jsonData="jsonData" ref="jsonForm"></el-json-form>
+    <el-button @click="getJSON">获取标准JSON</el-button>
+  </div>
 </template>
 
 <script>
@@ -57,7 +60,12 @@ export default {
       ]
     };
   },
-  methods: {},
+  methods: {
+    getJSON() {
+      let d = this.$refs.jsonForm.exportJSON();
+      console.log(d);
+    }
+  },
   mounted: function() {}
 };
 </script>

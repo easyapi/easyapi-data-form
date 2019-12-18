@@ -234,26 +234,45 @@ export default {
     },
 
     confirmQuickAdd: function() {
+      let _urlParams = [];
       try {
-        this.renderData = JSON.parse(this.quickText);
+        let jsonData = JSON.parse(this.quickText);
+        console.log(jsonData);
+        this.parseJson(jsonData, _urlParams);
+
+        const selfRowData = [...this.renderData, ..._urlParams];
+        this.renderData = selfRowData;
+
         this.dialogVisible = false;
       } catch (e) {
+        console.log(e);
         this.$message.error("请输入合法的JSON");
       }
     },
 
-    confirmInsert: function() {
-      let _urlParams = [];
-      try {
-        let jsonData = JSON.parse(this.quickJson);
-        this.parseJson(jsonData, _urlParams);
+    parseJson: function(data, set) {
+      let keys = Object.keys(data);
+      keys.forEach(key => {
+        if (Object.prototype.toString.call(data[key]) == "[object Object]") {
+          this.parseJson(data[key], set);
+        } else {
+          if (typeof data[key] !== "object") {
+            set.push({
+              id: +`${set.length + 1}${new Date().getTime()}`,
 
-        this.selfRowData = [...this.selfRowData, ..._urlParams];
-        this.renderData = makeParamsList(this.selfRowData);
-        this.quickAddParams = false;
-      } catch (e) {
-        this.$Message.error("请输入合法的JSON");
-      }
+              name: key,
+              type: typeof data[key],
+              description: "",
+              required: false,
+              sample: data[key],
+              demo: data[key],
+              demo: "",
+              sequence: 1,
+              childs: []
+            });
+          }
+        }
+      });
     },
 
     handleCurrentChange: function(row) {
@@ -289,6 +308,20 @@ export default {
       dealArr(tmp, this.selectedRow.id);
       this.renderData = tmp;
       this.$refs.singleTable.setCurrentRow();
+    },
+
+    exportJSON() {
+      // function getJson(targets, json) {
+      //   targets.forEach(el => {
+      //     json[el.name] = el.sample,
+      //     if (targets.childs) {
+      //       getJson
+      //     }
+
+      //   })
+
+      // }
+      return this.renderData;
     }
   }
 };
