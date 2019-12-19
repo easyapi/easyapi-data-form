@@ -49,7 +49,12 @@
       </el-table-column>
       <el-table-column prop="options" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="insertRow(scope)" type="text" size="small">插入</el-button>
+          <el-button
+            @click="insertRow(scope)"
+            type="text"
+            size="small"
+            v-if="scope.row.type === 'object' || scope.row.type === 'array'"
+          >插入</el-button>
           <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -146,21 +151,6 @@ export default {
     }
   },
   methods: {
-    // 添加属性
-    addParam: function() {
-      this.selfRowData.push({
-        name: "",
-        type: "int",
-        category: null,
-        description: "",
-        required: false,
-        sample: "",
-        demo: "",
-        childParams: []
-      });
-      this.renderData = makeParamsList(this.selfRowData);
-    },
-
     modelChange: function(item, field, e) {
       let deepIndex = item.deepIndex;
       let target = this.selfRowData;
@@ -222,7 +212,6 @@ export default {
         required: true,
         sample: "我和我的祖国",
         demo: "",
-        sequence: 1,
         childs: []
       });
     },
@@ -267,7 +256,6 @@ export default {
               sample: data[key],
               demo: data[key],
               demo: "",
-              sequence: 1,
               childs: []
             });
           }
@@ -311,17 +299,41 @@ export default {
     },
 
     exportJSON() {
-      // function getJson(targets, json) {
-      //   targets.forEach(el => {
-      //     json[el.name] = el.sample,
-      //     if (targets.childs) {
-      //       getJson
-      //     }
+      function getJson(targets, json) {
+        targets.forEach(el => {
+          if (el.type === "array") {
+            json[el.name] = [];
+            pushArray(el.childs, json[el.name]);
+          } else if (el.type === "object") {
+            json[el.name] = {};
+            getJson(el.childs, json[el.name]);
+          } else {
+            json[el.name] = el.sample;
+          }
+        });
+      }
 
-      //   })
+      function pushArray(targets, arr) {
+        debugger;
+        targets.forEach(el => {
+          if (el.type === "array") {
+            let tmpArr = [];
+            arr.push(tmpArr);
+            pushArray(el.childs, tmpArr);
+          } else if (el.type === "object") {
+            json[el.name] = {};
+            let tmpObj = {};
+            arr.push(tmpObj);
+            getJson(el.childs, tmpObj);
+          } else {
+            arr.push(el.sample);
+          }
+        });
+      }
 
-      // }
-      return this.renderData;
+      var json = {};
+      getJson(this.renderData, json);
+      return json;
     }
   }
 };

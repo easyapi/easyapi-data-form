@@ -19,27 +19,45 @@ export default {
           required: false,
           sample: "",
           demo: "",
-          sequence: 1,
           childs: [
             {
               id: 10,
               name: "title",
-              type: "string",
+              type: "array",
               description: "标题",
               required: true,
               sample: "我和我的祖国",
               demo: "",
-              sequence: 1,
               childs: [
                 {
-                  id: 110,
+                  id: 100,
+                  name: "title",
+                  type: "object",
+                  description: "标题",
+                  required: true,
+                  sample: "我和我的祖国",
+                  demo: "",
+                  childs: [
+                    {
+                      id: 1000,
+                      name: "title",
+                      type: "string",
+                      description: "标题",
+                      required: true,
+                      sample: "我和我的祖国",
+                      demo: "",
+                      childs: []
+                    }
+                  ]
+                },
+                {
+                  id: 101,
                   name: "title",
                   type: "string",
                   description: "标题",
                   required: true,
                   sample: "我和我的祖国",
                   demo: "",
-                  sequence: 1,
                   childs: []
                 }
               ]
@@ -49,13 +67,23 @@ export default {
         {
           id: 2,
           name: "title",
-          type: "string",
+          type: "array",
           description: "标题",
           required: true,
           sample: "我和我的祖国",
           demo: "",
-          sequence: 1,
-          childs: []
+          childs: [
+            {
+              id: 20,
+              name: "title",
+              type: "string",
+              description: "标题",
+              required: true,
+              sample: "我和我的祖国",
+              demo: "",
+              childs: []
+            }
+          ]
         }
       ]
     };
