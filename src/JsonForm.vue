@@ -314,7 +314,6 @@ export default {
       }
 
       function pushArray(targets, arr) {
-        debugger;
         targets.forEach(el => {
           if (el.type === "array") {
             let tmpArr = [];
