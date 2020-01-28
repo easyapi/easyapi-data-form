@@ -32,7 +32,7 @@ Vue.use(Dialog)
 const install = (Vue) => {
   if (install.installed) return
 
-  Vue.component('ea-json-form', JsonForm)
+  Vue.component('easyapi-json-form', JsonForm)
 }
 
 export default install
