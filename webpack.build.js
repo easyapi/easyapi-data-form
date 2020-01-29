@@ -12,8 +12,8 @@ config.optimization = {
 
 config.output = {
   path: path.resolve(__dirname, './dist'),
-  filename: 'easyapi-json-view.js',
-  library: 'easyapi-json-view',
+  filename: 'easyapi-json-form.js',
+  library: 'easyapi-json-form',
   libraryTarget: 'umd',
 };
 config.externals = {
