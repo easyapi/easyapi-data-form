@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-json-form :jsonData="jsonData" ref="jsonForm"></el-json-form>
+    <ea-json-form :jsonData="jsonData" ref="jsonForm"></ea-json-form>
     <el-button @click="getJSON">获取标准JSON</el-button>
   </div>
 </template>
