@@ -25,6 +25,13 @@
     "example": "rm -rf ./example/dist/*.js && rm -rf ./example/dist/*.html && webpack --progress --config webpack.config.js",
     "build": "webpack --progress --config webpack.build.js"
   },
+  "dependencies": {
+    "element-ui": "^2.13.2",
+    "highlight.js": "^10.2.0",
+    "jquery": "^3.5.1",
+    "lodash": "^4.17.20",
+    "vue": "^2.6.12"
+  },
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
@@ -59,13 +66,6 @@
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
-  },
-  "dependencies": {
-    "element-ui": "^2.13.2",
-    "highlight.js": "^10.2.0",
-    "jquery": "^3.5.1",
-    "lodash": "^4.17.20",
-    "vue": "^2.6.12"
   },
   "browserslist": [
     "> 1%",

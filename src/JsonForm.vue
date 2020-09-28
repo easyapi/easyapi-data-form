@@ -54,7 +54,8 @@
             type="text"
             size="small"
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
-          >插入</el-button>
+          >插入
+          </el-button>
           <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -77,305 +78,305 @@
 </template>
 
 <script>
-export default {
-  name: "JsonForm",
-  data: function() {
-    return {
-      dialogVisible: false,
-      quickText: "",
-      // 字段类型
-      paramType: [
-        {
-          value: "double",
-          label: "double"
-        },
-        {
-          value: "int",
-          label: "int"
-        },
-        {
-          value: "string",
-          label: "string"
-        },
-        {
-          value: "boolean",
-          label: "boolean"
-        },
-        {
-          value: "byte",
-          label: "byte"
-        },
-        {
-          value: "short",
-          label: "short"
-        },
-        {
-          value: "long",
-          label: "long"
-        },
-        {
-          value: "float",
-          label: "float"
-        },
-        {
-          value: "date",
-          label: "date"
-        },
-        {
-          value: "datetime",
-          label: "datetime"
-        },
-        {
-          value: "object",
-          label: "Object"
-        },
-        {
-          value: "array",
-          label: "Array"
-        }
-      ],
-      renderData: [],
-      quickAddParams: false,
-      quickJson: "",
+  export default {
+    name: "JsonForm",
+    data: function () {
+      return {
+        dialogVisible: false,
+        quickText: "",
+        // 字段类型
+        paramType: [
+          {
+            value: "double",
+            label: "double"
+          },
+          {
+            value: "int",
+            label: "int"
+          },
+          {
+            value: "string",
+            label: "string"
+          },
+          {
+            value: "boolean",
+            label: "boolean"
+          },
+          {
+            value: "byte",
+            label: "byte"
+          },
+          {
+            value: "short",
+            label: "short"
+          },
+          {
+            value: "long",
+            label: "long"
+          },
+          {
+            value: "float",
+            label: "float"
+          },
+          {
+            value: "date",
+            label: "date"
+          },
+          {
+            value: "datetime",
+            label: "datetime"
+          },
+          {
+            value: "object",
+            label: "Object"
+          },
+          {
+            value: "array",
+            label: "Array"
+          }
+        ],
+        renderData: [],
+        quickAddParams: false,
+        quickJson: "",
 
-      selectedRow: null
-    };
-  },
-  props: ["jsonData"],
-  created() {
-    this.renderData = this.jsonData;
-  },
-  watch: {
-    renderData: function() {
-      this.$emit("input", this.renderData);
-    }
-  },
-  methods: {
-    modelChange: function(item, field, e) {
-      let deepIndex = item.deepIndex;
-      let target = this.selfRowData;
-      deepIndex.forEach((deep, index) => {
-        if (index == 0) {
-          target = target[deep];
-        } else {
-          target = target["childs"][deep];
-        }
-      });
-      target[field] = typeof e == "object" ? e.target.value : e;
+        selectedRow: null
+      };
     },
-
-    // 插入行
-    insertRow: function(scope) {
-      if (!scope.row.childs) {
-        scope.row.childs = [];
+    props: ["jsonData"],
+    created() {
+      this.renderData = this.jsonData;
+    },
+    watch: {
+      renderData: function () {
+        this.$emit("input", this.renderData);
       }
-      scope.row.childs.push({
-        id: +`${scope.row.id}${new Date().getTime()}${Math.random().toFixed(2) *
+    },
+    methods: {
+      modelChange: function (item, field, e) {
+        let deepIndex = item.deepIndex;
+        let target = this.selfRowData;
+        deepIndex.forEach((deep, index) => {
+          if (index == 0) {
+            target = target[deep];
+          } else {
+            target = target["childs"][deep];
+          }
+        });
+        target[field] = typeof e == "object" ? e.target.value : e;
+      },
+
+      // 插入行
+      insertRow: function (scope) {
+        if (!scope.row.childs) {
+          scope.row.childs = [];
+        }
+        scope.row.childs.push({
+          id: +`${scope.row.id}${new Date().getTime()}${Math.random().toFixed(2) *
           100}`,
-        name: "",
-        type: "int",
-        category: null,
-        description: "",
-        required: false,
-        sample: "",
-        demo: "",
-        childs: []
-      });
-    },
-
-    // 删除行
-    delRow: function(scope) {
-      this.delRowItem(scope.row.id);
-    },
-
-    delRowItem: function(id) {
-      const dealArr = (arr, id) => {
-        arr.forEach((el, index) => {
-          if (el.id === id) {
-            arr.splice(index, 1);
-          } else if (el.childs && el.childs.length) {
-            dealArr(el.childs, id);
-          }
+          name: "",
+          type: "int",
+          category: null,
+          description: "",
+          required: false,
+          sample: "",
+          demo: "",
+          childs: []
         });
-      };
-      let tmp = this.renderData;
-      dealArr(tmp, id);
-      this.renderData = tmp;
-    },
+      },
 
-    addNew: function() {
-      this.renderData.push({
-        id: +`${this.renderData.length + 1}${new Date().getTime()}`,
-        name: "title",
-        type: "string",
-        description: "标题",
-        required: true,
-        sample: "我和我的祖国",
-        demo: "",
-        childs: []
-      });
-    },
+      // 删除行
+      delRow: function (scope) {
+        this.delRowItem(scope.row.id);
+      },
 
-    // 快速添加
-    toQuickAdd: function() {
-      this.quickText = "";
-      this.dialogVisible = true;
-    },
+      delRowItem: function (id) {
+        const dealArr = (arr, id) => {
+          arr.forEach((el, index) => {
+            if (el.id === id) {
+              arr.splice(index, 1);
+            } else if (el.childs && el.childs.length) {
+              dealArr(el.childs, id);
+            }
+          });
+        };
+        let tmp = this.renderData;
+        dealArr(tmp, id);
+        this.renderData = tmp;
+      },
 
-    confirmQuickAdd: function() {
-      let _urlParams = [];
-      try {
-        let jsonData = JSON.parse(this.quickText);
-        console.log(jsonData);
-        this.parseJson(jsonData, _urlParams);
+      addNew: function () {
+        this.renderData.push({
+          id: +`${this.renderData.length + 1}${new Date().getTime()}`,
+          name: "title",
+          type: "string",
+          description: "标题",
+          required: true,
+          sample: "我和我的祖国",
+          demo: "",
+          childs: []
+        });
+      },
 
-        const selfRowData = [...this.renderData, ..._urlParams];
-        this.renderData = selfRowData;
+      // 快速添加
+      toQuickAdd: function () {
+        this.quickText = "";
+        this.dialogVisible = true;
+      },
 
-        this.dialogVisible = false;
-      } catch (e) {
-        console.log(e);
-        this.$message.error("请输入合法的JSON");
-      }
-    },
+      confirmQuickAdd: function () {
+        let _urlParams = [];
+        try {
+          let jsonData = JSON.parse(this.quickText);
+          console.log(jsonData);
+          this.parseJson(jsonData, _urlParams);
 
-    parseJson: function(data, set) {
-      let keys = Object.keys(data);
-      keys.forEach(key => {
-        if (Object.prototype.toString.call(data[key]) == "[object Object]") {
-          this.parseJson(data[key], set);
-        } else {
-          if (typeof data[key] !== "object") {
-            set.push({
-              id: +`${set.length + 1}${new Date().getTime()}`,
+          const selfRowData = [...this.renderData, ..._urlParams];
+          this.renderData = selfRowData;
 
-              name: key,
-              type: typeof data[key],
-              description: "",
-              required: false,
-              sample: data[key],
-              demo: data[key],
-              demo: "",
-              childs: []
-            });
-          }
+          this.dialogVisible = false;
+        } catch (e) {
+          console.log(e);
+          this.$message.error("请输入合法的JSON");
         }
-      });
-    },
+      },
 
-    handleCurrentChange: function(row) {
-      this.selectedRow = row;
-    },
+      parseJson: function (data, set) {
+        let keys = Object.keys(data);
+        keys.forEach(key => {
+          if (Object.prototype.toString.call(data[key]) == "[object Object]") {
+            this.parseJson(data[key], set);
+          } else {
+            if (typeof data[key] !== "object") {
+              set.push({
+                id: +`${set.length + 1}${new Date().getTime()}`,
 
-    move(dir) {
-      const changeDir = (arr, index) => {
-        if (dir === 0) {
-          if (index === 0) return;
-          let t = arr[index - 1];
-          arr[index - 1] = arr[index];
-          arr[index] = t;
-        } else {
-          if (index === arr.length - 1) return;
-          let t = arr[index + 1];
-          arr[index + 1] = arr[index];
-          arr[index] = t;
+                name: key,
+                type: typeof data[key],
+                description: "",
+                required: false,
+                sample: data[key],
+                demo: data[key],
+                demo: "",
+                childs: []
+              });
+            }
+          }
+        });
+      },
+
+      handleCurrentChange: function (row) {
+        this.selectedRow = row;
+      },
+
+      move(dir) {
+        const changeDir = (arr, index) => {
+          if (dir === 0) {
+            if (index === 0) return;
+            let t = arr[index - 1];
+            arr[index - 1] = arr[index];
+            arr[index] = t;
+          } else {
+            if (index === arr.length - 1) return;
+            let t = arr[index + 1];
+            arr[index + 1] = arr[index];
+            arr[index] = t;
+          }
+        };
+        let isChange = false;
+        const dealArr = (arr, id) => {
+          arr.forEach((el, index) => {
+            if (el.id === id && !isChange) {
+              changeDir(arr, index);
+              isChange = true;
+            } else if (el.childs && el.childs.length) {
+              dealArr(el.childs, id);
+            }
+          });
+        };
+        let tmp = this.renderData;
+        dealArr(tmp, this.selectedRow.id);
+        this.renderData = tmp;
+        this.$refs.singleTable.setCurrentRow();
+      },
+
+      exportJSON() {
+        function getJson(targets, json) {
+          targets.forEach(el => {
+            if (el.type === "array") {
+              json[el.name] = [];
+              pushArray(el.childs, json[el.name]);
+            } else if (el.type === "object") {
+              json[el.name] = {};
+              getJson(el.childs, json[el.name]);
+            } else {
+              json[el.name] = el.sample;
+            }
+          });
         }
-      };
-      let isChange = false;
-      const dealArr = (arr, id) => {
-        arr.forEach((el, index) => {
-          if (el.id === id && !isChange) {
-            changeDir(arr, index);
-            isChange = true;
-          } else if (el.childs && el.childs.length) {
-            dealArr(el.childs, id);
-          }
-        });
-      };
-      let tmp = this.renderData;
-      dealArr(tmp, this.selectedRow.id);
-      this.renderData = tmp;
-      this.$refs.singleTable.setCurrentRow();
-    },
 
-    exportJSON() {
-      function getJson(targets, json) {
-        targets.forEach(el => {
-          if (el.type === "array") {
-            json[el.name] = [];
-            pushArray(el.childs, json[el.name]);
-          } else if (el.type === "object") {
-            json[el.name] = {};
-            getJson(el.childs, json[el.name]);
-          } else {
-            json[el.name] = el.sample;
-          }
-        });
+        function pushArray(targets, arr) {
+          targets.forEach(el => {
+            if (el.type === "array") {
+              let tmpArr = [];
+              arr.push(tmpArr);
+              pushArray(el.childs, tmpArr);
+            } else if (el.type === "object") {
+              json[el.name] = {};
+              let tmpObj = {};
+              arr.push(tmpObj);
+              getJson(el.childs, tmpObj);
+            } else {
+              arr.push(el.sample);
+            }
+          });
+        }
+
+        var json = {};
+        getJson(this.renderData, json);
+        return json;
       }
-
-      function pushArray(targets, arr) {
-        targets.forEach(el => {
-          if (el.type === "array") {
-            let tmpArr = [];
-            arr.push(tmpArr);
-            pushArray(el.childs, tmpArr);
-          } else if (el.type === "object") {
-            json[el.name] = {};
-            let tmpObj = {};
-            arr.push(tmpObj);
-            getJson(el.childs, tmpObj);
-          } else {
-            arr.push(el.sample);
-          }
-        });
-      }
-
-      var json = {};
-      getJson(this.renderData, json);
-      return json;
     }
-  }
-};
+  };
 </script>
 
 <style lang="less" scoped>
-.tools {
-  padding: 8px 10px;
-  cursor: pointer;
-  border: 1px solid #ddd;
-  border-top: none;
+  .tools {
+    padding: 8px 10px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-top: none;
 
-  .add {
-    display: inline-block;
-    margin-right: 20px;
-
-    p {
+    .add {
       display: inline-block;
-      color: c-blue;
+      margin-right: 20px;
+
+      p {
+        display: inline-block;
+        color: c-blue;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
 
-    &:hover {
-      opacity: 0.8;
+    .a-icon {
+      display: inline-block;
+      line-height: 20px;
+      font-size: 20px;
+      text-align: center;
+      color: blue;
+      transform: translateY(3px);
+    }
+
+    .btn {
+      color: #333;
+      padding: 2px 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-right: 5px;
     }
   }
-
-  .a-icon {
-    display: inline-block;
-    line-height: 20px;
-    font-size: 20px;
-    text-align: center;
-    color: blue;
-    transform: translateY(3px);
-  }
-
-  .btn {
-    color: #333;
-    padding: 2px 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 5px;
-  }
-}
 </style>
 
 
