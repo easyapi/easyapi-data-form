@@ -156,13 +156,13 @@
         let deepIndex = item.deepIndex;
         let target = this.selfRowData;
         deepIndex.forEach((deep, index) => {
-          if (index == 0) {
+          if (index === 0) {
             target = target[deep];
           } else {
             target = target["childs"][deep];
           }
         });
-        target[field] = typeof e == "object" ? e.target.value : e;
+        target[field] = typeof e === "object" ? e.target.value : e;
       },
 
       // 插入行
@@ -243,7 +243,7 @@
       parseJson: function (data, set) {
         let keys = Object.keys(data);
         keys.forEach(key => {
-          if (Object.prototype.toString.call(data[key]) == "[object Object]") {
+          if (Object.prototype.toString.call(data[key]) === "[object Object]") {
             this.parseJson(data[key], set);
           } else {
             if (typeof data[key] !== "object") {

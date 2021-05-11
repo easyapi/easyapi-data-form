@@ -67,7 +67,7 @@ _数据类型（字段类型）_
 
 ```
 <template>
-  <el-json-form :jsonData="jsonData" v-model="jsonData"></el-json-form>
+  <easyapi-json-form :jsonData="jsonData" v-model="jsonData"></easyapi-json-form>
 </template>
 
 <script>
