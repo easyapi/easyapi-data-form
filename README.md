@@ -22,26 +22,24 @@ EasyAPI JSON 表单编辑组件，使用表格形式编辑 JSON 数据，另外�
 
 ```json
 {
-  "id": 0,
-  "name": "blog",
-  "type": "object",
-  "description": "博客",
-  "required": true,
-  "sample": "",
-  "demo": "",
-  "sequence": 1,
-  "childs": [
-    {
-      "id": 00,
-      "name": "title",
-      "type": "string",
-      "description": "标题",
-      "required": true,
-      "sample": "我和我的祖国",
-      "demo": "",
-      "sequence": 1
-    }
-  ]
+	"id": 1,
+	"name": "blog",
+	"type": "object",
+	"description": "博客",
+	"required": true,
+	"sample": "",
+	"demo": "",
+	"sequence": 1,
+	"childs": [{
+		"id": 2,
+		"name": "title",
+		"type": "string",
+		"description": "标题",
+		"required": true,
+		"sample": "我和我的祖国",
+		"demo": "",
+		"sequence": 1
+	}]
 }
 ```
 
