@@ -1,7 +1,8 @@
 <template>
   <div>
     <easyapi-json-form :jsonData="jsonData" ref="jsonForm"></easyapi-json-form>
-    <el-button @click="getJSON">获取标准JSON</el-button>
+    <el-button @click="getJSONFormData">getJSONFormData 获取 JSON 表单数据</el-button>
+    <el-button @click="exportJSON">exportJSON 导出标准 JSON 数据</el-button>
   </div>
 </template>
 
@@ -89,7 +90,11 @@ export default {
     };
   },
   methods: {
-    getJSON() {
+    getJSONFormData() {
+      let d = this.$refs.jsonForm.getJSONFormData();
+      console.log(d);
+    },
+    exportJSON() {
       let d = this.$refs.jsonForm.exportJSON();
       console.log(d);
     }
