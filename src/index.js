@@ -39,4 +39,4 @@ export default install
 export const components = {
   JsonForm,
   VERSION
-}
+};
