@@ -67,7 +67,7 @@
       <el-button size="mini" @click="move(0)">上移</el-button>
       <el-button size="mini" @click="move(1)">下移</el-button>
     </div>
-    <el-dialog title="快速添加" :visible.sync="dialogVisible" width="50%">
+    <el-dialog title="快速添加" :modal-append-to-body="false" :visible.sync="dialogVisible" width="50%">
       <el-input type="textarea" placeholder="请输入内容" v-model="quickText" rows="8" show-word-limit></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
