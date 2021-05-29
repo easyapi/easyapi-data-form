@@ -227,17 +227,46 @@
         let _urlParams = [];
         try {
           let jsonData = JSON.parse(this.quickText);
-          console.log(jsonData);
-          this.parseJson(jsonData, _urlParams);
+
+          if(Object.prototype.toString.call(jsonData) === "[object Array]") {
+            this.parseArray(jsonData, _urlParams);
+          }
+          if(Object.prototype.toString.call(jsonData) === "[object Object]") {
+            this.parseJson(jsonData, _urlParams);
+          }
 
           const selfRowData = [...this.renderData, ..._urlParams];
           this.renderData = selfRowData;
 
           this.dialogVisible = false;
         } catch (e) {
-          console.log(e);
+          console.error(e);
           this.$message.error("请输入合法的JSON");
         }
+      },
+
+      parseArray: function (data, set) {
+        data.forEach(el => {
+          if (Object.prototype.toString.call(el) === "[object Array]") {
+            this.parseArray(el, set);
+          } else if (Object.prototype.toString.call(el) === "[object Object]") {
+            this.parseJson(el, set);
+          } else {
+            if (typeof el !== "object") {
+              set.push({
+                id: +`${set.length + 1}${new Date().getTime()}`,
+                name: el,
+                type: typeof el,
+                description: "",
+                required: false,
+                sample: el,
+                demo: el,
+                demo: "",
+                childs: []
+              });
+            }
+          }
+        })
       },
 
       parseJson: function (data, set) {
@@ -245,11 +274,12 @@
         keys.forEach(key => {
           if (Object.prototype.toString.call(data[key]) === "[object Object]") {
             this.parseJson(data[key], set);
+          } else if (Object.prototype.toString.call(data[key]) === "[object Array]") {
+            this.parseArray(data[key], set);
           } else {
             if (typeof data[key] !== "object") {
               set.push({
                 id: +`${set.length + 1}${new Date().getTime()}`,
-
                 name: key,
                 type: typeof data[key],
                 description: "",
@@ -297,6 +327,10 @@
         dealArr(tmp, this.selectedRow.id);
         this.renderData = tmp;
         this.$refs.singleTable.setCurrentRow();
+      },
+
+      getJSONFormData() {
+        return this.renderData;
       },
 
       exportJSON() {
