@@ -7,12 +7,16 @@
       row-key="id"
       border
       default-expand-all
-      :tree-props="{children: 'childs', hasChildren: 'hasChildren'}"
+      :tree-props="{ children: 'childs', hasChildren: 'hasChildren' }"
       ref="singleTable"
     >
       <el-table-column prop="name" label="参数名称">
         <template slot-scope="scope">
-          <el-input style="flex: 1" v-model="scope.row.name" placeholder="请输入内容"></el-input>
+          <el-input
+            style="flex: 1"
+            v-model="scope.row.name"
+            placeholder="请输入内容"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="type" label="参数类型" width="120">
@@ -29,7 +33,10 @@
       </el-table-column>
       <el-table-column prop="description" label="参数说明">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.description" placeholder="请输入内容"></el-input>
+          <el-input
+            v-model="scope.row.description"
+            placeholder="请输入内容"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="required" label="必填" width="70">
@@ -39,12 +46,18 @@
       </el-table-column>
       <el-table-column prop="sample" label="示例">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.sample" placeholder="请输入内容"></el-input>
+          <el-input
+            v-model="scope.row.sample"
+            placeholder="请输入内容"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="demo" label="默认值">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.demo" placeholder="请输入内容"></el-input>
+          <el-input
+            v-model="scope.row.demo"
+            placeholder="请输入内容"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="options" label="操作" width="100">
@@ -54,9 +67,11 @@
             type="text"
             size="small"
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
-          >插入
+            >插入
           </el-button>
-          <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
+          <el-button @click="delRow(scope)" type="text" size="small"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -67,8 +82,19 @@
       <el-button size="mini" @click="move(0)">上移</el-button>
       <el-button size="mini" @click="move(1)">下移</el-button>
     </div>
-    <el-dialog title="快速添加" :modal-append-to-body="false" :visible.sync="dialogVisible" width="50%">
-      <el-input type="textarea" placeholder="请输入内容" v-model="quickText" rows="8" show-word-limit></el-input>
+    <el-dialog
+      title="快速添加"
+      :modal-append-to-body="false"
+      :visible.sync="dialogVisible"
+      width="50%"
+    >
+      <el-input
+        type="textarea"
+        placeholder="请输入内容"
+        v-model="quickText"
+        rows="8"
+        show-word-limit
+      ></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmQuickAdd">确 定</el-button>
@@ -78,339 +104,401 @@
 </template>
 
 <script>
-  export default {
-    name: "JsonForm",
-    data: function () {
-      return {
-        dialogVisible: false,
-        quickText: "",
-        // 字段类型
-        paramType: [
-          {
-            value: "double",
-            label: "double"
-          },
-          {
-            value: "int",
-            label: "int"
-          },
-          {
-            value: "string",
-            label: "string"
-          },
-          {
-            value: "boolean",
-            label: "boolean"
-          },
-          {
-            value: "byte",
-            label: "byte"
-          },
-          {
-            value: "short",
-            label: "short"
-          },
-          {
-            value: "long",
-            label: "long"
-          },
-          {
-            value: "float",
-            label: "float"
-          },
-          {
-            value: "date",
-            label: "date"
-          },
-          {
-            value: "datetime",
-            label: "datetime"
-          },
-          {
-            value: "object",
-            label: "Object"
-          },
-          {
-            value: "array",
-            label: "Array"
-          }
-        ],
-        renderData: [],
-        quickAddParams: false,
-        quickJson: "",
+export default {
+  name: "JsonForm",
+  data: function () {
+    return {
+      dialogVisible: false,
+      quickText: "",
+      // 字段类型
+      paramType: [
+        {
+          value: "double",
+          label: "double",
+        },
+        {
+          value: "int",
+          label: "int",
+        },
+        {
+          value: "string",
+          label: "string",
+        },
+        {
+          value: "boolean",
+          label: "boolean",
+        },
+        {
+          value: "byte",
+          label: "byte",
+        },
+        {
+          value: "short",
+          label: "short",
+        },
+        {
+          value: "long",
+          label: "long",
+        },
+        {
+          value: "float",
+          label: "float",
+        },
+        {
+          value: "date",
+          label: "date",
+        },
+        {
+          value: "datetime",
+          label: "datetime",
+        },
+        {
+          value: "object",
+          label: "Object",
+        },
+        {
+          value: "array",
+          label: "Array",
+        },
+      ],
+      renderData: [],
+      quickAddParams: false,
+      quickJson: "",
 
-        selectedRow: null
+      selectedRow: null,
+    };
+  },
+  props: ["jsonData"],
+  created() {
+    this.renderData = this.jsonData;
+  },
+  watch: {
+    renderData: function () {
+      this.$emit("input", this.renderData);
+    },
+  },
+  methods: {
+    // 插入行
+    insertRow: function (scope) {
+      if (!scope.row.childs) {
+        scope.row.childs = [];
+      }
+      scope.row.childs.push({
+        id: +`${scope.row.id}${new Date().getTime()}${
+          Math.random().toFixed(2) * 100
+        }`,
+        name: "",
+        type: "int",
+        category: null,
+        description: "",
+        required: false,
+        sample: "",
+        demo: "",
+        childs: [],
+      });
+    },
+
+    // 删除行
+    delRow: function (scope) {
+      this.delRowItem(scope.row.id);
+    },
+
+    delRowItem: function (id) {
+      const dealArr = (arr, id) => {
+        arr.forEach((el, index) => {
+          if (el.id === id) {
+            arr.splice(index, 1);
+          } else if (el.childs && el.childs.length) {
+            dealArr(el.childs, id);
+          }
+        });
       };
+      let tmp = this.renderData;
+      dealArr(tmp, id);
+      this.renderData = tmp;
     },
-    props: ["jsonData"],
-    created() {
-      this.renderData = this.jsonData;
+
+    addNew: function () {
+      this.renderData.push({
+        id: +`${this.renderData.length + 1}${new Date().getTime()}`,
+        name: "title",
+        type: "string",
+        description: "标题",
+        required: true,
+        sample: "我和我的祖国",
+        demo: "",
+        childs: [],
+      });
     },
-    watch: {
-      renderData: function () {
-        this.$emit("input", this.renderData);
+
+    // 快速添加
+    toQuickAdd: function () {
+      this.quickText = "";
+      this.dialogVisible = true;
+    },
+
+    confirmQuickAdd: function () {
+      let _urlParams = [];
+      try {
+        let jsonData = JSON.parse(this.quickText);
+
+        if (Object.prototype.toString.call(jsonData) === "[object Array]") {
+          this.parseArray(jsonData, _urlParams);
+        }
+        if (Object.prototype.toString.call(jsonData) === "[object Object]") {
+          this.parseJson(jsonData, _urlParams);
+        }
+
+        const selfRowData = [...this.renderData, ..._urlParams];
+        this.renderData = selfRowData;
+
+        this.dialogVisible = false;
+      } catch (e) {
+        console.error(e);
+        this.$message.error("请输入合法的JSON");
       }
     },
-    methods: {
-      modelChange: function (item, field, e) {
-        let deepIndex = item.deepIndex;
-        let target = this.selfRowData;
-        deepIndex.forEach((deep, index) => {
-          if (index === 0) {
-            target = target[deep];
-          } else {
-            target = target["childs"][deep];
-          }
-        });
-        target[field] = typeof e === "object" ? e.target.value : e;
-      },
 
-      // 插入行
-      insertRow: function (scope) {
-        if (!scope.row.childs) {
-          scope.row.childs = [];
+    parseArray: function (data, set) {
+      data.forEach((el) => {
+        if (Object.prototype.toString.call(el) === "[object Array]") {
+          const obj = {
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            name: "",
+            type: "array",
+            description: "",
+            required: false,
+            sample: "",
+            demo: "",
+            demo: "",
+            childs: [],
+          };
+          this.parseArray(el, obj.childs);
+          set.push(obj);
+
+        } else if (Object.prototype.toString.call(el) === "[object Object]") {
+          const obj = {
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            name: "",
+            type: "object",
+            description: "",
+            required: false,
+            sample: "",
+            demo: "",
+            demo: "",
+            childs: [],
+          };
+          this.parseJson(el, obj.childs);
+          set.push(obj);
+
+        } else {
+          if (typeof el !== "object") {
+            set.push({
+              id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+              name: el,
+              type: typeof el,
+              description: "",
+              required: false,
+              sample: el,
+              demo: el,
+              demo: "",
+              childs: [],
+            });
+          }
         }
-        scope.row.childs.push({
-          id: +`${scope.row.id}${new Date().getTime()}${Math.random().toFixed(2) *
-          100}`,
-          name: "",
-          type: "int",
-          category: null,
-          description: "",
-          required: false,
-          sample: "",
-          demo: "",
-          childs: []
-        });
-      },
+      });
+    },
 
-      // 删除行
-      delRow: function (scope) {
-        this.delRowItem(scope.row.id);
-      },
+    parseJson: function (data, set) {
+      let keys = Object.keys(data);
+      keys.forEach((key) => {
+        if (Object.prototype.toString.call(data[key]) === "[object Object]") {
+          const obj = {
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            name: key,
+            type: "object",
+            description: "",
+            required: false,
+            sample: "",
+            demo: "",
+            demo: "",
+            childs: [],
+          };
+          this.parseJson(data[key], obj.childs);
+          set.push(obj);
 
-      delRowItem: function (id) {
-        const dealArr = (arr, id) => {
-          arr.forEach((el, index) => {
-            if (el.id === id) {
-              arr.splice(index, 1);
-            } else if (el.childs && el.childs.length) {
-              dealArr(el.childs, id);
-            }
-          });
-        };
-        let tmp = this.renderData;
-        dealArr(tmp, id);
-        this.renderData = tmp;
-      },
+        } else if (
+          Object.prototype.toString.call(data[key]) === "[object Array]"
+        ) {
+          const obj = {
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            name: key,
+            type: "array",
+            description: "",
+            required: false,
+            sample: "",
+            demo: "",
+            demo: "",
+            childs: [],
+          };
+          this.parseArray(data[key], obj.childs);
+          set.push(obj);
 
-      addNew: function () {
-        this.renderData.push({
-          id: +`${this.renderData.length + 1}${new Date().getTime()}`,
-          name: "title",
-          type: "string",
-          description: "标题",
-          required: true,
-          sample: "我和我的祖国",
-          demo: "",
-          childs: []
-        });
-      },
-
-      // 快速添加
-      toQuickAdd: function () {
-        this.quickText = "";
-        this.dialogVisible = true;
-      },
-
-      confirmQuickAdd: function () {
-        let _urlParams = [];
-        try {
-          let jsonData = JSON.parse(this.quickText);
-
-          if(Object.prototype.toString.call(jsonData) === "[object Array]") {
-            this.parseArray(jsonData, _urlParams);
+        } else {
+          if (typeof data[key] !== "object") {
+            set.push({
+              id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+              name: key,
+              type: typeof data[key],
+              description: "",
+              required: false,
+              sample: data[key],
+              demo: data[key],
+              demo: "",
+              childs: [],
+            });
           }
-          if(Object.prototype.toString.call(jsonData) === "[object Object]") {
-            this.parseJson(jsonData, _urlParams);
-          }
-
-          const selfRowData = [...this.renderData, ..._urlParams];
-          this.renderData = selfRowData;
-
-          this.dialogVisible = false;
-        } catch (e) {
-          console.error(e);
-          this.$message.error("请输入合法的JSON");
         }
-      },
+      });
+    },
 
-      parseArray: function (data, set) {
-        data.forEach(el => {
-          if (Object.prototype.toString.call(el) === "[object Array]") {
-            this.parseArray(el, set);
-          } else if (Object.prototype.toString.call(el) === "[object Object]") {
-            this.parseJson(el, set);
-          } else {
-            if (typeof el !== "object") {
-              set.push({
-                id: +`${set.length + 1}${new Date().getTime()}`,
-                name: el,
-                type: typeof el,
-                description: "",
-                required: false,
-                sample: el,
-                demo: el,
-                demo: "",
-                childs: []
-              });
-            }
-          }
-        })
-      },
+    handleCurrentChange: function (row) {
+      this.selectedRow = row;
+    },
 
-      parseJson: function (data, set) {
-        let keys = Object.keys(data);
-        keys.forEach(key => {
-          if (Object.prototype.toString.call(data[key]) === "[object Object]") {
-            this.parseJson(data[key], set);
-          } else if (Object.prototype.toString.call(data[key]) === "[object Array]") {
-            this.parseArray(data[key], set);
-          } else {
-            if (typeof data[key] !== "object") {
-              set.push({
-                id: +`${set.length + 1}${new Date().getTime()}`,
-                name: key,
-                type: typeof data[key],
-                description: "",
-                required: false,
-                sample: data[key],
-                demo: data[key],
-                demo: "",
-                childs: []
-              });
-            }
-          }
-        });
-      },
+    move(dir) {
+      let curIndex = 0;
 
-      handleCurrentChange: function (row) {
-        this.selectedRow = row;
-      },
+      const changeDir = (arr, index) => {
+        if (dir === 0) {
+          if (index === 0) return;
+          let t = arr[index - 1];
+          arr[index - 1] = arr[index];
+          arr[index] = t;
 
-      move(dir) {
-        const changeDir = (arr, index) => {
-          if (dir === 0) {
-            if (index === 0) return;
-            let t = arr[index - 1];
-            arr[index - 1] = arr[index];
-            arr[index] = t;
-          } else {
-            if (index === arr.length - 1) return;
-            let t = arr[index + 1];
-            arr[index + 1] = arr[index];
-            arr[index] = t;
-          }
-        };
-        let isChange = false;
-        const dealArr = (arr, id) => {
-          arr.forEach((el, index) => {
+          curIndex -= 1;
+
+        } else {
+          if (index === arr.length - 1) return;
+          let t = arr[index + 1];
+          arr[index + 1] = arr[index];
+          arr[index] = t;
+
+          curIndex += 1;
+        }
+      };
+      let isChange = false;
+
+      const dealArr = (arr, id) => {
+        arr.forEach((el, index) => {
+          if(!isChange) {
+            curIndex += 1;
             if (el.id === id && !isChange) {
               changeDir(arr, index);
               isChange = true;
             } else if (el.childs && el.childs.length) {
               dealArr(el.childs, id);
             }
-          });
-        };
-        let tmp = this.renderData;
+          }
+        });
+      };
+
+      if(this.selectedRow.id) {
+        const tmp = this.renderData;
         dealArr(tmp, this.selectedRow.id);
+
         this.renderData = tmp;
         this.$refs.singleTable.setCurrentRow();
-      },
-
-      getJSONFormData() {
-        return this.renderData;
-      },
-
-      exportJSON() {
-        function getJson(targets, json) {
-          targets.forEach(el => {
-            if (el.type === "array") {
-              json[el.name] = [];
-              pushArray(el.childs, json[el.name]);
-            } else if (el.type === "object") {
-              json[el.name] = {};
-              getJson(el.childs, json[el.name]);
-            } else {
-              json[el.name] = el.sample;
-            }
-          });
-        }
-
-        function pushArray(targets, arr) {
-          targets.forEach(el => {
-            if (el.type === "array") {
-              let tmpArr = [];
-              arr.push(tmpArr);
-              pushArray(el.childs, tmpArr);
-            } else if (el.type === "object") {
-              json[el.name] = {};
-              let tmpObj = {};
-              arr.push(tmpObj);
-              getJson(el.childs, tmpObj);
-            } else {
-              arr.push(el.sample);
-            }
-          });
-        }
-
-        var json = {};
-        getJson(this.renderData, json);
-        return json;
+        console.log(curIndex);
+        // const curDom = this.$refs.singleTable.$el.querySelectorAll('.el-table__row')[curIndex];
+        // if(curDom) {
+        //   curDom.click();
+        // }
       }
-    }
-  };
+    },
+
+    getJSONFormData() {
+      return this.renderData;
+    },
+
+    exportJSON() {
+      function getJson(targets, json) {
+        targets.forEach((el) => {
+          if (el.type === "array") {
+            json[el.name] = [];
+            pushArray(el.childs, json[el.name]);
+          } else if (el.type === "object") {
+            json[el.name] = {};
+            getJson(el.childs, json[el.name]);
+          } else {
+            json[el.name] = el.sample;
+          }
+        });
+      }
+
+      function pushArray(targets, arr) {
+        targets.forEach((el) => {
+          if (el.type === "array") {
+            let tmpArr = [];
+            arr.push(tmpArr);
+            pushArray(el.childs, tmpArr);
+          } else if (el.type === "object") {
+            json[el.name] = {};
+            let tmpObj = {};
+            arr.push(tmpObj);
+            getJson(el.childs, tmpObj);
+          } else {
+            arr.push(el.sample);
+          }
+        });
+      }
+
+      var json = {};
+      getJson(this.renderData, json);
+      return json;
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
-  .tools {
-    padding: 8px 10px;
-    cursor: pointer;
-    border: 1px solid #ddd;
-    border-top: none;
+.tools {
+  padding: 8px 10px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-top: none;
 
-    .add {
+  .add {
+    display: inline-block;
+    margin-right: 20px;
+
+    p {
       display: inline-block;
-      margin-right: 20px;
-
-      p {
-        display: inline-block;
-        color: c-blue;
-      }
-
-      &:hover {
-        opacity: 0.8;
-      }
+      color: c-blue;
     }
 
-    .a-icon {
-      display: inline-block;
-      line-height: 20px;
-      font-size: 20px;
-      text-align: center;
-      color: blue;
-      transform: translateY(3px);
-    }
-
-    .btn {
-      color: #333;
-      padding: 2px 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      margin-right: 5px;
+    &:hover {
+      opacity: 0.8;
     }
   }
+
+  .a-icon {
+    display: inline-block;
+    line-height: 20px;
+    font-size: 20px;
+    text-align: center;
+    color: blue;
+    transform: translateY(3px);
+  }
+
+  .btn {
+    color: #333;
+    padding: 2px 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+  }
+}
 </style>
 
 
