@@ -14,14 +14,19 @@
         <template slot-scope="scope">
           <el-input
             style="flex: 1"
+            v-if="!scope.row.inArray"
             v-model="scope.row.name"
             placeholder="请输入内容"
           ></el-input>
+          <p v-else>{{`[ Object ]`}}</p>
         </template>
       </el-table-column>
       <el-table-column prop="type" label="参数类型" width="120">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.type" placeholder="请选择">
+          <el-select
+            v-if="!scope.row.inArray"
+            v-model="scope.row.type"
+            placeholder="请选择">
             <el-option
               v-for="item in paramType"
               :key="item.value"
@@ -34,6 +39,7 @@
       <el-table-column prop="description" label="参数说明">
         <template slot-scope="scope">
           <el-input
+            v-if="!scope.row.inArray"
             v-model="scope.row.description"
             placeholder="请输入内容"
           ></el-input>
@@ -41,12 +47,13 @@
       </el-table-column>
       <el-table-column prop="required" label="必填" width="70">
         <template slot-scope="scope">
-          <el-checkbox v-model="scope.row.required"></el-checkbox>
+          <el-checkbox v-if="!scope.row.inArray" v-model="scope.row.required"></el-checkbox>
         </template>
       </el-table-column>
       <el-table-column prop="sample" label="示例">
         <template slot-scope="scope">
           <el-input
+            v-if="!scope.row.inArray"
             v-model="scope.row.sample"
             placeholder="请输入内容"
           ></el-input>
@@ -55,11 +62,13 @@
       <el-table-column prop="demo" label="默认值">
         <template slot-scope="scope">
           <el-input
+            v-if="!scope.row.inArray"
             v-model="scope.row.demo"
             placeholder="请输入内容"
           ></el-input>
         </template>
       </el-table-column>
+
       <el-table-column prop="options" label="操作" width="100">
         <template slot-scope="scope">
           <el-button
@@ -69,12 +78,11 @@
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
             >插入
           </el-button>
-          <el-button @click="delRow(scope)" type="text" size="small"
-            >删除</el-button
-          >
+          <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+
     <div class="json-form-tools tools">
       <el-button size="mini" @click="addNew">添加属性</el-button>
       <el-button size="mini" @click="toQuickAdd">快速添加</el-button>
@@ -82,6 +90,7 @@
       <el-button size="mini" @click="move(0)">上移</el-button>
       <el-button size="mini" @click="move(1)">下移</el-button>
     </div>
+
     <el-dialog
       title="快速添加"
       :modal-append-to-body="false"
@@ -260,7 +269,7 @@ export default {
     },
 
     parseArray: function (data, set) {
-      data.forEach((el) => {
+      data.forEach(el => {
         if (Object.prototype.toString.call(el) === "[object Array]") {
           const obj = {
             id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
@@ -287,6 +296,7 @@ export default {
             demo: "",
             demo: "",
             childs: [],
+            inArray: true,
           };
           this.parseJson(el, obj.childs);
           set.push(obj);
@@ -453,7 +463,7 @@ export default {
         });
       }
 
-      var json = {};
+      const json = {};
       getJson(this.renderData, json);
       return json;
     },
