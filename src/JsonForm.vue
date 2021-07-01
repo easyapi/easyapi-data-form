@@ -26,6 +26,7 @@
           <el-select
             v-if="!scope.row.inArray"
             v-model="scope.row.type"
+            filterable
             placeholder="请选择">
             <el-option
               v-for="item in paramType"
