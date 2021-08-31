@@ -94,7 +94,7 @@
 
     <el-dialog
       title="快速添加"
-      :modal-append-to-body="false"
+      :append-to-body="true"
       :visible.sync="dialogVisible"
       width="50%"
     >
