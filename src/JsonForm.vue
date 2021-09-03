@@ -18,7 +18,7 @@
             v-model="scope.row.name"
             placeholder="请输入内容"
           ></el-input>
-          <p v-else>{{`[ Object ]`}}</p>
+          <p v-else>{{ `[ Object ]` }}</p>
         </template>
       </el-table-column>
       <el-table-column prop="type" label="参数类型" width="120">
@@ -27,7 +27,8 @@
             v-if="!scope.row.inArray"
             v-model="scope.row.type"
             filterable
-            placeholder="请选择">
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in paramType"
               :key="item.value"
@@ -48,7 +49,10 @@
       </el-table-column>
       <el-table-column prop="required" label="必填" width="70">
         <template slot-scope="scope">
-          <el-checkbox v-if="!scope.row.inArray" v-model="scope.row.required"></el-checkbox>
+          <el-checkbox
+            v-if="!scope.row.inArray"
+            v-model="scope.row.required"
+          ></el-checkbox>
         </template>
       </el-table-column>
       <el-table-column prop="sample" label="示例">
@@ -79,7 +83,9 @@
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
             >插入
           </el-button>
-          <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
+          <el-button @click="delRow(scope)" type="text" size="small"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -116,7 +122,7 @@
 <script>
 export default {
   name: "JsonForm",
-  data: function () {
+  data: function() {
     return {
       dialogVisible: false,
       quickText: "",
@@ -124,79 +130,99 @@ export default {
       paramType: [
         {
           value: "double",
-          label: "double",
+          label: "double"
         },
         {
           value: "int",
-          label: "int",
+          label: "int"
         },
         {
           value: "string",
-          label: "string",
+          label: "string"
         },
         {
           value: "boolean",
-          label: "boolean",
+          label: "boolean"
         },
         {
           value: "byte",
-          label: "byte",
+          label: "byte"
         },
         {
           value: "short",
-          label: "short",
+          label: "short"
         },
         {
           value: "long",
-          label: "long",
+          label: "long"
         },
         {
           value: "float",
-          label: "float",
+          label: "float"
         },
         {
           value: "date",
-          label: "date",
+          label: "date"
         },
         {
           value: "datetime",
-          label: "datetime",
+          label: "datetime"
         },
         {
           value: "object",
-          label: "Object",
+          label: "Object"
         },
         {
           value: "array",
-          label: "Array",
-        },
+          label: "Array"
+        }
       ],
       renderData: [],
       quickAddParams: false,
       quickJson: "",
-
-      selectedRow: null,
+      ifArray: null,
+      ifObject: null,
+      selectedRow: null
     };
   },
-  props: ["jsonData"],
+  props: ["jsonData", "ifArray", "ifObject"],
   created() {
     this.renderData = this.jsonData;
+    this.ifArray = this.ifArray;
+    this.ifObject = this.ifObject;
   },
   watch: {
-    renderData: function () {
+    renderData: function() {
       this.$emit("input", this.renderData);
     },
+    ifArray: function(val) {
+      if (!val) {
+        for (let i in this.paramType) {
+          if (this.paramType[i].label == "Array") {
+            this.paramType.splice(i, 1);
+          }
+        }
+      }
+    },
+    ifObject: function(val) {
+      if (!val) {
+        for (let i in this.paramType) {
+          if (this.paramType[i].label == "Object") {
+            this.paramType.splice(i, 1);
+          }
+        }
+      }
+    }
   },
   methods: {
     // 插入行
-    insertRow: function (scope) {
+    insertRow: function(scope) {
       if (!scope.row.childs) {
         scope.row.childs = [];
       }
       scope.row.childs.push({
-        id: +`${scope.row.id}${new Date().getTime()}${
-          Math.random().toFixed(2) * 100
-        }`,
+        id: +`${scope.row.id}${new Date().getTime()}${Math.random().toFixed(2) *
+          100}`,
         name: "",
         type: "int",
         category: null,
@@ -204,16 +230,16 @@ export default {
         required: false,
         sample: "",
         demo: "",
-        childs: [],
+        childs: []
       });
     },
 
     // 删除行
-    delRow: function (scope) {
+    delRow: function(scope) {
       this.delRowItem(scope.row.id);
     },
 
-    delRowItem: function (id) {
+    delRowItem: function(id) {
       const dealArr = (arr, id) => {
         arr.forEach((el, index) => {
           if (el.id === id) {
@@ -228,7 +254,7 @@ export default {
       this.renderData = tmp;
     },
 
-    addNew: function () {
+    addNew: function() {
       this.renderData.push({
         id: +`${this.renderData.length + 1}${new Date().getTime()}`,
         name: "title",
@@ -237,17 +263,17 @@ export default {
         required: true,
         sample: "我和我的祖国",
         demo: "",
-        childs: [],
+        childs: []
       });
     },
 
     // 快速添加
-    toQuickAdd: function () {
+    toQuickAdd: function() {
       this.quickText = "";
       this.dialogVisible = true;
     },
 
-    confirmQuickAdd: function () {
+    confirmQuickAdd: function() {
       let _urlParams = [];
       try {
         let jsonData = JSON.parse(this.quickText);
@@ -269,11 +295,13 @@ export default {
       }
     },
 
-    parseArray: function (data, set) {
+    parseArray: function(data, set) {
       data.forEach(el => {
         if (Object.prototype.toString.call(el) === "[object Array]") {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+              Math.random() * 1000
+            )}`,
             name: "",
             type: "array",
             description: "",
@@ -281,14 +309,15 @@ export default {
             sample: "",
             demo: "",
             demo: "",
-            childs: [],
+            childs: []
           };
           this.parseArray(el, obj.childs);
           set.push(obj);
-
         } else if (Object.prototype.toString.call(el) === "[object Object]") {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+              Math.random() * 1000
+            )}`,
             name: "",
             type: "object",
             description: "",
@@ -297,15 +326,16 @@ export default {
             demo: "",
             demo: "",
             childs: [],
-            inArray: true,
+            inArray: true
           };
           this.parseJson(el, obj.childs);
           set.push(obj);
-
         } else {
           if (typeof el !== "object") {
             set.push({
-              id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+              id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+                Math.random() * 1000
+              )}`,
               name: el,
               type: typeof el,
               description: "",
@@ -313,19 +343,21 @@ export default {
               sample: el,
               demo: el,
               demo: "",
-              childs: [],
+              childs: []
             });
           }
         }
       });
     },
 
-    parseJson: function (data, set) {
+    parseJson: function(data, set) {
       let keys = Object.keys(data);
-      keys.forEach((key) => {
+      keys.forEach(key => {
         if (Object.prototype.toString.call(data[key]) === "[object Object]") {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+              Math.random() * 1000
+            )}`,
             name: key,
             type: "object",
             description: "",
@@ -333,16 +365,17 @@ export default {
             sample: "",
             demo: "",
             demo: "",
-            childs: [],
+            childs: []
           };
           this.parseJson(data[key], obj.childs);
           set.push(obj);
-
         } else if (
           Object.prototype.toString.call(data[key]) === "[object Array]"
         ) {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+              Math.random() * 1000
+            )}`,
             name: key,
             type: "array",
             description: "",
@@ -350,15 +383,16 @@ export default {
             sample: "",
             demo: "",
             demo: "",
-            childs: [],
+            childs: []
           };
           this.parseArray(data[key], obj.childs);
           set.push(obj);
-
         } else {
           if (typeof data[key] !== "object") {
             set.push({
-              id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+              id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+                Math.random() * 1000
+              )}`,
               name: key,
               type: typeof data[key],
               description: "",
@@ -366,14 +400,14 @@ export default {
               sample: data[key],
               demo: data[key],
               demo: "",
-              childs: [],
+              childs: []
             });
           }
         }
       });
     },
 
-    handleCurrentChange: function (row) {
+    handleCurrentChange: function(row) {
       this.selectedRow = row;
     },
 
@@ -388,7 +422,6 @@ export default {
           arr[index] = t;
 
           curIndex -= 1;
-
         } else {
           if (index === arr.length - 1) return;
           let t = arr[index + 1];
@@ -402,7 +435,7 @@ export default {
 
       const dealArr = (arr, id) => {
         arr.forEach((el, index) => {
-          if(!isChange) {
+          if (!isChange) {
             curIndex += 1;
             if (el.id === id && !isChange) {
               changeDir(arr, index);
@@ -414,7 +447,7 @@ export default {
         });
       };
 
-      if(this.selectedRow.id) {
+      if (this.selectedRow.id) {
         const tmp = this.renderData;
         dealArr(tmp, this.selectedRow.id);
 
@@ -434,7 +467,7 @@ export default {
 
     exportJSON() {
       function getJson(targets, json) {
-        targets.forEach((el) => {
+        targets.forEach(el => {
           if (el.type === "array") {
             json[el.name] = [];
             pushArray(el.childs, json[el.name]);
@@ -448,7 +481,7 @@ export default {
       }
 
       function pushArray(targets, arr) {
-        targets.forEach((el) => {
+        targets.forEach(el => {
           if (el.type === "array") {
             let tmpArr = [];
             arr.push(tmpArr);
@@ -467,8 +500,8 @@ export default {
       const json = {};
       getJson(this.renderData, json);
       return json;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -511,5 +544,3 @@ export default {
   }
 }
 </style>
-
-
