@@ -183,6 +183,9 @@ export default {
     renderData: function () {
       this.$emit("input", this.renderData);
     },
+    jsonData: function (val) {
+      this.renderData = val;
+    },
     ifArray: function (val) {
       if (!val) {
         for (let i in this.paramType) {

@@ -132,6 +132,8 @@
       }
     },
     mounted: function () {
+      this.ifArray = true;
+      this.ifObject = true;
     }
   };
 </script>
