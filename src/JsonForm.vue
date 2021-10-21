@@ -122,7 +122,7 @@
 <script>
 export default {
   name: "JsonForm",
-  data: function() {
+  data: function () {
     return {
       dialogVisible: false,
       quickText: "",
@@ -130,99 +130,102 @@ export default {
       paramType: [
         {
           value: "double",
-          label: "double"
+          label: "double",
         },
         {
           value: "int",
-          label: "int"
+          label: "int",
         },
         {
           value: "string",
-          label: "string"
+          label: "string",
         },
         {
           value: "boolean",
-          label: "boolean"
+          label: "boolean",
         },
         {
           value: "byte",
-          label: "byte"
+          label: "byte",
         },
         {
           value: "short",
-          label: "short"
+          label: "short",
         },
         {
           value: "long",
-          label: "long"
+          label: "long",
         },
         {
           value: "float",
-          label: "float"
+          label: "float",
         },
         {
           value: "date",
-          label: "date"
+          label: "date",
         },
         {
           value: "datetime",
-          label: "datetime"
-        },
-        {
-          value: "object",
-          label: "Object"
-        },
-        {
-          value: "array",
-          label: "Array"
+          label: "datetime",
         }
       ],
       renderData: [],
       quickAddParams: false,
       quickJson: "",
-      ifArray: null,
-      ifObject: null,
-      selectedRow: null
+      selectedRow: null,
     };
   },
   props: ["jsonData", "ifArray", "ifObject"],
   created() {
     this.renderData = this.jsonData;
-    this.ifArray = this.ifArray;
-    this.ifObject = this.ifObject;
   },
   watch: {
-    renderData: function() {
+    renderData: function () {
       this.$emit("input", this.renderData);
     },
-    ifArray: function(val) {
+    ifArray: function (val) {
       if (!val) {
         for (let i in this.paramType) {
           if (this.paramType[i].label == "Array") {
             this.paramType.splice(i, 1);
           }
         }
+      } else {
+        if (this.paramType.filter((x) => x.value == "array").length == 0) {
+          this.paramType.push({
+            value: "array",
+            label: "Array",
+          });
+        }
       }
     },
-    ifObject: function(val) {
+    ifObject: function (val) {
       if (!val) {
         for (let i in this.paramType) {
           if (this.paramType[i].label == "Object") {
             this.paramType.splice(i, 1);
           }
         }
+      } else {
+        if (this.paramType.filter((x) => x.value == "object").length == 0) {
+          this.paramType.push({
+            value: "object",
+            label: "Object",
+          });
+        }
       }
-    }
+    },
   },
   methods: {
     // 插入行
-    insertRow: function(scope) {
+    insertRow: function (scope) {
       if (!scope.row.childs) {
         scope.row.childs = [];
       }
       scope.row.childs.push({
-        id: +`${scope.row.id}${new Date().getTime()}${Math.random().toFixed(2) *
-          100}`,
+        id: +`${scope.row.id}${new Date().getTime()}${
+          Math.random().toFixed(2) * 100
+        }`,
         name: "",
         type: "int",
         category: null,
@@ -230,16 +233,16 @@ export default {
         required: false,
         sample: "",
         demo: "",
-        childs: []
+        childs: [],
       });
     },
 
     // 删除行
-    delRow: function(scope) {
+    delRow: function (scope) {
       this.delRowItem(scope.row.id);
     },
 
-    delRowItem: function(id) {
+    delRowItem: function (id) {
       const dealArr = (arr, id) => {
         arr.forEach((el, index) => {
           if (el.id === id) {
@@ -254,7 +257,7 @@ export default {
       this.renderData = tmp;
     },
 
-    addNew: function() {
+    addNew: function () {
       this.renderData.push({
         id: +`${this.renderData.length + 1}${new Date().getTime()}`,
         name: "title",
@@ -263,17 +266,17 @@ export default {
         required: true,
         sample: "我和我的祖国",
         demo: "",
-        childs: []
+        childs: [],
       });
     },
 
     // 快速添加
-    toQuickAdd: function() {
+    toQuickAdd: function () {
       this.quickText = "";
       this.dialogVisible = true;
     },
 
-    confirmQuickAdd: function() {
+    confirmQuickAdd: function () {
       let _urlParams = [];
       try {
         let jsonData = JSON.parse(this.quickText);
@@ -295,8 +298,8 @@ export default {
       }
     },
 
-    parseArray: function(data, set) {
-      data.forEach(el => {
+    parseArray: function (data, set) {
+      data.forEach((el) => {
         if (Object.prototype.toString.call(el) === "[object Array]") {
           const obj = {
             id: +`${set.length + 1}${new Date().getTime()}${parseInt(
@@ -309,7 +312,7 @@ export default {
             sample: "",
             demo: "",
             demo: "",
-            childs: []
+            childs: [],
           };
           this.parseArray(el, obj.childs);
           set.push(obj);
@@ -326,7 +329,7 @@ export default {
             demo: "",
             demo: "",
             childs: [],
-            inArray: true
+            inArray: true,
           };
           this.parseJson(el, obj.childs);
           set.push(obj);
@@ -343,16 +346,16 @@ export default {
               sample: el,
               demo: el,
               demo: "",
-              childs: []
+              childs: [],
             });
           }
         }
       });
     },
 
-    parseJson: function(data, set) {
+    parseJson: function (data, set) {
       let keys = Object.keys(data);
-      keys.forEach(key => {
+      keys.forEach((key) => {
         if (Object.prototype.toString.call(data[key]) === "[object Object]") {
           const obj = {
             id: +`${set.length + 1}${new Date().getTime()}${parseInt(
@@ -365,7 +368,7 @@ export default {
             sample: "",
             demo: "",
             demo: "",
-            childs: []
+            childs: [],
           };
           this.parseJson(data[key], obj.childs);
           set.push(obj);
@@ -383,7 +386,7 @@ export default {
             sample: "",
             demo: "",
             demo: "",
-            childs: []
+            childs: [],
           };
           this.parseArray(data[key], obj.childs);
           set.push(obj);
@@ -400,14 +403,14 @@ export default {
               sample: data[key],
               demo: data[key],
               demo: "",
-              childs: []
+              childs: [],
             });
           }
         }
       });
     },
 
-    handleCurrentChange: function(row) {
+    handleCurrentChange: function (row) {
       this.selectedRow = row;
     },
 
@@ -467,7 +470,7 @@ export default {
 
     exportJSON() {
       function getJson(targets, json) {
-        targets.forEach(el => {
+        targets.forEach((el) => {
           if (el.type === "array") {
             json[el.name] = [];
             pushArray(el.childs, json[el.name]);
@@ -481,7 +484,7 @@ export default {
       }
 
       function pushArray(targets, arr) {
-        targets.forEach(el => {
+        targets.forEach((el) => {
           if (el.type === "array") {
             let tmpArr = [];
             arr.push(tmpArr);
@@ -500,8 +503,8 @@ export default {
       const json = {};
       getJson(this.renderData, json);
       return json;
-    }
-  }
+    },
+  },
 };
 </script>
 

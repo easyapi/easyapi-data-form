@@ -1,10 +1,13 @@
 <template>
   <div class="content">
     <h1 class="title">easyapi-json-form</h1>
-    <easyapi-json-form :jsonData="jsonData" ref="jsonForm"></easyapi-json-form>
+    <easyapi-json-form :jsonData="jsonData" :ifArray="ifArray" :ifObject="ifObject" ref="jsonForm"></easyapi-json-form>
     <div class="tools-btn pure-form">
       <el-button class="pure-button" @click="getJSONFormData">getJSONFormData</el-button>
       <el-button class="pure-button" @click="exportJSON">exportJSON</el-button>
+      <el-button class="pure-button" @click="ifArrayFun">ifArraya</el-button>
+      <el-button class="pure-button" @click="ifObjectFun">ifObjecta</el-button>
+
     </div>
   </div>
 </template>
@@ -14,6 +17,8 @@
     name: "app",
     data: function () {
       return {
+        ifArray: false,
+        ifObject: false,
         jsonData: [
           {
             id: 1,
@@ -117,6 +122,13 @@
       exportJSON() {
         let d = this.$refs.jsonForm.exportJSON();
         console.log(d);
+      },
+      ifObjectFun(){
+        this.ifObject = !this.ifObject;
+
+      },
+      ifArrayFun(){
+        this.ifArray = !this.ifArray;
       }
     },
     mounted: function () {
