@@ -29,8 +29,9 @@ Vue.use(Dialog);
 
 
 const install = (Vue) => {
-  if (install.installed) return;
-
+  if (install.installed) {
+    return;
+  }
   Vue.component('easyapi-json-form', JsonForm)
 };
 

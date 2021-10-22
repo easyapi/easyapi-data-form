@@ -10,24 +10,24 @@
       :tree-props="{ children: 'childs', hasChildren: 'hasChildren' }"
       ref="singleTable"
     >
-      <el-table-column prop="name" label="参数名称">
+      <el-table-column prop="name" label="参数名">
         <template slot-scope="scope">
           <el-input
             style="flex: 1"
             v-if="!scope.row.inArray"
             v-model="scope.row.name"
-            placeholder="请输入内容"
+            placeholder="参数名称"
           ></el-input>
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="参数类型" width="120">
+      <el-table-column prop="type" label="类型" width="120">
         <template slot-scope="scope">
           <el-select
             v-if="!scope.row.inArray"
             v-model="scope.row.type"
             filterable
-            placeholder="请选择"
+            placeholder="请选择类型"
           >
             <el-option
               v-for="item in paramType"
@@ -38,12 +38,12 @@
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="参数说明">
+      <el-table-column prop="description" label="描述">
         <template slot-scope="scope">
           <el-input
             v-if="!scope.row.inArray"
             v-model="scope.row.description"
-            placeholder="请输入内容"
+            placeholder="描述"
           ></el-input>
         </template>
       </el-table-column>
@@ -60,7 +60,7 @@
           <el-input
             v-if="!scope.row.inArray"
             v-model="scope.row.sample"
-            placeholder="请输入内容"
+            placeholder="示例"
           ></el-input>
         </template>
       </el-table-column>
@@ -69,7 +69,7 @@
           <el-input
             v-if="!scope.row.inArray"
             v-model="scope.row.demo"
-            placeholder="请输入内容"
+            placeholder="默认值"
           ></el-input>
         </template>
       </el-table-column>
@@ -81,10 +81,11 @@
             type="text"
             size="small"
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
-            >插入
+          >插入
           </el-button>
           <el-button @click="delRow(scope)" type="text" size="small"
-            >删除</el-button
+          >删除
+          </el-button
           >
         </template>
       </el-table-column>
