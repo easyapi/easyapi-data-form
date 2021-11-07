@@ -277,9 +277,12 @@ export default {
         onMove: function ({ dragged, related }) {
           const oldRow = _this.renderDataRows[dragged.rowIndex];
           const newRow = _this.renderDataRows[related.rowIndex];
+          // if (
+          //   oldRow.level !== newRow.level ||
+          //   oldRow.parentId !== newRow.parentId
+          // )
           if (
-            oldRow.level !== newRow.level ||
-            oldRow.parentId !== newRow.parentId
+            oldRow.level !== newRow.level
           ) {
             return false;
           }
@@ -287,14 +290,15 @@ export default {
         onEnd({ newIndex, oldIndex }) {
           const oldRow = _this.renderDataRows[oldIndex];
           const newRow = _this.renderDataRows[newIndex];
+          
           if (
             newIndex !== oldIndex &&
-            oldRow.level === newRow.level &&
-            oldRow.parentId === newRow.parentId
+            oldRow.level === newRow.level
           ) {
-            
             //递归找到父类的数据
-            let renderDataArr = [];
+            let renderDataArrNew = [];
+            let renderDataArrOld = [];
+
             if (oldRow.parentId == 0) {
               renderDataArr = _this.renderData;
             } else {
@@ -303,13 +307,15 @@ export default {
                   data
                     .filter((d) => d)
                     .forEach((e) => {
-                      if(renderDataArr.length > 0){
+                      if(renderDataArrNew.length > 0 && renderDataArrOld.length > 0){
                         return;
                       }
-                      if(e.id == oldRow.parentId){
-                        renderDataArr = e["childs"];
-                        return;
-                      }else{
+                      if(e.id == newRow.parentId){
+                          renderDataArrNew = e["childs"];
+                      }else if(e.id == oldRow.parentId){
+                          renderDataArrOld = e["childs"];
+                      }
+                      else {
                         expanded(e["childs"]);
                       }
                     });
@@ -317,15 +323,28 @@ export default {
               };
               expanded(_this.renderData);
             }
+            if(oldRow.parentId === newRow.parentId){
+              renderDataArrOld = renderDataArrNew;
+            }
+            
             //根据ID找出树状图的坐标
-            let oldIndexTree = renderDataArr.findIndex(
+            let oldIndexTree = renderDataArrOld.findIndex(
               (x) => x.id == oldRow.id
             );
-            let newIndexTree = renderDataArr.findIndex(
+            let newIndexTree = renderDataArrNew.findIndex(
               (x) => x.id == newRow.id
             );
-            const currRow = renderDataArr.splice(oldIndexTree, 1)[0];
-            renderDataArr.splice(newIndexTree, 0, currRow);
+
+            if(oldRow.parentId !== newRow.parentId){
+              if(oldIndex < newIndex){
+                newIndexTree += 1;
+              }
+              renderDataArrOld[oldIndexTree].parentId = renderDataArrNew[0].parentId;
+            }
+
+            const currRow = renderDataArrOld.splice(oldIndexTree, 1)[0];
+            renderDataArrNew.splice(newIndexTree, 0, currRow);
+            
             _this.initData();
           }
         },
