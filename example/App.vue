@@ -46,7 +46,9 @@
                     required: true,
                     sample: "张三",
                     demo: "",
-                    childs: []
+                    childs: [],
+                    level: 3,
+                    parentId: 10,
                   }, {
                     id: 101,
                     name: "email",
@@ -55,7 +57,9 @@
                     required: true,
                     sample: "zhangsan@qq.com",
                     demo: "",
-                    childs: []
+                    childs: [],
+                    level: 3,
+                    parentId: 10,
                   }, {
                     id: 102,
                     name: "company",
@@ -73,13 +77,21 @@
                         required: true,
                         sample: "中国无锡",
                         demo: "",
-                        childs: []
+                        childs: [],
+                        level: 4,
+                        parentId: 102,
                       }
-                    ]
+                    ],
+                    level: 3,
+                    parentId: 10,
                   }
-                ]
+                ],
+                level: 2,
+                parentId: 1,
               }
-            ]
+            ],
+            level: 1,
+            parentId: 0,
           },
           {
             id: 2,
@@ -98,7 +110,9 @@
                 required: true,
                 sample: "写的不错",
                 demo: "写的不错",
-                childs: []
+                childs: [],
+                level: 2,
+                parentId: 2,
               }, {
                 id: 21,
                 name: "content",
@@ -107,9 +121,13 @@
                 required: true,
                 sample: "最是我见过最棒的文章",
                 demo: "",
-                childs: []
+                childs: [],
+                level: 2,
+                parentId: 2,
               }
-            ]
+            ],
+            level: 1,
+            parentId: 0,
           }
         ]
       };
