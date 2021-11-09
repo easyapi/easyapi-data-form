@@ -39,6 +39,17 @@
           </el-select>
         </template>
       </el-table-column>
+      <el-table-column label="参数位置">
+        <template slot-scope="scope">
+          <el-select
+            v-model="scope.row.category"
+            placeholder="请选择"
+          >
+            <el-option label="Path" value="Path"> </el-option>
+            <el-option label="Query" value="Query"> </el-option>
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column prop="description" label="参数说明">
         <template slot-scope="scope">
           <el-input
@@ -281,20 +292,15 @@ export default {
           //   oldRow.level !== newRow.level ||
           //   oldRow.parentId !== newRow.parentId
           // )
-          if (
-            oldRow.level !== newRow.level
-          ) {
+          if (oldRow.level !== newRow.level) {
             return false;
           }
         },
         onEnd({ newIndex, oldIndex }) {
           const oldRow = _this.renderDataRows[oldIndex];
           const newRow = _this.renderDataRows[newIndex];
-          
-          if (
-            newIndex !== oldIndex &&
-            oldRow.level === newRow.level
-          ) {
+
+          if (newIndex !== oldIndex && oldRow.level === newRow.level) {
             //递归找到父类的数据
             let renderDataArrNew = [];
             let renderDataArrOld = [];
@@ -307,15 +313,17 @@ export default {
                   data
                     .filter((d) => d)
                     .forEach((e) => {
-                      if(renderDataArrNew.length > 0 && renderDataArrOld.length > 0){
+                      if (
+                        renderDataArrNew.length > 0 &&
+                        renderDataArrOld.length > 0
+                      ) {
                         return;
                       }
-                      if(e.id == newRow.parentId){
-                          renderDataArrNew = e["childs"];
-                      }else if(e.id == oldRow.parentId){
-                          renderDataArrOld = e["childs"];
-                      }
-                      else {
+                      if (e.id == newRow.parentId) {
+                        renderDataArrNew = e["childs"];
+                      } else if (e.id == oldRow.parentId) {
+                        renderDataArrOld = e["childs"];
+                      } else {
                         expanded(e["childs"]);
                       }
                     });
@@ -323,10 +331,10 @@ export default {
               };
               expanded(_this.renderData);
             }
-            if(oldRow.parentId === newRow.parentId){
+            if (oldRow.parentId === newRow.parentId) {
               renderDataArrOld = renderDataArrNew;
             }
-            
+
             //根据ID找出树状图的坐标
             let oldIndexTree = renderDataArrOld.findIndex(
               (x) => x.id == oldRow.id
@@ -335,16 +343,17 @@ export default {
               (x) => x.id == newRow.id
             );
 
-            if(oldRow.parentId !== newRow.parentId){
-              if(oldIndex < newIndex){
+            if (oldRow.parentId !== newRow.parentId) {
+              if (oldIndex < newIndex) {
                 newIndexTree += 1;
               }
-              renderDataArrOld[oldIndexTree].parentId = renderDataArrNew[0].parentId;
+              renderDataArrOld[oldIndexTree].parentId =
+                renderDataArrNew[0].parentId;
             }
 
             const currRow = renderDataArrOld.splice(oldIndexTree, 1)[0];
             renderDataArrNew.splice(newIndexTree, 0, currRow);
-            
+
             _this.initData();
           }
         },
@@ -362,7 +371,7 @@ export default {
         id: +`${scope.row.childs.length + 1}${new Date().getTime()}`,
         name: "",
         type: "int",
-        category: null,
+        category: 'Query',
         description: "",
         required: false,
         sample: "",
@@ -396,11 +405,12 @@ export default {
     addNew: function () {
       this.renderData.push({
         id: +`${this.renderData.length + 1}${new Date().getTime()}`,
-        name: "title",
+        name: "",
         type: "string",
-        description: "标题",
+        category: 'Query',
+        description: "",
         required: true,
-        sample: "我和我的祖国",
+        sample: "",
         demo: "",
         childs: [],
         level: 1,
