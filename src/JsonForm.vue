@@ -10,94 +10,56 @@
       default-expand-all
       :tree-props="{ children: 'childs', hasChildren: 'hasChildren' }"
       ref="singleTable"
+      size="small"
     >
       <el-table-column prop="name" label="参数名称">
         <template slot-scope="scope">
-          <el-input
-            style="flex: 1"
-            v-if="!scope.row.inArray"
-            v-model="scope.row.name"
-            placeholder="请输入内容"
-          ></el-input>
+          <el-input size="small" style="flex: 1" v-if="!scope.row.inArray" v-model="scope.row.name" placeholder="请输入内容"></el-input>
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
       </el-table-column>
       <el-table-column prop="type" label="参数类型" width="120">
         <template slot-scope="scope">
-          <el-select
-            v-if="!scope.row.inArray"
-            v-model="scope.row.type"
-            filterable
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in paramType"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
+          <el-select size="small" v-if="!scope.row.inArray" v-model="scope.row.type" filterable placeholder="请选择">
+            <el-option v-for="item in paramType" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </template>
       </el-table-column>
       <el-table-column label="参数位置">
         <template slot-scope="scope">
-          <el-select
-            v-model="scope.row.category"
-            placeholder="请选择"
-          >
-            <el-option label="Path" value="Path"> </el-option>
-            <el-option label="Query" value="Query"> </el-option>
+          <el-select v-model="scope.row.category" placeholder="请选择" size="small">
+            <el-option label="Path" value="Path"></el-option>
+            <el-option label="Query" value="Query"></el-option>
           </el-select>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="参数说明">
         <template slot-scope="scope">
-          <el-input
-            v-if="!scope.row.inArray"
-            v-model="scope.row.description"
-            placeholder="请输入内容"
-          ></el-input>
+          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.description"
+                    placeholder="请输入内容"></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="required" label="必填" width="70">
         <template slot-scope="scope">
-          <el-checkbox
-            v-if="!scope.row.inArray"
-            v-model="scope.row.required"
-          ></el-checkbox>
+          <el-checkbox size="small" v-if="!scope.row.inArray" v-model="scope.row.required"></el-checkbox>
         </template>
       </el-table-column>
       <el-table-column prop="sample" label="示例">
         <template slot-scope="scope">
-          <el-input
-            v-if="!scope.row.inArray"
-            v-model="scope.row.sample"
-            placeholder="请输入内容"
-          ></el-input>
+          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.sample" placeholder="请输入内容"></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="demo" label="默认值">
         <template slot-scope="scope">
-          <el-input
-            v-if="!scope.row.inArray"
-            v-model="scope.row.demo"
-            placeholder="请输入内容"
-          ></el-input>
+          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.demo" placeholder="请输入内容"></el-input>
         </template>
       </el-table-column>
 
       <el-table-column prop="options" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button
-            @click="insertRow(scope)"
-            type="text"
-            size="small"
-            v-if="scope.row.type === 'object' || scope.row.type === 'array'"
-            >插入
+          <el-button @click="insertRow(scope)" type="text" size="small" v-if="scope.row.type === 'object' || scope.row.type === 'array'">插入
           </el-button>
-          <el-button @click="delRow(scope)" type="text" size="small"
-            >删除</el-button
-          >
+          <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,19 +72,8 @@
       <el-button size="mini" @click="move(1)">下移</el-button>
     </div>
 
-    <el-dialog
-      title="快速添加"
-      :append-to-body="true"
-      :visible.sync="dialogVisible"
-      width="50%"
-    >
-      <el-input
-        type="textarea"
-        placeholder="请输入内容"
-        v-model="quickText"
-        rows="8"
-        show-word-limit
-      ></el-input>
+    <el-dialog title="快速添加" :append-to-body="true" :visible.sync="dialogVisible" width="50%">
+      <el-input type="textarea" placeholder="请输入内容" v-model="quickText" rows="8" show-word-limit></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmQuickAdd">确 定</el-button>
@@ -133,6 +84,7 @@
 
 <script>
 import Sortable from "sortablejs";
+
 export default {
   name: "JsonForm",
   data: function () {
@@ -285,7 +237,7 @@ export default {
         //   put: false
         // },
         // 拖拽移动的时候
-        onMove: function ({ dragged, related }) {
+        onMove: function ({dragged, related}) {
           const oldRow = _this.renderDataRows[dragged.rowIndex];
           const newRow = _this.renderDataRows[related.rowIndex];
           // if (
@@ -296,7 +248,7 @@ export default {
             return false;
           }
         },
-        onEnd({ newIndex, oldIndex }) {
+        onEnd({newIndex, oldIndex}) {
           const oldRow = _this.renderDataRows[oldIndex];
           const newRow = _this.renderDataRows[newIndex];
 
