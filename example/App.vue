@@ -3,11 +3,11 @@
     <h1 class="title">easyapi-json-form</h1>
     <easyapi-json-form :jsonData="jsonData" :ifArray="ifArray" :ifObject="ifObject" ref="jsonForm"></easyapi-json-form>
     <div class="tools-btn pure-form">
+      <el-button class="pure-button" @click="addNew">addNew</el-button>
       <el-button class="pure-button" @click="getJSONFormData">getJSONFormData</el-button>
       <el-button class="pure-button" @click="exportJSON">exportJSON</el-button>
       <el-button class="pure-button" @click="ifArrayFun">ifArray</el-button>
       <el-button class="pure-button" @click="ifObjectFun">ifObject</el-button>
-
     </div>
   </div>
 </template>
@@ -133,6 +133,9 @@ export default {
     };
   },
   methods: {
+    addNew() {
+      this.$refs.jsonForm.addNew();
+    },
     getJSONFormData() {
       let d = this.$refs.jsonForm.getJSONFormData();
       console.log(d);

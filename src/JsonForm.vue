@@ -14,7 +14,8 @@
     >
       <el-table-column prop="name" label="参数名">
         <template slot-scope="scope">
-          <el-input size="small" style="flex: 1" v-if="!scope.row.inArray" v-model="scope.row.name" placeholder="参数名"></el-input>
+          <el-input size="small" style="flex: 1" v-if="!scope.row.inArray" v-model="scope.row.name"
+                    placeholder="参数名"></el-input>
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
       </el-table-column>
@@ -27,7 +28,8 @@
       </el-table-column>
       <el-table-column prop="description" label="说明">
         <template slot-scope="scope">
-          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.description" placeholder="参数说明"></el-input>
+          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.description"
+                    placeholder="参数说明"></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="required" label="必填" width="70">
@@ -48,25 +50,13 @@
 
       <el-table-column prop="options" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="insertRow(scope)" type="text" size="small" v-if="scope.row.type === 'object' || scope.row.type === 'array'">插入
+          <el-button @click="insertRow(scope)" type="text" size="small"
+                     v-if="scope.row.type === 'object' || scope.row.type === 'array'">插入
           </el-button>
           <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-
-    <div class="json-form-tools tools">
-      <el-button size="mini" @click="addNew">添加属性</el-button>
-      <el-button size="mini" @click="toQuickAdd">快速添加</el-button>
-    </div>
-
-    <el-dialog title="快速添加" :append-to-body="true" :visible.sync="dialogVisible" width="50%">
-      <el-input type="textarea" placeholder="请输入内容" v-model="quickText" rows="8" show-word-limit></el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirmQuickAdd">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -77,7 +67,6 @@ export default {
   name: "JsonForm",
   data: function () {
     return {
-      dialogVisible: false,
       quickText: "",
       // 字段类型
       paramType: [
@@ -248,23 +237,18 @@ export default {
             } else {
               const expanded = (data) => {
                 if (data && data.length > 0) {
-                  data
-                    .filter((d) => d)
-                    .forEach((e) => {
-                      if (
-                        renderDataArrNew.length > 0 &&
-                        renderDataArrOld.length > 0
-                      ) {
-                        return;
-                      }
-                      if (e.id === newRow.parentId) {
-                        renderDataArrNew = e["childs"];
-                      } else if (e.id === oldRow.parentId) {
-                        renderDataArrOld = e["childs"];
-                      } else {
-                        expanded(e["childs"]);
-                      }
-                    });
+                  data.filter((d) => d).forEach((e) => {
+                    if (renderDataArrNew.length > 0 && renderDataArrOld.length > 0) {
+                      return;
+                    }
+                    if (e.id === newRow.parentId) {
+                      renderDataArrNew = e["childs"];
+                    } else if (e.id === oldRow.parentId) {
+                      renderDataArrOld = e["childs"];
+                    } else {
+                      expanded(e["childs"]);
+                    }
+                  });
                 }
               };
               expanded(_this.renderData);
@@ -274,19 +258,14 @@ export default {
             }
 
             //根据ID找出树状图的坐标
-            let oldIndexTree = renderDataArrOld.findIndex(
-              (x) => x.id === oldRow.id
-            );
-            let newIndexTree = renderDataArrNew.findIndex(
-              (x) => x.id === newRow.id
-            );
+            let oldIndexTree = renderDataArrOld.findIndex((x) => x.id === oldRow.id);
+            let newIndexTree = renderDataArrNew.findIndex((x) => x.id === newRow.id);
 
             if (oldRow.parentId !== newRow.parentId) {
               if (oldIndex < newIndex) {
                 newIndexTree += 1;
               }
-              renderDataArrOld[oldIndexTree].parentId =
-                renderDataArrNew[0].parentId;
+              renderDataArrOld[oldIndexTree].parentId = renderDataArrNew[0].parentId;
             }
 
             const currRow = renderDataArrOld.splice(oldIndexTree, 1)[0];
@@ -354,12 +333,6 @@ export default {
       });
     },
 
-    // 快速添加
-    toQuickAdd: function () {
-      this.quickText = "";
-      this.dialogVisible = true;
-    },
-
     confirmQuickAdd: function () {
       let _urlParams = [];
       try {
@@ -415,9 +388,7 @@ export default {
         } else {
           if (typeof el !== "object") {
             set.push({
-              id: +`${set.length + 1}${new Date().getTime()}${parseInt(
-                Math.random() * 1000
-              )}`,
+              id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
               name: el,
               type: typeof el,
               description: "",
@@ -436,9 +407,7 @@ export default {
       keys.forEach((key) => {
         if (Object.prototype.toString.call(data[key]) === "[object Object]") {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
-              Math.random() * 1000
-            )}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
             name: key,
             type: "object",
             description: "",
@@ -453,9 +422,7 @@ export default {
           Object.prototype.toString.call(data[key]) === "[object Array]"
         ) {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
-              Math.random() * 1000
-            )}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
             name: key,
             type: "array",
             description: "",
@@ -469,9 +436,7 @@ export default {
         } else {
           if (typeof data[key] !== "object") {
             set.push({
-              id: +`${set.length + 1}${new Date().getTime()}${parseInt(
-                Math.random() * 1000
-              )}`,
+              id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
               name: key,
               type: typeof data[key],
               description: "",
