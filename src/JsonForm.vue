@@ -12,31 +12,22 @@
       ref="singleTable"
       size="small"
     >
-      <el-table-column prop="name" label="参数名称">
+      <el-table-column prop="name" label="参数名">
         <template slot-scope="scope">
-          <el-input size="small" style="flex: 1" v-if="!scope.row.inArray" v-model="scope.row.name" placeholder="请输入内容"></el-input>
+          <el-input size="small" style="flex: 1" v-if="!scope.row.inArray" v-model="scope.row.name" placeholder="参数名"></el-input>
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="参数类型" width="120">
+      <el-table-column prop="type" label="类型" width="120">
         <template slot-scope="scope">
           <el-select size="small" v-if="!scope.row.inArray" v-model="scope.row.type" filterable placeholder="请选择">
             <el-option v-for="item in paramType" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </template>
       </el-table-column>
-      <el-table-column label="参数位置">
+      <el-table-column prop="description" label="说明">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.category" placeholder="请选择" size="small">
-            <el-option label="Path" value="Path"></el-option>
-            <el-option label="Query" value="Query"></el-option>
-          </el-select>
-        </template>
-      </el-table-column>
-      <el-table-column prop="description" label="参数说明">
-        <template slot-scope="scope">
-          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.description"
-                    placeholder="请输入内容"></el-input>
+          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.description" placeholder="参数说明"></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="required" label="必填" width="70">
@@ -46,12 +37,12 @@
       </el-table-column>
       <el-table-column prop="sample" label="示例">
         <template slot-scope="scope">
-          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.sample" placeholder="请输入内容"></el-input>
+          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.sample" placeholder="参数示例"></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="demo" label="默认值">
         <template slot-scope="scope">
-          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.demo" placeholder="请输入内容"></el-input>
+          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.demo" placeholder="参数默认值"></el-input>
         </template>
       </el-table-column>
 
@@ -67,9 +58,6 @@
     <div class="json-form-tools tools">
       <el-button size="mini" @click="addNew">添加属性</el-button>
       <el-button size="mini" @click="toQuickAdd">快速添加</el-button>
-
-      <el-button size="mini" @click="move(0)">上移</el-button>
-      <el-button size="mini" @click="move(1)">下移</el-button>
     </div>
 
     <el-dialog title="快速添加" :append-to-body="true" :visible.sync="dialogVisible" width="50%">
@@ -166,15 +154,15 @@ export default {
     ifArray: function (val) {
       if (!val) {
         for (let i in this.paramType) {
-          if (this.paramType[i].label == "Array") {
+          if (this.paramType[i].label === "array") {
             this.paramType.splice(i, 1);
           }
         }
       } else {
-        if (this.paramType.filter((x) => x.value == "array").length == 0) {
+        if (this.paramType.filter((x) => x.value === "array").length === 0) {
           this.paramType.push({
             value: "array",
-            label: "Array",
+            label: "array",
           });
         }
       }
@@ -182,15 +170,15 @@ export default {
     ifObject: function (val) {
       if (!val) {
         for (let i in this.paramType) {
-          if (this.paramType[i].label == "Object") {
+          if (this.paramType[i].label === "object") {
             this.paramType.splice(i, 1);
           }
         }
       } else {
-        if (this.paramType.filter((x) => x.value == "object").length == 0) {
+        if (this.paramType.filter((x) => x.value === "object").length === 0) {
           this.paramType.push({
             value: "object",
-            label: "Object",
+            label: "object",
           });
         }
       }
@@ -202,12 +190,10 @@ export default {
       this.renderDataRows = [];
       const expanded = (data) => {
         if (data && data.length > 0) {
-          data
-            .filter((d) => d)
-            .forEach((e) => {
-              this.renderDataRows.push(e);
-              expanded(e["childs"]);
-            });
+          data.filter((d) => d).forEach((e) => {
+            this.renderDataRows.push(e);
+            expanded(e["childs"]);
+          });
         }
       };
       expanded(this.renderData);
@@ -257,7 +243,7 @@ export default {
             let renderDataArrNew = [];
             let renderDataArrOld = [];
 
-            if (oldRow.parentId == 0) {
+            if (oldRow.parentId === 0) {
               renderDataArr = _this.renderData;
             } else {
               const expanded = (data) => {
@@ -271,9 +257,9 @@ export default {
                       ) {
                         return;
                       }
-                      if (e.id == newRow.parentId) {
+                      if (e.id === newRow.parentId) {
                         renderDataArrNew = e["childs"];
-                      } else if (e.id == oldRow.parentId) {
+                      } else if (e.id === oldRow.parentId) {
                         renderDataArrOld = e["childs"];
                       } else {
                         expanded(e["childs"]);
@@ -289,10 +275,10 @@ export default {
 
             //根据ID找出树状图的坐标
             let oldIndexTree = renderDataArrOld.findIndex(
-              (x) => x.id == oldRow.id
+              (x) => x.id === oldRow.id
             );
             let newIndexTree = renderDataArrNew.findIndex(
-              (x) => x.id == newRow.id
+              (x) => x.id === newRow.id
             );
 
             if (oldRow.parentId !== newRow.parentId) {
@@ -323,7 +309,6 @@ export default {
         id: +`${scope.row.childs.length + 1}${new Date().getTime()}`,
         name: "",
         type: "int",
-        category: 'Query',
         description: "",
         required: false,
         sample: "",
@@ -359,7 +344,6 @@ export default {
         id: +`${this.renderData.length + 1}${new Date().getTime()}`,
         name: "",
         type: "string",
-        category: 'Query',
         description: "",
         required: true,
         sample: "",
@@ -388,8 +372,7 @@ export default {
           this.parseJson(jsonData, _urlParams);
         }
 
-        const selfRowData = [...this.renderData, ..._urlParams];
-        this.renderData = selfRowData;
+        this.renderData = [...this.renderData, ..._urlParams];
 
         this.dialogVisible = false;
       } catch (e) {
@@ -402,15 +385,12 @@ export default {
       data.forEach((el) => {
         if (Object.prototype.toString.call(el) === "[object Array]") {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
-              Math.random() * 1000
-            )}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
             name: "",
             type: "array",
             description: "",
             required: false,
             sample: "",
-            demo: "",
             demo: "",
             childs: [],
           };
@@ -426,7 +406,6 @@ export default {
             description: "",
             required: false,
             sample: "",
-            demo: "",
             demo: "",
             childs: [],
             inArray: true,
@@ -445,7 +424,6 @@ export default {
               required: false,
               sample: el,
               demo: el,
-              demo: "",
               childs: [],
             });
           }
@@ -467,7 +445,6 @@ export default {
             required: false,
             sample: "",
             demo: "",
-            demo: "",
             childs: [],
           };
           this.parseJson(data[key], obj.childs);
@@ -485,7 +462,6 @@ export default {
             required: false,
             sample: "",
             demo: "",
-            demo: "",
             childs: [],
           };
           this.parseArray(data[key], obj.childs);
@@ -502,7 +478,6 @@ export default {
               required: false,
               sample: data[key],
               demo: data[key],
-              demo: "",
               childs: [],
             });
           }
@@ -512,56 +487,6 @@ export default {
 
     handleCurrentChange: function (row) {
       this.selectedRow = row;
-    },
-
-    move(dir) {
-      let curIndex = 0;
-
-      const changeDir = (arr, index) => {
-        if (dir === 0) {
-          if (index === 0) return;
-          let t = arr[index - 1];
-          arr[index - 1] = arr[index];
-          arr[index] = t;
-
-          curIndex -= 1;
-        } else {
-          if (index === arr.length - 1) return;
-          let t = arr[index + 1];
-          arr[index + 1] = arr[index];
-          arr[index] = t;
-
-          curIndex += 1;
-        }
-      };
-      let isChange = false;
-
-      const dealArr = (arr, id) => {
-        arr.forEach((el, index) => {
-          if (!isChange) {
-            curIndex += 1;
-            if (el.id === id && !isChange) {
-              changeDir(arr, index);
-              isChange = true;
-            } else if (el.childs && el.childs.length) {
-              dealArr(el.childs, id);
-            }
-          }
-        });
-      };
-
-      if (this.selectedRow.id) {
-        const tmp = this.renderData;
-        dealArr(tmp, this.selectedRow.id);
-
-        this.renderData = tmp;
-        this.$refs.singleTable.setCurrentRow();
-        console.log(curIndex);
-        // const curDom = this.$refs.singleTable.$el.querySelectorAll('.el-table__row')[curIndex];
-        // if(curDom) {
-        //   curDom.click();
-        // }
-      }
     },
 
     getJSONFormData() {
