@@ -389,7 +389,6 @@ export default {
         let _urlParams = [];
         try {
           let jsonData = JSON.parse(quickText);
-
           if (Object.prototype.toString.call(jsonData) === "[object Array]") {
             this.parseArray(jsonData, _urlParams);
           }
