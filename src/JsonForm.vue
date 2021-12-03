@@ -402,7 +402,7 @@ export default {
         }
       } else if (type == "URL") {
         try {
-          let data = this.quickText.split("?")[1].split("&");
+          let data = quickText.split("?")[1].split("&");
           for (let item of data) {
             this.renderData.push({
               id: +`${this.renderData.length + 1}${new Date().getTime()}`,
