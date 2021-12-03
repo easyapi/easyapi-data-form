@@ -14,46 +14,86 @@
     >
       <el-table-column prop="name" label="参数名">
         <template slot-scope="scope">
-          <el-input size="small" style="flex: 1" v-if="!scope.row.inArray" v-model="scope.row.name"
-                    placeholder="参数名"></el-input>
+          <el-input
+            size="small"
+            style="flex: 1"
+            v-if="!scope.row.inArray"
+            v-model="scope.row.name"
+            placeholder="参数名"
+          ></el-input>
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
       </el-table-column>
       <el-table-column prop="type" label="类型" width="120">
         <template slot-scope="scope">
-          <el-select size="small" v-if="!scope.row.inArray" v-model="scope.row.type" filterable placeholder="请选择">
-            <el-option v-for="item in paramType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-select
+            size="small"
+            v-if="!scope.row.inArray"
+            v-model="scope.row.type"
+            filterable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in paramType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="说明">
         <template slot-scope="scope">
-          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.description"
-                    placeholder="参数说明"></el-input>
+          <el-input
+            size="small"
+            v-if="!scope.row.inArray"
+            v-model="scope.row.description"
+            placeholder="参数说明"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="required" label="必填" width="70">
         <template slot-scope="scope">
-          <el-checkbox size="small" v-if="!scope.row.inArray" v-model="scope.row.required"></el-checkbox>
+          <el-checkbox
+            size="small"
+            v-if="!scope.row.inArray"
+            v-model="scope.row.required"
+          ></el-checkbox>
         </template>
       </el-table-column>
       <el-table-column prop="sample" label="示例">
         <template slot-scope="scope">
-          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.sample" placeholder="参数示例"></el-input>
+          <el-input
+            size="small"
+            v-if="!scope.row.inArray"
+            v-model="scope.row.sample"
+            placeholder="参数示例"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="demo" label="默认值">
         <template slot-scope="scope">
-          <el-input size="small" v-if="!scope.row.inArray" v-model="scope.row.demo" placeholder="参数默认值"></el-input>
+          <el-input
+            size="small"
+            v-if="!scope.row.inArray"
+            v-model="scope.row.demo"
+            placeholder="参数默认值"
+          ></el-input>
         </template>
       </el-table-column>
 
       <el-table-column prop="options" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="insertRow(scope)" type="text" size="small"
-                     v-if="scope.row.type === 'object' || scope.row.type === 'array'">插入
+          <el-button
+            @click="insertRow(scope)"
+            type="text"
+            size="small"
+            v-if="scope.row.type === 'object' || scope.row.type === 'array'"
+            >插入
           </el-button>
-          <el-button @click="delRow(scope)" type="text" size="small">删除</el-button>
+          <el-button @click="delRow(scope)" type="text" size="small"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -67,7 +107,6 @@ export default {
   name: "JsonForm",
   data: function () {
     return {
-      quickText: "",
       // 字段类型
       paramType: [
         {
@@ -179,10 +218,12 @@ export default {
       this.renderDataRows = [];
       const expanded = (data) => {
         if (data && data.length > 0) {
-          data.filter((d) => d).forEach((e) => {
-            this.renderDataRows.push(e);
-            expanded(e["childs"]);
-          });
+          data
+            .filter((d) => d)
+            .forEach((e) => {
+              this.renderDataRows.push(e);
+              expanded(e["childs"]);
+            });
         }
       };
       expanded(this.renderData);
@@ -212,7 +253,7 @@ export default {
         //   put: false
         // },
         // 拖拽移动的时候
-        onMove: function ({dragged, related}) {
+        onMove: function ({ dragged, related }) {
           const oldRow = _this.renderDataRows[dragged.rowIndex];
           const newRow = _this.renderDataRows[related.rowIndex];
           // if (
@@ -223,7 +264,7 @@ export default {
             return false;
           }
         },
-        onEnd({newIndex, oldIndex}) {
+        onEnd({ newIndex, oldIndex }) {
           const oldRow = _this.renderDataRows[oldIndex];
           const newRow = _this.renderDataRows[newIndex];
 
@@ -237,18 +278,23 @@ export default {
             } else {
               const expanded = (data) => {
                 if (data && data.length > 0) {
-                  data.filter((d) => d).forEach((e) => {
-                    if (renderDataArrNew.length > 0 && renderDataArrOld.length > 0) {
-                      return;
-                    }
-                    if (e.id === newRow.parentId) {
-                      renderDataArrNew = e["childs"];
-                    } else if (e.id === oldRow.parentId) {
-                      renderDataArrOld = e["childs"];
-                    } else {
-                      expanded(e["childs"]);
-                    }
-                  });
+                  data
+                    .filter((d) => d)
+                    .forEach((e) => {
+                      if (
+                        renderDataArrNew.length > 0 &&
+                        renderDataArrOld.length > 0
+                      ) {
+                        return;
+                      }
+                      if (e.id === newRow.parentId) {
+                        renderDataArrNew = e["childs"];
+                      } else if (e.id === oldRow.parentId) {
+                        renderDataArrOld = e["childs"];
+                      } else {
+                        expanded(e["childs"]);
+                      }
+                    });
                 }
               };
               expanded(_this.renderData);
@@ -258,14 +304,19 @@ export default {
             }
 
             //根据ID找出树状图的坐标
-            let oldIndexTree = renderDataArrOld.findIndex((x) => x.id === oldRow.id);
-            let newIndexTree = renderDataArrNew.findIndex((x) => x.id === newRow.id);
+            let oldIndexTree = renderDataArrOld.findIndex(
+              (x) => x.id === oldRow.id
+            );
+            let newIndexTree = renderDataArrNew.findIndex(
+              (x) => x.id === newRow.id
+            );
 
             if (oldRow.parentId !== newRow.parentId) {
               if (oldIndex < newIndex) {
                 newIndexTree += 1;
               }
-              renderDataArrOld[oldIndexTree].parentId = renderDataArrNew[0].parentId;
+              renderDataArrOld[oldIndexTree].parentId =
+                renderDataArrNew[0].parentId;
             }
 
             const currRow = renderDataArrOld.splice(oldIndexTree, 1)[0];
@@ -333,24 +384,43 @@ export default {
       });
     },
 
-    confirmQuickAdd: function () {
-      let _urlParams = [];
-      try {
-        let jsonData = JSON.parse(this.quickText);
+    confirmQuickAdd: function (type, quickText) {
+      if (type == "JSON") {
+        let _urlParams = [];
+        try {
+          let jsonData = JSON.parse(quickText);
 
-        if (Object.prototype.toString.call(jsonData) === "[object Array]") {
-          this.parseArray(jsonData, _urlParams);
+          if (Object.prototype.toString.call(jsonData) === "[object Array]") {
+            this.parseArray(jsonData, _urlParams);
+          }
+          if (Object.prototype.toString.call(jsonData) === "[object Object]") {
+            this.parseJson(jsonData, _urlParams);
+          }
+          this.renderData = [...this.renderData, ..._urlParams];
+        } catch (e) {
+          this.$message.error("请输入合法的JSON");
         }
-        if (Object.prototype.toString.call(jsonData) === "[object Object]") {
-          this.parseJson(jsonData, _urlParams);
+      } else if (type == "URL") {
+        try {
+          let data = this.quickText.split("?")[1].split("&");
+          for (let item of data) {
+            this.renderData.push({
+              id: +`${this.renderData.length + 1}${new Date().getTime()}`,
+              name: item.split("=")[0],
+              type: "string",
+              category: "Query",
+              description: "",
+              required: true,
+              sample: item.split("=")[1],
+              demo: "",
+              childs: [],
+              level: 1,
+              parentId: 0,
+            });
+          }
+        } catch (e) {
+          this.$message.error("请输入合法的URL");
         }
-
-        this.renderData = [...this.renderData, ..._urlParams];
-
-        this.dialogVisible = false;
-      } catch (e) {
-        console.error(e);
-        this.$message.error("请输入合法的JSON");
       }
     },
 
@@ -358,7 +428,9 @@ export default {
       data.forEach((el) => {
         if (Object.prototype.toString.call(el) === "[object Array]") {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+              Math.random() * 1000
+            )}`,
             name: "",
             type: "array",
             description: "",
@@ -388,7 +460,9 @@ export default {
         } else {
           if (typeof el !== "object") {
             set.push({
-              id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+              id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+                Math.random() * 1000
+              )}`,
               name: el,
               type: typeof el,
               description: "",
@@ -407,7 +481,9 @@ export default {
       keys.forEach((key) => {
         if (Object.prototype.toString.call(data[key]) === "[object Object]") {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+              Math.random() * 1000
+            )}`,
             name: key,
             type: "object",
             description: "",
@@ -422,7 +498,9 @@ export default {
           Object.prototype.toString.call(data[key]) === "[object Array]"
         ) {
           const obj = {
-            id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+            id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+              Math.random() * 1000
+            )}`,
             name: key,
             type: "array",
             description: "",
@@ -436,7 +514,9 @@ export default {
         } else {
           if (typeof data[key] !== "object") {
             set.push({
-              id: +`${set.length + 1}${new Date().getTime()}${parseInt(Math.random() * 1000)}`,
+              id: +`${set.length + 1}${new Date().getTime()}${parseInt(
+                Math.random() * 1000
+              )}`,
               name: key,
               type: typeof data[key],
               description: "",
