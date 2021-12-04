@@ -18,6 +18,7 @@
             size="small"
             style="flex: 1"
             v-if="!scope.row.inArray"
+            :disabled="scope.row.level === 1 && haveRoot"
             v-model="scope.row.name"
             placeholder="参数名"
           ></el-input>
@@ -28,6 +29,7 @@
         <template slot-scope="scope">
           <el-select
             size="small"
+            @change="typeChanged(scope.row)"
             v-if="!scope.row.inArray"
             v-model="scope.row.type"
             filterable
@@ -67,6 +69,7 @@
             size="small"
             v-if="!scope.row.inArray"
             v-model="scope.row.sample"
+            :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             placeholder="参数示例"
           ></el-input>
         </template>
@@ -77,6 +80,7 @@
             size="small"
             v-if="!scope.row.inArray"
             v-model="scope.row.demo"
+            :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             placeholder="参数默认值"
           ></el-input>
         </template>
@@ -91,7 +95,11 @@
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
             >插入
           </el-button>
-          <el-button @click="delRow(scope)" type="text" size="small"
+          <el-button
+            v-if="scope.row.level !== 1"
+            @click="delRow(scope)"
+            type="text"
+            size="small"
             >删除</el-button
           >
         </template>
@@ -159,9 +167,32 @@ export default {
       sortable: null,
     };
   },
-  props: ["jsonData", "ifArray", "ifObject"],
+  props: ["jsonData", "ifArray", "ifObject", "haveRoot"],
   created() {
-    this.renderData = this.jsonData;
+    if (this.haveRoot) {
+      //如果是根节点，那么只显示一个数据
+      if (this.jsonData && this.jsonData.length > 0) {
+        this.renderData = [this.jsonData[0]];
+      } else {
+        //给一个默认的值
+        this.renderData = [
+          {
+            id: 1,
+            name: "根节点",
+            type: "object",
+            description: "",
+            required: true,
+            sample: "",
+            demo: "",
+            childs: [],
+            level: 1,
+            parentId: 0,
+          },
+        ];
+      }
+    } else {
+      this.renderData = this.jsonData;
+    }
   },
   mounted() {
     this.initData();
@@ -213,6 +244,11 @@ export default {
     },
   },
   methods: {
+    typeChanged(value){
+      if(value.type !== "object" && value.type !== "array"){
+        value.childs = [];
+      }
+    },
     //将树状图平铺
     treeToTile() {
       this.renderDataRows = [];

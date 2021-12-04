@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <h1 class="title">easyapi-json-form</h1>
-    <easyapi-json-form :jsonData="jsonData" :ifArray="ifArray" :ifObject="ifObject" ref="jsonForm"></easyapi-json-form>
+    <easyapi-json-form :jsonData="jsonData" :haveRoot="haveRoot" :ifArray="ifArray" :ifObject="ifObject" ref="jsonForm"></easyapi-json-form>
     <div class="tools-btn pure-form">
       <el-button class="pure-button" @click="addNew">addNew</el-button>
       <el-button class="pure-button" @click="getJSONFormData">getJSONFormData</el-button>
@@ -19,13 +19,14 @@ export default {
     return {
       ifArray: false,
       ifObject: false,
+      haveRoot: true,
       jsonData: [
         {
           id: 1,
-          name: "blog",
+          name: "根节点",
           type: "object",
           description: "博客",
-          required: false,
+          required: true,
           sample: "",
           demo: "",
           childs: [
@@ -88,42 +89,6 @@ export default {
               ],
               level: 2,
               parentId: 1,
-            }
-          ],
-          level: 1,
-          parentId: 0,
-        },
-        {
-          id: 2,
-          name: "comments",
-          type: "array",
-          description: "评论",
-          required: true,
-          sample: "我和我的祖国",
-          demo: "",
-          childs: [
-            {
-              id: 20,
-              name: "title",
-              type: "string",
-              description: "评论标题",
-              required: true,
-              sample: "写的不错",
-              demo: "写的不错",
-              childs: [],
-              level: 2,
-              parentId: 2,
-            }, {
-              id: 21,
-              name: "content",
-              type: "string",
-              description: "评论内容",
-              required: true,
-              sample: "最是我见过最棒的文章",
-              demo: "",
-              childs: [],
-              level: 2,
-              parentId: 2,
             }
           ],
           level: 1,
