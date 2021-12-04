@@ -169,30 +169,7 @@ export default {
   },
   props: ["jsonData", "ifArray", "ifObject", "haveRoot"],
   created() {
-    if (this.haveRoot) {
-      //如果是根节点，那么只显示一个数据
-      if (this.jsonData && this.jsonData.length > 0) {
-        this.renderData = [this.jsonData[0]];
-      } else {
-        //给一个默认的值
-        this.renderData = [
-          {
-            id: 1,
-            name: "根节点",
-            type: "object",
-            description: "",
-            required: true,
-            sample: "",
-            demo: "",
-            childs: [],
-            level: 1,
-            parentId: 0,
-          },
-        ];
-      }
-    } else {
-      this.renderData = this.jsonData;
-    }
+    this.initViewData();
   },
   mounted() {
     this.initData();
@@ -211,7 +188,63 @@ export default {
       this.renderData = val;
     },
     ifArray: function (val) {
-      if (!val) {
+      this.initViewData();
+    },
+    ifObject: function (val) {
+      this.initViewData();
+    },
+    haveRoot: function (val) {
+      this.initViewData();
+    },
+  },
+  methods: {
+    typeChanged(value) {
+      if (value.type !== "object" && value.type !== "array") {
+        value.childs = [];
+      }
+    },
+    initViewData() {
+      if (this.haveRoot) {
+        //如果是根节点，那么只显示一个数据
+        if (this.jsonData && this.jsonData.length > 0) {
+          this.renderData = [this.jsonData[0]];
+        } else {
+          //给一个默认的值
+          this.renderData = [
+            {
+              id: 1,
+              name: "根节点",
+              type: "object",
+              description: "",
+              required: true,
+              sample: "",
+              demo: "",
+              childs: [],
+              level: 1,
+              parentId: 0,
+            },
+          ];
+        }
+      } else {
+        this.renderData = this.jsonData;
+      }
+      //初始化object
+      if(!this.ifObject){
+        for (let i in this.paramType) {
+          if (this.paramType[i].label === "object") {
+            this.paramType.splice(i, 1);
+          }
+        }
+      }else{
+        if (this.paramType.filter((x) => x.value === "object").length === 0) {
+          this.paramType.push({
+            value: "object",
+            label: "object",
+          });
+        }
+      }
+      //初始化array
+      if (!this.ifArray) {
         for (let i in this.paramType) {
           if (this.paramType[i].label === "array") {
             this.paramType.splice(i, 1);
@@ -224,29 +257,6 @@ export default {
             label: "array",
           });
         }
-      }
-    },
-    ifObject: function (val) {
-      if (!val) {
-        for (let i in this.paramType) {
-          if (this.paramType[i].label === "object") {
-            this.paramType.splice(i, 1);
-          }
-        }
-      } else {
-        if (this.paramType.filter((x) => x.value === "object").length === 0) {
-          this.paramType.push({
-            value: "object",
-            label: "object",
-          });
-        }
-      }
-    },
-  },
-  methods: {
-    typeChanged(value){
-      if(value.type !== "object" && value.type !== "array"){
-        value.childs = [];
       }
     },
     //将树状图平铺
