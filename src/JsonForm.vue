@@ -14,14 +14,22 @@
     >
       <el-table-column prop="name" label="参数名">
         <template slot-scope="scope">
-          <el-input
+          <!-- <el-input
             size="small"
             style="flex: 1"
             v-if="!scope.row.inArray"
             :disabled="scope.row.level === 1 && haveRoot"
             v-model="scope.row.name"
             placeholder="参数名"
-          ></el-input>
+          ></el-input> -->
+          <easyapi-env-input
+            v-if="!scope.row.inArray"
+            style="width: 100%"
+            :disabled="scope.row.level === 1 && haveRoot"
+            v-model="scope.row.name"
+            placeholder="参数名"
+            :aggregateEnvs="aggregateEnvs"
+          />
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
       </el-table-column>
@@ -65,27 +73,28 @@
       </el-table-column>
       <el-table-column prop="sample" label="示例">
         <template slot-scope="scope">
-          <el-input
-            size="small"
+          <easyapi-env-input
             v-if="!scope.row.inArray"
+            style="width: 100%"
             v-model="scope.row.sample"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             placeholder="参数示例"
-          ></el-input>
+            :aggregateEnvs="aggregateEnvs"
+          />
         </template>
       </el-table-column>
       <el-table-column prop="demo" label="默认值">
         <template slot-scope="scope">
-          <el-input
-            size="small"
+          <easyapi-env-input
             v-if="!scope.row.inArray"
+            style="width: 100%"
             v-model="scope.row.demo"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             placeholder="参数默认值"
-          ></el-input>
+            :aggregateEnvs="aggregateEnvs"
+          />
         </template>
       </el-table-column>
-
       <el-table-column prop="options" label="操作" width="100">
         <template slot-scope="scope">
           <el-button
@@ -167,7 +176,7 @@ export default {
       sortable: null,
     };
   },
-  props: ["jsonData", "ifArray", "ifObject", "haveRoot"],
+  props: ["jsonData", "ifArray", "ifObject", "haveRoot", "aggregateEnvs"],
   created() {
     this.initViewData();
   },
@@ -229,13 +238,13 @@ export default {
         this.renderData = this.jsonData;
       }
       //初始化object
-      if(!this.ifObject){
+      if (!this.ifObject) {
         for (let i in this.paramType) {
           if (this.paramType[i].label === "object") {
             this.paramType.splice(i, 1);
           }
         }
-      }else{
+      } else {
         if (this.paramType.filter((x) => x.value === "object").length === 0) {
           this.paramType.push({
             value: "object",

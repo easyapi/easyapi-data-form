@@ -4,8 +4,11 @@ import PackageFile from "../package.json";
 import "element-ui/lib/theme-chalk/index.css";
 import "./assets/styles/common.less";
 import Element from "element-ui";
+import EnvInput from "easyapi-env-input";
 
 Vue.use(Element);
+Vue.use(EnvInput);
+
 const VERSION = PackageFile.version;
 
 const install = (Vue) => {
