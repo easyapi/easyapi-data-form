@@ -96,7 +96,7 @@
             >插入
           </el-button>
           <el-button
-            v-if="scope.row.level !== 1"
+            v-if="scope.row.level !== 1 || !haveRoot"
             @click="delRow(scope)"
             type="text"
             size="small"
