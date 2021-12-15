@@ -102,15 +102,15 @@
             type="text"
             size="small"
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
+            style="margin-right: 10px"
             >插入
           </el-button>
-          <el-button
+          <i
             v-if="scope.row.level !== 1 || !haveRoot"
             @click="delRow(scope)"
-            type="text"
-            size="small"
-            >删除</el-button
-          >
+            class="el-icon-delete"
+          ></i>
+          <!-- <el-button type="text" size="small">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -669,5 +669,9 @@ export default {
     border-radius: 5px;
     margin-right: 5px;
   }
+}
+.el-icon-delete {
+  font-size: 18px;
+  cursor: pointer;
 }
 </style>
