@@ -194,7 +194,8 @@ export default {
       deep: true,
     },
     jsonData: function (val) {
-      this.renderData = val;
+      // this.renderData = val;
+      this.initViewData();
     },
     ifArray: function (val) {
       this.initViewData();
@@ -216,10 +217,9 @@ export default {
       if (this.haveRoot) {
         //如果是根节点，那么只显示一个数据
         if (this.jsonData && this.jsonData.length > 0) {
-          this.renderData = [this.jsonData[0]];
         } else {
           //给一个默认的值
-          this.renderData = [
+          this.jsonData.push(
             {
               id: 1,
               name: "根节点",
@@ -232,8 +232,9 @@ export default {
               level: 1,
               parentId: 0,
             },
-          ];
+          );
         }
+        this.renderData = [this.jsonData[0]];
       } else {
         this.renderData = this.jsonData;
       }
