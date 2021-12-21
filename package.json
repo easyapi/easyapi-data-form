@@ -32,7 +32,7 @@
     "lodash": "^4.17.21",
     "vue": "^2.6.14",
     "vuedraggable": "^2.24.3",
-    "easyapi-env-input": "^1.0.4"
+    "easyapi-env-input": "^1.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
