@@ -295,7 +295,7 @@ export default {
     },
     //行拖拽
     rowDrop() {
-      const tbody = document.querySelector(".el-table__body-wrapper tbody");
+      const tbody = document.querySelector(".json-form .el-table__body-wrapper tbody");
       if (!tbody) {
         return;
       }
