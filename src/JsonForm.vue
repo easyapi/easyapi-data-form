@@ -1,5 +1,5 @@
 <template>
-  <div class="json-form">
+  <div :class="`${jsonClass} json-form`">
     <el-table
       :data="renderData"
       :key="tableKey"
@@ -176,7 +176,14 @@ export default {
       sortable: null,
     };
   },
-  props: ["jsonData", "ifArray", "ifObject", "haveRoot", "aggregateEnvs"],
+  props: [
+    "jsonData",
+    "ifArray",
+    "ifObject",
+    "haveRoot",
+    "aggregateEnvs",
+    "jsonClass",
+  ],
   created() {
     this.initViewData();
   },
@@ -219,20 +226,18 @@ export default {
         if (this.jsonData && this.jsonData.length > 0) {
         } else {
           //给一个默认的值
-          this.jsonData.push(
-            {
-              id: 1,
-              name: "根节点",
-              type: "object",
-              description: "",
-              required: false,
-              sample: "",
-              demo: "",
-              childs: [],
-              level: 1,
-              parentId: 0,
-            },
-          );
+          this.jsonData.push({
+            id: 1,
+            name: "根节点",
+            type: "object",
+            description: "",
+            required: false,
+            sample: "",
+            demo: "",
+            childs: [],
+            level: 1,
+            parentId: 0,
+          });
         }
         this.renderData = [this.jsonData[0]];
       } else {
@@ -295,7 +300,9 @@ export default {
     },
     //行拖拽
     rowDrop() {
-      const tbody = document.querySelector(".json-form .el-table__body-wrapper tbody");
+      const tbody = document.querySelector(
+        `.${this.jsonClass} .el-table__body-wrapper tbody`
+      );
       if (!tbody) {
         return;
       }

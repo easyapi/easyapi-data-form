@@ -1,10 +1,19 @@
 <template>
   <div class="content">
     <h1 class="title">easyapi-json-form</h1>
-    <easyapi-json-form :jsonData="jsonData" :haveRoot="haveRoot" :ifArray="ifArray" :ifObject="ifObject" ref="jsonForm"></easyapi-json-form>
+    <easyapi-json-form
+      :jsonData="jsonData"
+      :haveRoot="haveRoot"
+      :ifArray="ifArray"
+      :ifObject="ifObject"
+      :jsonClass="jsonClass"
+      ref="jsonForm"
+    ></easyapi-json-form>
     <div class="tools-btn pure-form">
       <el-button class="pure-button" @click="addNew">addNew</el-button>
-      <el-button class="pure-button" @click="getJSONFormData">getJSONFormData</el-button>
+      <el-button class="pure-button" @click="getJSONFormData"
+        >getJSONFormData</el-button
+      >
       <el-button class="pure-button" @click="exportJSON">exportJSON</el-button>
       <el-button class="pure-button" @click="ifArrayFun">ifArray</el-button>
       <el-button class="pure-button" @click="ifObjectFun">ifObject</el-button>
@@ -20,6 +29,7 @@ export default {
       ifArray: false,
       ifObject: false,
       haveRoot: true,
+      jsonClass: "jsonClass",
       jsonData: [
         {
           id: 1,
@@ -50,7 +60,8 @@ export default {
                   childs: [],
                   level: 3,
                   parentId: 10,
-                }, {
+                },
+                {
                   id: 101,
                   name: "email",
                   type: "string",
@@ -61,7 +72,8 @@ export default {
                   childs: [],
                   level: 3,
                   parentId: 10,
-                }, {
+                },
+                {
                   id: 102,
                   name: "company",
                   type: "object",
@@ -81,20 +93,20 @@ export default {
                       childs: [],
                       level: 4,
                       parentId: 102,
-                    }
+                    },
                   ],
                   level: 3,
                   parentId: 10,
-                }
+                },
               ],
               level: 2,
               parentId: 1,
-            }
+            },
           ],
           level: 1,
           parentId: 0,
-        }
-      ]
+        },
+      ],
     };
   },
   methods: {
@@ -114,12 +126,12 @@ export default {
     },
     ifArrayFun() {
       this.ifArray = !this.ifArray;
-    }
+    },
   },
   mounted: function () {
     this.ifArray = true;
     this.ifObject = true;
-  }
+  },
 };
 </script>
 
@@ -130,5 +142,3 @@ export default {
   margin-top: 20px;
 }
 </style>
-
-
