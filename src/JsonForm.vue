@@ -29,6 +29,7 @@
             v-model="scope.row.name"
             placeholder="参数名"
             :aggregateEnvs="aggregateEnvs"
+            @input="addTable"
           />
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
@@ -59,6 +60,7 @@
             v-if="!scope.row.inArray"
             v-model="scope.row.description"
             placeholder="参数说明"
+            @input="addTable"
           ></el-input>
         </template>
       </el-table-column>
@@ -80,6 +82,7 @@
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             placeholder="参数示例"
             :aggregateEnvs="aggregateEnvs"
+            @input="addTable"
           />
         </template>
       </el-table-column>
@@ -92,6 +95,7 @@
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             placeholder="参数默认值"
             :aggregateEnvs="aggregateEnvs"
+            @input="addTable"
           />
         </template>
       </el-table-column>
@@ -241,7 +245,9 @@ export default {
         }
         this.renderData = [this.jsonData[0]];
       } else {
+        console.log(123123)
         this.renderData = this.jsonData;
+        this.addNew()
       }
       //初始化object
       if (!this.ifObject) {
@@ -431,7 +437,19 @@ export default {
       dealArr(tmp, id);
       this.renderData = tmp;
     },
-
+    addTable() {
+      let item = this.renderData;
+      let length = this.renderData.length - 1;
+      if (
+        item[length].name != "" ||
+        item[length].description != "" ||
+        item[length].sample != "" ||
+        item[length].demo != ""
+      ) {
+        this.addNew();
+      }
+    },
+    // 添加行
     addNew: function () {
       this.renderData.push({
         id: +`${this.renderData.length + 1}${new Date().getTime()}`,
