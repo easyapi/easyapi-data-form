@@ -245,9 +245,7 @@ export default {
         }
         this.renderData = [this.jsonData[0]];
       } else {
-        console.log(123123)
         this.renderData = this.jsonData;
-        this.addNew()
       }
       //初始化object
       if (!this.ifObject) {

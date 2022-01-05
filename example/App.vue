@@ -3,10 +3,10 @@
     <h1 class="title">easyapi-json-form</h1>
     <easyapi-json-form
       :jsonData="jsonData"
-      :haveRoot="haveRoot"
       :ifArray="ifArray"
       :ifObject="ifObject"
       :jsonClass="jsonClass"
+      :haveRoot="haveRoot"
       ref="jsonForm"
     ></easyapi-json-form>
     <div class="tools-btn pure-form">
@@ -131,6 +131,7 @@ export default {
   mounted: function () {
     this.ifArray = true;
     this.ifObject = true;
+    this.addNew();
   },
 };
 </script>
