@@ -170,6 +170,10 @@ export default {
           value: "datetime",
           label: "datetime",
         },
+        {
+          value: "file",
+          label: "file",
+        },
       ],
       renderData: [],
       renderDataRows: [],
