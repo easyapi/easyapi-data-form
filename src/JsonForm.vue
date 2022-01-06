@@ -478,7 +478,10 @@ export default {
           if (Object.prototype.toString.call(jsonData) === "[object Object]") {
             this.parseJson(jsonData, _urlParams);
           }
-          this.renderData = [...this.renderData, ..._urlParams];
+          for (let item of _urlParams) {
+            this.renderData.splice(this.renderData.length - 1, 0, item);
+          }
+          // this.renderData = [...this.renderData, ..._urlParams];
         } catch (e) {
           this.$message.error("请输入合法的JSON");
         }
@@ -486,7 +489,7 @@ export default {
         try {
           let data = quickText.split("?")[1].split("&");
           for (let item of data) {
-            this.renderData.push({
+            this.renderData.splice(this.renderData.length - 1, 0, {
               id: +`${this.renderData.length + 1}${new Date().getTime()}`,
               name: item.split("=")[0],
               type: "string",
