@@ -440,6 +440,7 @@ export default {
       this.renderData = tmp;
     },
     addTable() {
+      if(this.haveRoot) return
       let item = this.renderData;
       let length = this.renderData.length - 1;
       if (
