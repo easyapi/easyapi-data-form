@@ -110,11 +110,13 @@
             >插入
           </el-button>
           <i
-            v-if="scope.row.level !== 1 || !haveRoot"
+            v-if="
+              scope.row.level !== 1 ||
+              (!haveRoot && scope.$index != renderData.length - 1)
+            "
             @click="delRow(scope)"
             class="el-icon-delete"
           ></i>
-          <!-- <el-button type="text" size="small">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -250,6 +252,20 @@ export default {
         this.renderData = [this.jsonData[0]];
       } else {
         this.renderData = this.jsonData;
+
+        if (this.renderData.length == 0) {
+          this.addNew();
+        }
+
+        if (
+          (this.renderData.length > 0 &&
+            this.renderData[this.renderData.length - 1].name != "") ||
+          this.renderData[this.renderData.length - 1].description != "" ||
+          this.renderData[this.renderData.length - 1].demo != "" ||
+          this.renderData[this.renderData.length - 1].sample != ""
+        ) {
+          this.addNew();
+        }
       }
       //初始化object
       if (!this.ifObject) {
@@ -440,7 +456,7 @@ export default {
       this.renderData = tmp;
     },
     addTable() {
-      if(this.haveRoot) return
+      if (this.haveRoot) return;
       let item = this.renderData;
       let length = this.renderData.length - 1;
       if (
