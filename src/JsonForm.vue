@@ -361,7 +361,7 @@ export default {
             let renderDataArrOld = [];
 
             if (oldRow.parentId === 0) {
-              renderDataArr = _this.renderData;
+              renderDataArrNew = _this.renderData;
             } else {
               const expanded = (data) => {
                 if (data && data.length > 0) {

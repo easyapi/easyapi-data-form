@@ -28,7 +28,7 @@ export default {
     return {
       ifArray: false,
       ifObject: false,
-      haveRoot: true,
+      haveRoot: false,
       jsonClass: "jsonClass",
       jsonData: [
         {
