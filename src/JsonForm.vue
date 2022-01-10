@@ -171,11 +171,7 @@ export default {
         {
           value: "datetime",
           label: "datetime",
-        },
-        {
-          value: "file",
-          label: "file",
-        },
+        }
       ],
       renderData: [],
       renderDataRows: [],
@@ -189,6 +185,7 @@ export default {
   props: [
     "jsonData",
     "ifArray",
+    "type",
     "ifObject",
     "haveRoot",
     "aggregateEnvs",
@@ -295,6 +292,22 @@ export default {
             value: "array",
             label: "array",
           });
+        }
+      }
+      //初始化file
+      if (this.type && this.type === 'form-data') {
+        if (this.paramType.filter((x) => x.value === "array").length === 0) {
+          this.paramType.push({
+            value: "file",
+            label: "file",
+          });
+        }
+        
+      } else {
+        for (let i in this.paramType) {
+          if (this.paramType[i].label === "file") {
+            this.paramType.splice(i, 1);
+          }
         }
       }
     },

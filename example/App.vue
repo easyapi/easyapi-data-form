@@ -27,6 +27,7 @@ export default {
   data: function () {
     return {
       ifArray: false,
+      type: "form-data22",
       ifObject: false,
       haveRoot: false,
       jsonClass: "jsonClass",
