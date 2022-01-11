@@ -3,7 +3,6 @@
     <el-table
       :data="renderData"
       :key="tableKey"
-      highlight-current-row
       @current-change="handleCurrentChange"
       row-key="id"
       border
