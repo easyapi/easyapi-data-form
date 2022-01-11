@@ -170,7 +170,7 @@ export default {
         {
           value: "datetime",
           label: "datetime",
-        }
+        },
       ],
       renderData: [],
       renderDataRows: [],
@@ -294,14 +294,15 @@ export default {
         }
       }
       //初始化file
-      if (this.type && this.type === 'form-data') {
+      if (this.type && this.type === "form-data") {
         if (this.paramType.filter((x) => x.value === "array").length === 0) {
-          this.paramType.push({
-            value: "file",
-            label: "file",
-          });
+          if (this.paramType.filter((x) => x.value === "file").length === 0) {
+            this.paramType.push({
+              value: "file",
+              label: "file",
+            });
+          }
         }
-        
       } else {
         for (let i in this.paramType) {
           if (this.paramType[i].label === "file") {
