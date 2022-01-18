@@ -1,6 +1,6 @@
 {
   "name": "easyapi-json-form",
-  "version": "1.1.3",
+  "version": "1.1.5",
   "description": "EasyAPI JSON 表单组件",
   "author": "easyapi",
   "keywords": [
@@ -32,8 +32,8 @@
     "lodash": "^4.17.21",
     "vue": "^2.6.14",
     "vuedraggable": "^2.24.3",
-    "easyapi-js-sandbox": "^1.0.0",
-    "easyapi-env-input": "^1.0.9"
+    "easyapi-js-sandbox": "^1.0.4",
+    "easyapi-env-input": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
