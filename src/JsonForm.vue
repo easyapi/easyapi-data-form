@@ -95,7 +95,7 @@
       <el-table-column prop="options" width="100">
         <template slot="header">
           <div v-if="haveRoot">操作</div>
-          <div v-else class="setting-edit" @click="gotoEdit">批量修改</div>
+          <div v-if="!haveRoot" class="setting-edit" @click="gotoEdit">批量修改</div>
         </template>
         <template slot-scope="scope">
           <el-button
