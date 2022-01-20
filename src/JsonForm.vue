@@ -1,6 +1,7 @@
 <template>
   <div :class="`${jsonClass} json-form`">
     <el-table
+      v-if="!ifEdit"
       :data="renderData"
       :key="tableKey"
       @current-change="handleCurrentChange"
@@ -10,17 +11,10 @@
       :tree-props="{ children: 'childs', hasChildren: 'hasChildren' }"
       ref="singleTable"
       size="small"
+      :class="!haveRoot ? 'json-form-container' : ''"
     >
       <el-table-column prop="name" label="参数名">
         <template slot-scope="scope">
-          <!-- <el-input
-            size="small"
-            style="flex: 1"
-            v-if="!scope.row.inArray"
-            :disabled="scope.row.level === 1 && haveRoot"
-            v-model="scope.row.name"
-            placeholder="参数名"
-          ></el-input> -->
           <easyapi-env-input
             v-if="!scope.row.inArray"
             style="width: 100%"
@@ -98,7 +92,11 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="options" label="操作" width="100">
+      <el-table-column prop="options" width="100">
+        <template slot="header">
+          <div v-if="haveRoot">操作</div>
+          <div v-else class="setting-edit" @click="gotoEdit">批量修改</div>
+        </template>
         <template slot-scope="scope">
           <el-button
             @click="insertRow(scope)"
@@ -119,6 +117,29 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <div class="bulk-edit" v-if="ifEdit">
+      <div class="bulk-edit_header">
+        <div class="format-explain">
+          格式：参数名,类型,说明,必填,示例值,默认值
+        </div>
+        <div>
+          <el-button size="mini" type="primary" @click="confirmEdit"
+            >确认</el-button
+          >
+          <el-button size="mini" @click="ifEdit = false">取消</el-button>
+        </div>
+      </div>
+      <el-input
+        :autosize="{ minRows: 4 }"
+        type="textarea"
+        v-model="renderValue"
+      >
+      </el-input>
+      <div class="bulk-edit_footer">
+        字段之间以英文逗号(,)分隔，多条记录以换行分隔
+      </div>
+    </div>
   </div>
 </template>
 
@@ -130,6 +151,7 @@ export default {
   data: function () {
     return {
       // 字段类型
+      ifEdit: false,
       paramType: [
         {
           value: "double",
@@ -179,6 +201,7 @@ export default {
       selectedRow: null,
       tableKey: "",
       sortable: null,
+      renderValue: "",
     };
   },
   props: [
@@ -199,6 +222,7 @@ export default {
   watch: {
     renderData: {
       handler(newName, oldName) {
+        // console.log(newName, oldName);
         this.$emit("input", this.renderData);
         //将数据设置成一级，用于拖动排序
         this.treeToTile();
@@ -221,6 +245,40 @@ export default {
     },
   },
   methods: {
+    gotoEdit() {
+      this.ifEdit = true;
+      let data = this.renderData.filter(
+        (x) =>
+          x.name != "" || x.description != "" || x.sample != "" || x.demo != ""
+      );
+      let str = "";
+      data.forEach((item) => {
+        str += `${item.name},${item.type},${item.description},${item.required},${item.sample},${item.demo}\n`;
+      });
+      this.renderValue = str;
+    },
+    confirmEdit() {
+      this.renderData.splice(0, this.renderData.length);
+      let data = this.renderValue.split("\n");
+      data.forEach((item) => {
+        if (item != "") {
+          this.renderData.splice(this.renderData.length, 0, {
+            id: +`${this.renderData.length + 1}${new Date().getTime()}`,
+            name: item.split(",")[0],
+            type: item.split(",")[1],
+            description: item.split(",")[2],
+            required: item.split(",")[3] == "false" ? false : true,
+            sample: item.split(",")[4],
+            demo: item.split(",")[5],
+            childs: [],
+            level: 1,
+            parentId: 0,
+          });
+        }
+      });
+      this.ifEdit = false;
+    },
+
     typeChanged(value) {
       if (value.type !== "object" && value.type !== "array") {
         value.childs = [];
@@ -693,6 +751,29 @@ export default {
 };
 </script>
 
+<style lang="less">
+.json-form-container {
+  .el-table__row td:nth-of-type(6) {
+    border-right: none !important;
+  }
+  thead th:nth-of-type(6) {
+    border-right: none !important;
+  }
+  .setting-edit {
+    text-align: right;
+    color: #00b2c8;
+    cursor: pointer;
+    &:hover {
+      color: rgba(0, 178, 200, 0.8);
+    }
+  }
+}
+
+.bulk-edit .el-textarea__inner {
+  border-radius: 0;
+  border-color: #ebeef5;
+}
+</style>
 <style lang="less" scoped>
 .tools {
   padding: 8px 10px;
@@ -734,5 +815,34 @@ export default {
 .el-icon-delete {
   font-size: 18px;
   cursor: pointer;
+}
+
+.bulk-edit {
+  width: 100%;
+  .bulk-edit_header {
+    padding: 0 10px;
+    height: 40px;
+    border: 1px solid #ebeef5;
+    border-bottom: none;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .format-explain {
+      color: #909399;
+      font-weight: 550;
+    }
+  }
+  .bulk-edit_footer {
+    padding: 0 10px;
+    height: 30px;
+    border: 1px solid #ebeef5;
+    border-top: none;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #909399;
+    font-weight: 550;
+  }
 }
 </style>

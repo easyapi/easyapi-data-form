@@ -32,83 +32,92 @@ export default {
       haveRoot: false,
       jsonClass: "jsonClass",
       jsonData: [
-        {
-          id: 1,
-          name: "根节点",
-          type: "object",
-          description: "博客",
-          required: true,
-          sample: "",
-          demo: "",
-          childs: [
-            {
-              id: 10,
-              name: "user",
-              type: "array",
-              description: "作者",
-              required: true,
-              sample: "我和我的祖国",
-              demo: "",
-              childs: [
-                {
-                  id: 100,
-                  name: "name",
-                  type: "object",
-                  description: "名称",
-                  required: true,
-                  sample: "张三",
-                  demo: "",
-                  childs: [],
-                  level: 3,
-                  parentId: 10,
-                },
-                {
-                  id: 101,
-                  name: "email",
-                  type: "string",
-                  description: "邮箱",
-                  required: true,
-                  sample: "zhangsan@qq.com",
-                  demo: "",
-                  childs: [],
-                  level: 3,
-                  parentId: 10,
-                },
-                {
-                  id: 102,
-                  name: "company",
-                  type: "object",
-                  description: "公司",
-                  required: true,
-                  sample: "接口有限公司",
-                  demo: "",
-                  childs: [
-                    {
-                      id: 1021,
-                      name: "address",
-                      type: "string",
-                      description: "公司地址",
-                      required: true,
-                      sample: "中国无锡",
-                      demo: "",
-                      childs: [],
-                      level: 4,
-                      parentId: 102,
-                    },
-                  ],
-                  level: 3,
-                  parentId: 10,
-                },
-              ],
-              level: 2,
-              parentId: 1,
-            },
-          ],
-          level: 1,
-          parentId: 0,
-        },
+        // {
+        //   id: 1,
+        //   name: "根节点",
+        //   type: "object",
+        //   description: "博客",
+        //   required: true,
+        //   sample: "",
+        //   demo: "",
+        //   childs: [
+        //     {
+        //       id: 10,
+        //       name: "user",
+        //       type: "array",
+        //       description: "作者",
+        //       required: true,
+        //       sample: "我和我的祖国",
+        //       demo: "",
+        //       childs: [
+        //         {
+        //           id: 100,
+        //           name: "name",
+        //           type: "object",
+        //           description: "名称",
+        //           required: true,
+        //           sample: "张三",
+        //           demo: "",
+        //           childs: [],
+        //           level: 3,
+        //           parentId: 10,
+        //         },
+        //         {
+        //           id: 101,
+        //           name: "email",
+        //           type: "string",
+        //           description: "邮箱",
+        //           required: true,
+        //           sample: "zhangsan@qq.com",
+        //           demo: "",
+        //           childs: [],
+        //           level: 3,
+        //           parentId: 10,
+        //         },
+        //         {
+        //           id: 102,
+        //           name: "company",
+        //           type: "object",
+        //           description: "公司",
+        //           required: true,
+        //           sample: "接口有限公司",
+        //           demo: "",
+        //           childs: [
+        //             {
+        //               id: 1021,
+        //               name: "address",
+        //               type: "string",
+        //               description: "公司地址",
+        //               required: true,
+        //               sample: "中国无锡",
+        //               demo: "",
+        //               childs: [],
+        //               level: 4,
+        //               parentId: 102,
+        //             },
+        //           ],
+        //           level: 3,
+        //           parentId: 10,
+        //         },
+        //       ],
+        //       level: 2,
+        //       parentId: 1,
+        //     },
+        //   ],
+        //   level: 1,
+        //   parentId: 0,
+        // },
       ],
     };
+  },
+  watch: {
+    jsonData: {
+      handler(newName, oldName) {
+        console.log(this.jsonData);
+      },
+      immediate: true,
+      deep: true,
+    },
   },
   methods: {
     addNew() {
@@ -132,7 +141,7 @@ export default {
   mounted: function () {
     this.ifArray = true;
     this.ifObject = true;
-    this.addNew();
+    // this.addNew();
   },
 };
 </script>
