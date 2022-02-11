@@ -48,13 +48,14 @@
       </el-table-column>
       <el-table-column prop="description" label="说明">
         <template slot-scope="scope">
-          <el-input
-            size="small"
+          <easyapi-env-input
             v-if="!scope.row.inArray"
+            style="width: 100%"
             v-model="scope.row.description"
             placeholder="参数说明"
+            :aggregateEnvs="aggregateEnvs"
             @input="addTable"
-          ></el-input>
+          />
         </template>
       </el-table-column>
       <el-table-column prop="required" label="必填" width="70">
@@ -95,7 +96,9 @@
       <el-table-column prop="options" width="100">
         <template slot="header">
           <div v-if="haveRoot">操作</div>
-          <div v-if="!haveRoot" class="setting-edit" @click="gotoEdit">批量修改</div>
+          <div v-if="!haveRoot" class="setting-edit" @click="gotoEdit">
+            批量修改
+          </div>
         </template>
         <template slot-scope="scope">
           <el-button
@@ -154,20 +157,20 @@ export default {
       ifEdit: false,
       paramType: [
         {
-          value: "double",
-          label: "double",
+          value: "string",
+          label: "string",
         },
         {
           value: "int",
           label: "int",
         },
         {
-          value: "string",
-          label: "string",
-        },
-        {
           value: "boolean",
           label: "boolean",
+        },
+        {
+          value: "double",
+          label: "double",
         },
         {
           value: "byte",
@@ -496,7 +499,7 @@ export default {
         // }`,
         id: +`${scope.row.childs.length + 1}${new Date().getTime()}`,
         name: "",
-        type: "int",
+        type: "string",
         description: "",
         required: false,
         sample: "",
