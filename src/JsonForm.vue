@@ -11,7 +11,7 @@
       :tree-props="{ children: 'childs', hasChildren: 'hasChildren' }"
       ref="singleTable"
       size="small"
-      :class="!haveRoot ? 'json-form-container' : ''"
+      class="json-form-container"
     >
       <el-table-column prop="name" label="参数名">
         <template slot-scope="scope">
@@ -95,10 +95,7 @@
       </el-table-column>
       <el-table-column prop="options" width="100">
         <template slot="header">
-          <div v-if="haveRoot">操作</div>
-          <div v-if="!haveRoot" class="setting-edit" @click="gotoEdit">
-            批量修改
-          </div>
+          <div class="setting-edit" @click="gotoEdit">批量修改</div>
         </template>
         <template slot-scope="scope">
           <el-button
@@ -250,16 +247,42 @@ export default {
   methods: {
     gotoEdit() {
       this.ifEdit = true;
-      let data = this.renderData.filter(
-        (x) =>
-          x.name != "" || x.description != "" || x.sample != "" || x.demo != ""
-      );
-      let str = "";
-      data.forEach((item) => {
-        str += `${item.name},${item.type},${item.description},${item.required},${item.sample},${item.demo}\n`;
-      });
-      this.renderValue = str;
+      if (!this.haveRoot) {
+        let data = this.renderData.filter(
+          (x) =>
+            x.name != "" ||
+            x.description != "" ||
+            x.sample != "" ||
+            x.demo != ""
+        );
+        let str = "";
+        data.forEach((item) => {
+          str += `${item.name},${item.type},${item.description},${item.required},${item.sample},${item.demo}\n`;
+        });
+        this.renderValue = str;
+        return;
+      } else {
+        let arr = [];
+        this.getStr(this.renderData[0], arr);
+        let str = "";
+        arr.map((item) => {
+          str += `${item}\n`;
+        });
+        this.renderValue = str;
+      }
     },
+
+    getStr(v, arr) {
+      if (v.childs.length > 0) {
+        v.childs.forEach((item) => {
+          arr.push(
+            `${item.name},${item.type},${item.description},${item.required},${item.sample},${item.demo}`
+          );
+          this.getStr(item, arr);
+        });
+      }
+    },
+
     confirmEdit() {
       this.renderData.splice(0, this.renderData.length);
       let data = this.renderValue.split("\n");
@@ -570,7 +593,11 @@ export default {
             this.parseJson(jsonData, _urlParams);
           }
           for (let item of _urlParams) {
-            this.renderData.splice(this.renderData.length - 1, 0, item);
+            if (!this.haveRoot) {
+              this.renderData.splice(this.renderData.length - 1, 0, item);
+            } else {
+              this.renderData[0].childs.push(item);
+            }
           }
           // this.renderData = [...this.renderData, ..._urlParams];
         } catch (e) {
@@ -580,19 +607,37 @@ export default {
         try {
           let data = quickText.split("?")[1].split("&");
           for (let item of data) {
-            this.renderData.splice(this.renderData.length - 1, 0, {
-              id: +`${this.renderData.length + 1}${new Date().getTime()}`,
-              name: item.split("=")[0],
-              type: "string",
-              category: "Query",
-              description: "",
-              required: false,
-              sample: item.split("=")[1],
-              demo: "",
-              childs: [],
-              level: 1,
-              parentId: 0,
-            });
+            if (!this.haveRoot) {
+              this.renderData.splice(this.renderData.length - 1, 0, {
+                id: +`${this.renderData.length + 1}${new Date().getTime()}`,
+                name: item.split("=")[0],
+                type: "string",
+                category: "Query",
+                description: "",
+                required: false,
+                sample: item.split("=")[1],
+                demo: "",
+                childs: [],
+                level: 1,
+                parentId: 0,
+              });
+            } else {
+              this.renderData[0].childs.push({
+                id: +`${
+                  this.renderData[0].childs.length + 1
+                }${new Date().getTime()}`,
+                name: item.split("=")[0],
+                type: "string",
+                category: "Query",
+                description: "",
+                required: false,
+                sample: item.split("=")[1],
+                demo: "",
+                childs: [],
+                level: this.renderData[0].childs.length + 1,
+                parentId: 0,
+              });
+            }
           }
         } catch (e) {
           this.$message.error("请输入合法的URL");
