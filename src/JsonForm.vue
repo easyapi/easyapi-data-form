@@ -67,12 +67,12 @@
           ></el-checkbox>
         </template>
       </el-table-column>
-      <el-table-column prop="sample" label="示例">
+      <el-table-column prop="demo" label="示例">
         <template slot-scope="scope">
           <easyapi-env-input
             v-if="!scope.row.inArray"
             style="width: 100%"
-            v-model="scope.row.sample"
+            v-model="scope.row.demo"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             placeholder="参数示例"
             :aggregateEnvs="aggregateEnvs"
@@ -80,12 +80,12 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="demo" label="默认值">
+      <el-table-column prop="defaultValue" label="默认值">
         <template slot-scope="scope">
           <easyapi-env-input
             v-if="!scope.row.inArray"
             style="width: 100%"
-            v-model="scope.row.demo"
+            v-model="scope.row.defaultValue"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             placeholder="参数默认值"
             :aggregateEnvs="aggregateEnvs"
@@ -252,12 +252,12 @@ export default {
           (x) =>
             x.name != "" ||
             x.description != "" ||
-            x.sample != "" ||
-            x.demo != ""
+            x.demo != "" ||
+            x.defaultValue != ""
         );
         let str = "";
         data.forEach((item) => {
-          str += `${item.name},${item.type},${item.description},${item.required},${item.sample},${item.demo}\n`;
+          str += `${item.name},${item.type},${item.description},${item.required},${item.demo},${item.defaultValue}\n`;
         });
         this.renderValue = str;
         return;
@@ -276,7 +276,7 @@ export default {
       if (v.childs.length > 0) {
         v.childs.forEach((item) => {
           arr.push(
-            `${item.name},${item.type},${item.description},${item.required},${item.sample},${item.demo}`
+            `${item.name},${item.type},${item.description},${item.required},${item.demo},${item.defaultValue}`
           );
           this.getStr(item, arr);
         });
@@ -294,8 +294,8 @@ export default {
             type: item.split(",")[1],
             description: item.split(",")[2],
             required: item.split(",")[3] == "false" ? false : true,
-            sample: item.split(",")[4],
-            demo: item.split(",")[5],
+            demo: item.split(",")[4],
+            defaultValue: item.split(",")[5],
             childs: [],
             level: 1,
             parentId: 0,
@@ -322,8 +322,8 @@ export default {
             type: "object",
             description: "",
             required: false,
-            sample: "",
             demo: "",
+            defaultValue: "",
             childs: [],
             level: 1,
             parentId: 0,
@@ -341,8 +341,8 @@ export default {
           (this.renderData.length > 0 &&
             this.renderData[this.renderData.length - 1].name != "") ||
           this.renderData[this.renderData.length - 1].description != "" ||
-          this.renderData[this.renderData.length - 1].demo != "" ||
-          this.renderData[this.renderData.length - 1].sample != ""
+          this.renderData[this.renderData.length - 1].defaultValue != "" ||
+          this.renderData[this.renderData.length - 1].demo != ""
         ) {
           this.addNew();
         }
@@ -525,8 +525,8 @@ export default {
         type: "string",
         description: "",
         required: false,
-        sample: "",
         demo: "",
+        defaultValue: "",
         childs: [],
         level: scope.row.level + 1,
         parentId: scope.row.id,
@@ -559,8 +559,8 @@ export default {
       if (
         item[length].name != "" ||
         item[length].description != "" ||
-        item[length].sample != "" ||
-        item[length].demo != ""
+        item[length].demo != "" ||
+        item[length].defaultValue != ""
       ) {
         this.addNew();
       }
@@ -573,8 +573,8 @@ export default {
         type: "string",
         description: "",
         required: false,
-        sample: "",
         demo: "",
+        defaultValue: "",
         childs: [],
         level: 1,
         parentId: 0,
@@ -615,8 +615,8 @@ export default {
                 category: "Query",
                 description: "",
                 required: false,
-                sample: item.split("=")[1],
-                demo: "",
+                demo: item.split("=")[1],
+                defaultValue: "",
                 childs: [],
                 level: 1,
                 parentId: 0,
@@ -631,8 +631,8 @@ export default {
                 category: "Query",
                 description: "",
                 required: false,
-                sample: item.split("=")[1],
-                demo: "",
+                demo: item.split("=")[1],
+                defaultValue: "",
                 childs: [],
                 level: this.renderData[0].childs.length + 1,
                 parentId: 0,
@@ -656,8 +656,8 @@ export default {
             type: "array",
             description: "",
             required: false,
-            sample: "",
             demo: "",
+            defaultValue: "",
             childs: [],
           };
           this.parseArray(el, obj.childs);
@@ -671,8 +671,8 @@ export default {
             type: "object",
             description: "",
             required: false,
-            sample: "",
             demo: "",
+            defaultValue: "",
             childs: [],
             inArray: true,
           };
@@ -688,8 +688,8 @@ export default {
               type: typeof el,
               description: "",
               required: false,
-              sample: el,
               demo: el,
+              defaultValue: el,
               childs: [],
             });
           }
@@ -709,8 +709,8 @@ export default {
             type: "object",
             description: "",
             required: false,
-            sample: "",
             demo: "",
+            defaultValue: "",
             childs: [],
           };
           this.parseJson(data[key], obj.childs);
@@ -726,8 +726,8 @@ export default {
             type: "array",
             description: "",
             required: false,
-            sample: "",
             demo: "",
+            defaultValue: "",
             childs: [],
           };
           this.parseArray(data[key], obj.childs);
@@ -742,8 +742,8 @@ export default {
               type: typeof data[key],
               description: "",
               required: false,
-              sample: data[key],
               demo: data[key],
+              defaultValue: data[key],
               childs: [],
             });
           }
@@ -769,7 +769,7 @@ export default {
             json[el.name] = {};
             getJson(el.childs, json[el.name]);
           } else {
-            json[el.name] = el.sample;
+            json[el.name] = el.demo;
           }
         });
       }
@@ -786,7 +786,7 @@ export default {
             arr.push(tmpObj);
             getJson(el.childs, tmpObj);
           } else {
-            arr.push(el.sample);
+            arr.push(el.demo);
           }
         });
       }
