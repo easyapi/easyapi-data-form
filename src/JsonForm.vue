@@ -795,6 +795,118 @@ export default {
       getJson(this.renderData, json);
       return json;
     },
+    importJSON: function (json) {
+      //如果是数组，只显示第一个
+      if (json.constructor === Array) {
+        json = [json[0]];
+      }
+      //加上根节点
+      let newData = {
+        根节点: json,
+      };
+      this.treeToTile();
+      this.renderData = this.jsonParse(newData);
+    },
+
+    jsonParse: function (jsonStr) {
+      if (!jsonStr || jsonStr.length == 0) {
+        return [];
+      }
+      const parseJson = (json, id) => {
+        let result = [];
+        let keys = Object.keys(json);
+        keys.forEach((k, index) => {
+          let val = json[k];
+          let parsedVal = val;
+
+          if (this.getType(val) === "object") {
+            parsedVal = parseJson(val, id + 1);
+          } else if (this.getType(val) === "array") {
+            parsedVal = parseArray([val[0]], id + 1);
+          }
+
+          let opt = {
+            id: id,
+            name: k,
+            type: this.getType(val),
+            description: this.renderDataRows.filter(x => x.name == k).length > 0 ? this.renderDataRows.filter(x => x.name == k)[0].description : ""
+          };
+
+          if (opt.type === "array" || opt.type === "object") {
+            opt.childs = parsedVal;
+            opt.demo = null;
+          } else {
+            opt.childs = null;
+            opt.demo = parsedVal + "";
+          }
+
+          result.push(opt);
+        });
+        return result;
+      };
+
+      //
+      const parseArray = (arrayObj, id) => {
+        const result = [];
+        for (let i = 0; i < arrayObj.length; ++i) {
+          let val = arrayObj[i];
+          let parsedVal = val;
+          if (this.getType(val) === "object") {
+            parsedVal = parseJson(val, id + 1);
+          } else if (this.getType(val) === "array") {
+            parsedVal = parseArray([val[0]], id + 1);
+          }
+
+          let opt = {
+            // name: null,3
+            id: id,
+            name: val,
+            type: this.getType(val),
+            description: this.renderDataRows.filter(x => x.name == val).length > 0 ? this.renderDataRows.filter(x => x.name == val)[0].description : ""
+          };
+
+          if (opt.type === "array" || opt.type === "object") {
+            opt.childs = parsedVal;
+            opt.demo = null;
+          } else {
+            opt.childs = null;
+            opt.demo = parsedVal;
+          }
+
+          result.push(opt);
+        }
+        return result;
+      };
+
+      // --
+      const parseBody = (json) => {
+        return parseJson(json);
+      };
+
+      return parseBody(jsonStr);
+    },
+
+    getType: function (obj) {
+      switch (Object.prototype.toString.call(obj)) {
+        case "[object Array]":
+          return "array";
+          break;
+        case "[object Object]":
+          return "object";
+          break;
+        case "[object Number]":
+          return obj % 1 === 0 ? "int" : "double";
+        case "[object Null]":
+        case "[object Function]":
+        case "[object Undefined]":
+          return "string";
+          break;
+        default:
+          return typeof obj;
+          break;
+      }
+    },
+
   },
 };
 </script>

@@ -17,6 +17,8 @@
       <el-button class="pure-button" @click="exportJSON">exportJSON</el-button>
       <el-button class="pure-button" @click="ifArrayFun">ifArray</el-button>
       <el-button class="pure-button" @click="ifObjectFun">ifObject</el-button>
+      <el-button class="pure-button" @click="importJSON">importJSON</el-button>
+
     </div>
   </div>
 </template>
@@ -137,6 +139,21 @@ export default {
     ifArrayFun() {
       this.ifArray = !this.ifArray;
     },
+    importJSON: function () {
+      this.$refs.jsonForm.importJSON(
+      //   [{
+      //   aaa: 123,
+      //   bbb: {
+      //     ccc: 32,
+      //     ddd: 45,
+      //     fff: [123, 4556, 67]
+      //   }
+      // }]
+      {
+        aaa: 123
+      }
+      );
+    }
   },
   mounted: function () {
     this.ifArray = true;
