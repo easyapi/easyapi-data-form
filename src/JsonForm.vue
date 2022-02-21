@@ -1,5 +1,5 @@
 <template>
-  <div :class="`${jsonClass} json-form`">
+  <div :class="`${jsonClass} data-form`">
     <el-table
       v-if="!ifEdit"
       :data="renderData"
@@ -11,7 +11,7 @@
       :tree-props="{ children: 'childs', hasChildren: 'hasChildren' }"
       ref="singleTable"
       size="small"
-      class="json-form-container"
+      class="data-form-container"
     >
       <el-table-column prop="name" label="参数名">
         <template slot-scope="scope">
@@ -912,7 +912,7 @@ export default {
 </script>
 
 <style lang="less">
-.json-form-container {
+.data-form-container {
   .el-table__row td:nth-of-type(6) {
     border-right: none !important;
   }

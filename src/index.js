@@ -15,7 +15,7 @@ const install = (Vue) => {
   if (install.installed) {
     return;
   }
-  Vue.component("easyapi-json-form", JsonForm);
+  Vue.component("easyapi-data-form", JsonForm);
 };
 
 export default install;

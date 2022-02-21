@@ -1,14 +1,14 @@
 <template>
   <div class="content">
-    <h1 class="title">easyapi-json-form</h1>
-    <easyapi-json-form
+    <h1 class="title">easyapi-data-form</h1>
+    <easyapi-data-form
       :jsonData="jsonData"
       :ifArray="ifArray"
       :ifObject="ifObject"
       :jsonClass="jsonClass"
       :haveRoot="haveRoot"
       ref="jsonForm"
-    ></easyapi-json-form>
+    ></easyapi-data-form>
     <div class="tools-btn pure-form">
       <el-button class="pure-button" @click="addNew">addNew</el-button>
       <el-button class="pure-button" @click="getJSONFormData"

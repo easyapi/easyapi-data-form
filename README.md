@@ -1,16 +1,16 @@
-# EasyAPI JSON 表单组件
+# EasyAPI（JSON、XML）表单组件
 
 ## 组件命名
 
-easyapi-json-form
+easyapi-data-form
 
 ## 组件描述
 
-EasyAPI JSON 表单编辑组件，使用表格形式编辑 JSON 数据，另外还包括数据类型（字段类型），数据注释（字段描述），是否必填，示例值，默认值。
+EasyAPI（JSON、XML）表单编辑组件，使用表格形式编辑 JSON、XML 数据，另外还包括数据类型（字段类型），数据注释（字段描述），是否必填，示例值，默认值。
 
 ## 组件效果图
 
-![image](https://qiniu.easyapi.com/easyapi-json-form.png)
+![image](https://qiniu.easyapi.com/easyapi-data-form.png)
 
 > 本组件重点在于下一级数据的显示风格
 
@@ -65,7 +65,7 @@ _数据类型（字段类型）_
 
 ```
 <template>
-  <easyapi-json-form :jsonData="jsonData" v-model="jsonData"></easyapi-json-form>
+  <easyapi-data-form :jsonData="jsonData" v-model="jsonData"></easyapi-data-form>
 </template>
 
 <script>
