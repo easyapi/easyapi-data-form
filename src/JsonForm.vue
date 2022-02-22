@@ -104,7 +104,7 @@
             size="small"
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
             style="margin-right: 10px"
-          >插入
+            >插入
           </el-button>
           <i
             v-if="
@@ -125,9 +125,8 @@
         </div>
         <div>
           <el-button size="mini" type="primary" @click="confirmEdit"
-          >确认
-          </el-button
-          >
+            >确认
+          </el-button>
           <el-button size="mini" @click="ifEdit = false">取消</el-button>
         </div>
       </div>
@@ -146,7 +145,7 @@
 
 <script>
 import Sortable from "sortablejs";
-import {fillId} from "./utils/fill";
+import { fillId } from "./utils/fill";
 
 export default {
   name: "JsonForm",
@@ -265,7 +264,8 @@ export default {
         return;
       } else {
         let arr = [];
-        this.getStr(this.renderData[0], arr);
+        let num = 0;
+        this.getStr(this.renderData[0], arr, num);
         let str = "";
         arr.map((item) => {
           str += `${item}\n`;
@@ -274,36 +274,49 @@ export default {
       }
     },
 
-    getStr(v, arr) {
+    getStr(v, arr, num) {
       if (v.childs.length > 0) {
-        v.childs.forEach((item) => {
-          arr.push(
-            `${item.name},${item.type},${item.description},${item.required},${item.demo},${item.defaultValue}`
-          );
-          this.getStr(item, arr);
+        let symbol = "";
+        for (var i = 0; i < num; i++) {
+          symbol += ">";
+        }
+        v.childs.forEach((item, index) => {
+          if (num == 0) {
+            arr.push(
+              `${item.name},${item.type},${item.description},${item.required},${item.demo},${item.defaultValue}`
+            );
+          } else {
+            arr.push(
+              `${symbol} ${item.name},${item.type},${item.description},${item.required},${item.demo},${item.defaultValue}`
+            );
+          }
+          this.getStr(item, arr, Number(num + 1));
         });
       }
     },
 
     confirmEdit() {
-      this.renderData.splice(0, this.renderData.length);
-      let data = this.renderValue.split("\n");
-      data.forEach((item) => {
-        if (item != "") {
-          this.renderData.splice(this.renderData.length, 0, {
-            id: +`${this.renderData.length + 1}${new Date().getTime()}`,
-            name: item.split(",")[0],
-            type: item.split(",")[1],
-            description: item.split(",")[2],
-            required: item.split(",")[3] == "false" ? false : true,
-            demo: item.split(",")[4],
-            defaultValue: item.split(",")[5],
-            childs: [],
-            level: 1,
-            parentId: 0,
-          });
-        }
-      });
+      if (!this.haveRoot) {
+        this.renderData.splice(0, this.renderData.length);
+        let data = this.renderValue.split("\n");
+        data.forEach((item) => {
+          if (item != "") {
+            this.renderData.splice(this.renderData.length, 0, {
+              id: +`${this.renderData.length + 1}${new Date().getTime()}`,
+              name: item.split(",")[0],
+              type: item.split(",")[1],
+              description: item.split(",")[2],
+              required: item.split(",")[3] == "false" ? false : true,
+              demo: item.split(",")[4],
+              defaultValue: item.split(",")[5],
+              childs: [],
+              level: 1,
+              parentId: 0,
+            });
+          }
+        });
+      } else {
+      }
       this.ifEdit = false;
     },
 
@@ -439,7 +452,7 @@ export default {
         //   put: false
         // },
         // 拖拽移动的时候
-        onMove: function ({dragged, related}) {
+        onMove: function ({ dragged, related }) {
           const oldRow = _this.renderDataRows[dragged.rowIndex];
           const newRow = _this.renderDataRows[related.rowIndex];
           // if (
@@ -450,7 +463,7 @@ export default {
             return false;
           }
         },
-        onEnd({newIndex, oldIndex}) {
+        onEnd({ newIndex, oldIndex }) {
           const oldRow = _this.renderDataRows[oldIndex];
           const newRow = _this.renderDataRows[newIndex];
 
@@ -831,7 +844,10 @@ export default {
             id: id,
             name: k,
             type: this.getType(val),
-            description: this.renderDataRows.filter(x => x.name == k).length > 0 ? this.renderDataRows.filter(x => x.name == k)[0].description : ""
+            description:
+              this.renderDataRows.filter((x) => x.name == k).length > 0
+                ? this.renderDataRows.filter((x) => x.name == k)[0].description
+                : "",
           };
 
           if (opt.type === "array" || opt.type === "object") {
@@ -864,7 +880,11 @@ export default {
             id: id,
             name: val,
             type: this.getType(val),
-            description: this.renderDataRows.filter(x => x.name == val).length > 0 ? this.renderDataRows.filter(x => x.name == val)[0].description : ""
+            description:
+              this.renderDataRows.filter((x) => x.name == val).length > 0
+                ? this.renderDataRows.filter((x) => x.name == val)[0]
+                    .description
+                : "",
           };
 
           if (opt.type === "array" || opt.type === "object") {
@@ -908,7 +928,6 @@ export default {
           break;
       }
     },
-
   },
 };
 </script>
