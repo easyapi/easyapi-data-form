@@ -24,6 +24,7 @@
 </template>
 
 <script>
+
 export default {
   name: "app",
   data: function () {
@@ -158,7 +159,6 @@ export default {
   mounted: function () {
     this.ifArray = true;
     this.ifObject = true;
-    // this.addNew();
   },
 };
 </script>

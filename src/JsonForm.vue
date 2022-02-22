@@ -104,7 +104,7 @@
             size="small"
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
             style="margin-right: 10px"
-            >插入
+          >插入
           </el-button>
           <i
             v-if="
@@ -125,7 +125,8 @@
         </div>
         <div>
           <el-button size="mini" type="primary" @click="confirmEdit"
-            >确认</el-button
+          >确认
+          </el-button
           >
           <el-button size="mini" @click="ifEdit = false">取消</el-button>
         </div>
@@ -145,6 +146,7 @@
 
 <script>
 import Sortable from "sortablejs";
+import {fillId} from "./utils/fill";
 
 export default {
   name: "JsonForm",
@@ -437,7 +439,7 @@ export default {
         //   put: false
         // },
         // 拖拽移动的时候
-        onMove: function ({ dragged, related }) {
+        onMove: function ({dragged, related}) {
           const oldRow = _this.renderDataRows[dragged.rowIndex];
           const newRow = _this.renderDataRows[related.rowIndex];
           // if (
@@ -448,7 +450,7 @@ export default {
             return false;
           }
         },
-        onEnd({ newIndex, oldIndex }) {
+        onEnd({newIndex, oldIndex}) {
           const oldRow = _this.renderDataRows[oldIndex];
           const newRow = _this.renderDataRows[newIndex];
 
@@ -916,14 +918,17 @@ export default {
   .el-table__row td:nth-of-type(6) {
     border-right: none !important;
   }
+
   thead th:nth-of-type(6) {
     border-right: none !important;
   }
+
   .setting-edit {
     display: inline-block;
     text-align: right;
     color: #00b2c8;
     cursor: pointer;
+
     &:hover {
       color: rgba(0, 178, 200, 0.8);
     }
@@ -973,6 +978,7 @@ export default {
     margin-right: 5px;
   }
 }
+
 .el-icon-delete {
   font-size: 18px;
   cursor: pointer;
@@ -980,6 +986,7 @@ export default {
 
 .bulk-edit {
   width: 100%;
+
   .bulk-edit_header {
     padding: 0 10px;
     height: 40px;
@@ -989,11 +996,13 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .format-explain {
       color: #909399;
       font-weight: 550;
     }
   }
+
   .bulk-edit_footer {
     padding: 0 10px;
     height: 30px;
