@@ -295,6 +295,10 @@ export default {
       }
     },
 
+    getValue(v, arr, level) {
+      console.log(v, arr, level);
+    },
+
     confirmEdit() {
       if (!this.haveRoot) {
         this.renderData.splice(0, this.renderData.length);
@@ -316,6 +320,16 @@ export default {
           }
         });
       } else {
+        // this.renderData[0].childs.splice(0, this.renderData.length);
+        // let data = this.renderValue.split("\n");
+        // let arr = [];
+        // data.forEach((item) => {
+        //   if (item.indexOf(">") != -1) {
+        //     arr.push(item.split(" ")[0].length);
+        //   }
+        // });
+        // let maxLevel = Math.max(...arr);
+        // this.getValue(this.renderData[0].childs, data, maxLevel);
       }
       this.ifEdit = false;
     },
