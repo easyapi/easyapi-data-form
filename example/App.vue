@@ -41,8 +41,8 @@ export default {
           type: "object",
           description: "博客",
           required: true,
-          demo: "",
-          defaultValue: "",
+          demo: null,
+          // defaultValue: "",
           childs: [
             {
               // id: 10,
