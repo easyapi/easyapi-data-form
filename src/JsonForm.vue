@@ -93,7 +93,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="options" width="100">
+      <el-table-column prop="options" width="100" align="right">
         <template slot="header">
           <div class="setting-edit" @click="gotoEdit">批量修改</div>
         </template>
@@ -920,6 +920,7 @@ export default {
     border-right: none !important;
   }
   .setting-edit {
+    display: inline-block;
     text-align: right;
     color: #00b2c8;
     cursor: pointer;
