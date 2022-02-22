@@ -344,9 +344,9 @@ export default {
             parentId: 0,
           });
         }
-        this.renderData = [this.jsonData[0]];
+        this.renderData = fillId([this.jsonData[0]]);
       } else {
-        this.renderData = this.jsonData;
+        this.renderData = fillId(this.jsonData);
 
         if (this.renderData.length == 0) {
           this.addNew();
@@ -817,17 +817,17 @@ export default {
       }
       //加上根节点
       let newData = {
-        根节点: json,
+        根节点: json
       };
       this.treeToTile();
-      this.renderData = this.jsonParse(newData);
+      this.renderData = fillId(this.jsonParse(newData));
     },
 
     jsonParse: function (jsonStr) {
       if (!jsonStr || jsonStr.length == 0) {
         return [];
       }
-      const parseJson = (json, id) => {
+      const parseJson = (json) => {
         let result = [];
         let keys = Object.keys(json);
         keys.forEach((k, index) => {
@@ -835,15 +835,15 @@ export default {
           let parsedVal = val;
 
           if (this.getType(val) === "object") {
-            parsedVal = parseJson(val, id + 1);
+            parsedVal = parseJson(val);
           } else if (this.getType(val) === "array") {
-            parsedVal = parseArray([val[0]], id + 1);
+            parsedVal = parseArray([val[0]]);
           }
 
           let opt = {
-            id: id,
             name: k,
             type: this.getType(val),
+            defaultValue: "",
             description:
               this.renderDataRows.filter((x) => x.name == k).length > 0
                 ? this.renderDataRows.filter((x) => x.name == k)[0].description
@@ -852,7 +852,7 @@ export default {
 
           if (opt.type === "array" || opt.type === "object") {
             opt.childs = parsedVal;
-            opt.demo = null;
+            opt.demo = "";
           } else {
             opt.childs = null;
             opt.demo = parsedVal + "";
@@ -864,22 +864,22 @@ export default {
       };
 
       //
-      const parseArray = (arrayObj, id) => {
+      const parseArray = (arrayObj) => {
         const result = [];
         for (let i = 0; i < arrayObj.length; ++i) {
           let val = arrayObj[i];
           let parsedVal = val;
           if (this.getType(val) === "object") {
-            parsedVal = parseJson(val, id + 1);
+            parsedVal = parseJson(val);
           } else if (this.getType(val) === "array") {
-            parsedVal = parseArray([val[0]], id + 1);
+            parsedVal = parseArray([val[0]]);
           }
 
           let opt = {
             // name: null,3
-            id: id,
             name: val,
             type: this.getType(val),
+            defaultValue: "",
             description:
               this.renderDataRows.filter((x) => x.name == val).length > 0
                 ? this.renderDataRows.filter((x) => x.name == val)[0]
@@ -889,7 +889,7 @@ export default {
 
           if (opt.type === "array" || opt.type === "object") {
             opt.childs = parsedVal;
-            opt.demo = null;
+            opt.demo = "";
           } else {
             opt.childs = null;
             opt.demo = parsedVal;
