@@ -14,6 +14,9 @@ let fillId = function (array) {
  */
 function childs(array, parentId, level) {
   for (let i in array) {
+    if(array[i].demo == null){
+      array[i].demo = "";
+    }
     array[i].id = parseInt(level + "" + i);
     array[i].parentId = parentId;
     if (array[i].childs && array[i].childs.length > 0) {

@@ -36,16 +36,16 @@ export default {
       jsonClass: "jsonClass",
       jsonData: [
         {
-          id: 1,
+          // id: 1,
           name: "根节点",
           type: "object",
           description: "博客",
           required: true,
-          demo: "",
-          defaultValue: "",
+          demo: null,
+          // defaultValue: "",
           childs: [
             {
-              id: 10,
+              // id: 10,
               name: "user",
               type: "array",
               description: "作者",
@@ -54,7 +54,7 @@ export default {
               defaultValue: "",
               childs: [
                 {
-                  id: 100,
+                  // id: 100,
                   name: "name",
                   type: "object",
                   description: "名称",
@@ -66,7 +66,7 @@ export default {
                   parentId: 10,
                 },
                 {
-                  id: 101,
+                  // id: 101,
                   name: "email",
                   type: "string",
                   description: "邮箱",
@@ -78,7 +78,7 @@ export default {
                   parentId: 10,
                 },
                 {
-                  id: 102,
+                  // id: 102,
                   name: "company",
                   type: "object",
                   description: "公司",
@@ -87,7 +87,7 @@ export default {
                   defaultValue: "",
                   childs: [
                     {
-                      id: 1021,
+                      // id: 1021,
                       name: "address",
                       type: "string",
                       description: "公司地址",
