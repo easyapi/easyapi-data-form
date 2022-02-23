@@ -1038,8 +1038,27 @@ export default {
     border-right: none !important;
   }
 
-  .el-table__row td {
-    padding: 4px 0 !important;
+  .el-table__row {
+    td {
+      padding: 4px 0 !important;
+    }
+    &:hover td {
+      .env-input-container {
+        -webkit-transition: background-color .25s ease;
+        transition: background-color 0.25s ease;
+        background-color: #f6f6f6 !important;
+        .is-disabled[data-v-6d9ac156] {
+          -webkit-transition: background-color .25s ease;
+          transition: background-color 0.25s ease;
+          background-color: #f6f6f6 !important;
+        }
+      }
+      .el-input__inner {
+        -webkit-transition: background-color .25s ease;
+        transition: background-color 0.25s ease;
+        background-color: #f6f6f6 !important;
+      }
+    }
   }
 
   thead th:nth-of-type(6) {
@@ -1073,11 +1092,12 @@ export default {
       height: 25px !important;
       line-height: 25px !important;
     }
-    .is-disabled[data-v-6d9ac156]{
-        background-color: #fff !important;
-        color: #909399;
-      }
+    .is-disabled[data-v-6d9ac156] {
+      background-color: #fff !important;
+      color: #909399;
+    }
   }
+
   .el-input--small {
     .el-input__inner {
       border: 0px solid #000 !important;
@@ -1088,7 +1108,8 @@ export default {
       line-height: 25px !important;
     }
   }
-  .el-button--small{
+
+  .el-button--small {
     padding: 0px;
   }
 }
