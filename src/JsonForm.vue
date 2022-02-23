@@ -1038,6 +1038,10 @@ export default {
     border-right: none !important;
   }
 
+  .el-table__row td {
+    padding: 4px 0 !important;
+  }
+
   thead th:nth-of-type(6) {
     border-right: none !important;
   }
@@ -1059,8 +1063,35 @@ export default {
   .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
     border-color: #fff;
   }
-}
 
+  .env-input-container {
+    height: 25px !important;
+    line-height: 25px !important;
+    .env-input {
+      padding: 0 15px;
+      border: 0px solid #dcdfe6 !important;
+      height: 25px !important;
+      line-height: 25px !important;
+    }
+    .is-disabled[data-v-6d9ac156]{
+        background-color: #fff !important;
+        color: #909399;
+      }
+  }
+  .el-input--small {
+    .el-input__inner {
+      border: 0px solid #000 !important;
+      height: 25px !important;
+      line-height: 25px !important;
+    }
+    .el-input__icon {
+      line-height: 25px !important;
+    }
+  }
+  .el-button--small{
+    padding: 0px;
+  }
+}
 .bulk-edit .el-textarea__inner {
   border-radius: 0;
   border-color: #ebeef5;
