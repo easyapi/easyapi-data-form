@@ -72,8 +72,35 @@
       </el-table-column>
       <el-table-column prop="demo" label="示例">
         <template slot-scope="scope">
+          <el-input-number
+            style="width: 100%"
+            v-if="scope.row.type == 'int' && !scope.row.inArray"
+            controls-position="right"
+            v-model="scope.row.demo"
+            placeholder="参数示例"
+            :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
+            size="small"
+          ></el-input-number>
+          <el-select
+            v-model="scope.row.demo"
+            v-if="scope.row.type == 'boolean' && !scope.row.inArray"
+            placeholder="请选择"
+            size="small"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
           <easyapi-env-input
-            v-if="!scope.row.inArray"
+            v-if="
+              scope.row.type != 'int' &&
+              scope.row.type != 'boolean' &&
+              !scope.row.inArray
+            "
             style="width: 100%"
             v-model="scope.row.demo"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
@@ -85,8 +112,35 @@
       </el-table-column>
       <el-table-column prop="defaultValue" label="默认值">
         <template slot-scope="scope">
+          <el-input-number
+            style="width: 100%"
+            v-if="scope.row.type == 'int' && !scope.row.inArray"
+            controls-position="right"
+            v-model="scope.row.defaultValue"
+            placeholder="参数示例"
+            :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
+            size="small"
+          ></el-input-number>
+          <el-select
+            v-model="scope.row.defaultValue"
+            v-if="scope.row.type == 'boolean' && !scope.row.inArray"
+            placeholder="请选择"
+            size="small"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
           <easyapi-env-input
-            v-if="!scope.row.inArray"
+            v-if="
+              scope.row.type != 'int' &&
+              scope.row.type != 'boolean' &&
+              !scope.row.inArray
+            "
             style="width: 100%"
             v-model="scope.row.defaultValue"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
@@ -156,6 +210,20 @@ export default {
     return {
       // 字段类型
       ifEdit: false,
+      options: [
+        {
+          value: "true",
+          label: "true",
+        },
+        {
+          value: "false",
+          label: "false",
+        },
+        {
+          value: "null",
+          label: "null",
+        },
+      ],
       paramType: [
         {
           value: "string",
@@ -343,6 +411,14 @@ export default {
     typeChanged(value) {
       if (value.type !== "object" && value.type !== "array") {
         value.childs = [];
+      }
+      if (value.type == "int") {
+        value.demo = 1;
+        value.defaultValue = 1;
+      }
+      if (value.type == "boolean") {
+        value.demo = "null";
+        value.defaultValue = "null";
       }
     },
 

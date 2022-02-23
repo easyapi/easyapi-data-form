@@ -112,7 +112,6 @@ export default {
           parentId: 0,
         },
       ],
-      parameter:'path'
     };
   },
   watch: {
