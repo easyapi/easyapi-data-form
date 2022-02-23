@@ -7,6 +7,7 @@
       :ifObject="ifObject"
       :jsonClass="jsonClass"
       :haveRoot="haveRoot"
+      :modelData="modelData"
       ref="jsonForm"
       :parameter="parameter"
     ></easyapi-data-form>
@@ -19,13 +20,11 @@
       <el-button class="pure-button" @click="ifArrayFun">ifArray</el-button>
       <el-button class="pure-button" @click="ifObjectFun">ifObject</el-button>
       <el-button class="pure-button" @click="importJSON">importJSON</el-button>
-
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "app",
   data: function () {
@@ -34,6 +33,7 @@ export default {
       type: "form-data22",
       ifObject: false,
       haveRoot: true,
+      modelData: null,
       jsonClass: "jsonClass",
       jsonData: [
         {
@@ -143,23 +143,39 @@ export default {
     },
     importJSON: function () {
       this.$refs.jsonForm.importJSON(
-      //   [{
-      //   aaa: 123,
-      //   bbb: {
-      //     ccc: 32,
-      //     ddd: 45,
-      //     fff: [123, 4556, 67]
-      //   }
-      // }]
-      {
-        aaa: 123
-      }
+        //   [{
+        //   aaa: 123,
+        //   bbb: {
+        //     ccc: 32,
+        //     ddd: 45,
+        //     fff: [123, 4556, 67]
+        //   }
+        // }]
+        {
+          aaa: 123,
+        }
       );
-    }
+    },
   },
   mounted: function () {
     this.ifArray = true;
     this.ifObject = true;
+    this.modelData = [
+      {
+        value: "宠物店",
+        label: "宠物店",
+        children: [
+          {
+            value: "pet",
+            label: "pet",
+          },
+          {
+            value: "tag",
+            label: "tag",
+          },
+        ],
+      },
+    ];
   },
 };
 </script>

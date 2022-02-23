@@ -31,7 +31,14 @@
       </el-table-column>
       <el-table-column prop="type" label="类型" width="120">
         <template slot-scope="scope">
-          <el-select
+          <el-cascader
+            v-model="scope.row.type"
+            @change="typeChanged(scope.row)"
+            size="small"
+            :options="paramType"
+            :show-all-levels="false"
+          ></el-cascader>
+          <!-- <el-select
             size="small"
             @change="typeChanged(scope.row)"
             v-if="!scope.row.inArray"
@@ -45,7 +52,7 @@
               :label="item.label"
               :value="item.value"
             ></el-option>
-          </el-select>
+          </el-select> -->
         </template>
       </el-table-column>
       <el-table-column prop="description" label="说明">
@@ -226,6 +233,11 @@ export default {
       ],
       paramType: [
         {
+          value: "引用类型",
+          label: "引用类型",
+          children: [],
+        },
+        {
           value: "string",
           label: "string",
         },
@@ -285,6 +297,7 @@ export default {
     "aggregateEnvs",
     "jsonClass",
     "parameter",
+    "modelData",
   ],
   created() {
     this.initViewData();
@@ -316,6 +329,11 @@ export default {
     },
     haveRoot: function (val) {
       this.initViewData();
+    },
+    modelData: function (val) {
+      if (val && val.length > 0) {
+        this.paramType[0].children = val;
+      }
     },
   },
 
@@ -1044,17 +1062,17 @@ export default {
     }
     &:hover td {
       .env-input-container {
-        -webkit-transition: background-color .25s ease;
+        -webkit-transition: background-color 0.25s ease;
         transition: background-color 0.25s ease;
         background-color: #f6f6f6 !important;
         .is-disabled[data-v-6d9ac156] {
-          -webkit-transition: background-color .25s ease;
+          -webkit-transition: background-color 0.25s ease;
           transition: background-color 0.25s ease;
           background-color: #f6f6f6 !important;
         }
       }
       .el-input__inner {
-        -webkit-transition: background-color .25s ease;
+        -webkit-transition: background-color 0.25s ease;
         transition: background-color 0.25s ease;
         background-color: #f6f6f6 !important;
       }
