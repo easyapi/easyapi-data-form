@@ -32,27 +32,13 @@
       <el-table-column prop="type" label="类型" width="120">
         <template slot-scope="scope">
           <el-cascader
-            v-model="scope.row.type"
-            @change="typeChanged(scope.row)"
-            size="small"
-            :options="paramType"
-            :show-all-levels="false"
-          ></el-cascader>
-          <!-- <el-select
             size="small"
             @change="typeChanged(scope.row)"
             v-if="!scope.row.inArray"
             v-model="scope.row.type"
-            filterable
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in paramType"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select> -->
+            :options="paramType"
+            :show-all-levels="false"
+          ></el-cascader>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="说明">
@@ -79,15 +65,15 @@
       </el-table-column>
       <el-table-column prop="demo" label="示例">
         <template slot-scope="scope">
-          <el-input-number
+          <el-input
             style="width: 100%"
             v-if="scope.row.type == 'int' && !scope.row.inArray"
-            controls-position="right"
             v-model="scope.row.demo"
             placeholder="参数示例"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             size="small"
-          ></el-input-number>
+            type="number"
+          ></el-input>
           <el-select
             v-model="scope.row.demo"
             v-if="scope.row.type == 'boolean' && !scope.row.inArray"
@@ -119,15 +105,15 @@
       </el-table-column>
       <el-table-column prop="defaultValue" label="默认值">
         <template slot-scope="scope">
-          <el-input-number
+          <el-input
             style="width: 100%"
             v-if="scope.row.type == 'int' && !scope.row.inArray"
-            controls-position="right"
             v-model="scope.row.defaultValue"
             placeholder="参数示例"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             size="small"
-          ></el-input-number>
+            type="number"
+          ></el-input>
           <el-select
             v-model="scope.row.defaultValue"
             v-if="scope.row.type == 'boolean' && !scope.row.inArray"
@@ -227,8 +213,8 @@ export default {
           label: "false",
         },
         {
-          value: "null",
-          label: "null",
+          value: "",
+          label: "",
         },
       ],
       paramType: [
@@ -435,8 +421,8 @@ export default {
         value.defaultValue = 1;
       }
       if (value.type == "boolean") {
-        value.demo = "null";
-        value.defaultValue = "null";
+        value.demo = "";
+        value.defaultValue = "";
       }
     },
 
@@ -1052,6 +1038,11 @@ export default {
 
 <style lang="less">
 .data-form-container {
+  // 取消input的上下箭头
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+  }
+
   .el-table__row td:nth-of-type(6) {
     border-right: none !important;
   }
@@ -1064,17 +1055,17 @@ export default {
       .env-input-container {
         -webkit-transition: background-color 0.25s ease;
         transition: background-color 0.25s ease;
-        background-color: #f6f6f6 !important;
+        background-color: #f5f7fa !important;
         .is-disabled[data-v-6d9ac156] {
           -webkit-transition: background-color 0.25s ease;
           transition: background-color 0.25s ease;
-          background-color: #f6f6f6 !important;
+          background-color: #f5f7fa !important;
         }
       }
       .el-input__inner {
         -webkit-transition: background-color 0.25s ease;
         transition: background-color 0.25s ease;
-        background-color: #f6f6f6 !important;
+        background-color: #f5f7fa !important;
       }
     }
   }

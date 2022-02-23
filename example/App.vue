@@ -7,9 +7,9 @@
       :ifObject="ifObject"
       :jsonClass="jsonClass"
       :haveRoot="haveRoot"
+      :parameter="parameter"
       :modelData="modelData"
       ref="jsonForm"
-      :parameter="parameter"
     ></easyapi-data-form>
     <div class="tools-btn pure-form">
       <el-button class="pure-button" @click="addNew">addNew</el-button>
@@ -34,6 +34,7 @@ export default {
       ifObject: false,
       haveRoot: true,
       modelData: null,
+      parameter: null,
       jsonClass: "jsonClass",
       jsonData: [
         {
@@ -160,22 +161,22 @@ export default {
   mounted: function () {
     this.ifArray = true;
     this.ifObject = true;
-    this.modelData = [
-      {
-        value: "宠物店",
-        label: "宠物店",
-        children: [
-          {
-            value: "pet",
-            label: "pet",
-          },
-          {
-            value: "tag",
-            label: "tag",
-          },
-        ],
-      },
-    ];
+    // this.modelData = [
+    //   {
+    //     value: "宠物店",
+    //     label: "宠物店",
+    //     children: [
+    //       {
+    //         value: "pet",
+    //         label: "pet",
+    //       },
+    //       {
+    //         value: "tag",
+    //         label: "tag",
+    //       },
+    //     ],
+    //   },
+    // ];
   },
 };
 </script>
