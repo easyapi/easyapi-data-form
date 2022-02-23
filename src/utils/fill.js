@@ -13,14 +13,28 @@ let fillId = function (array) {
  * @param level 第几级（从1开始）
  */
 function childs(array, parentId, level) {
-  for (let i in array) {
-    array[i].id = parseInt(level + "" + i);
-    array[i].parentId = parentId;
-    if (array[i].childs && array[i].childs.length > 0) {
-      childs(array[i].childs, array[i].id, level + 1)
-    }
-  }
-  return array;
+
+  const parseJson = (json, parentId) => {
+    let result = json;
+    result.forEach((k, index) => {
+      k.id = level++;
+      k.parentId = parentId;
+      if (k.childs && k.childs.length > 0) {
+        k.childs = parseJson(k.childs, k.id);
+      }
+    });
+    return result;
+  };
+  return parseJson(array,parentId);
+
+  // for (let i=0;i<array.length; i++) {
+  //   array[i].id = parseInt(level + "" + i);
+  //   array[i].parentId = parentId;
+  //   if (array[i].childs && array[i].childs.length > 0) {
+  //     childs(array[i].childs, array[i].id, level + 1)
+  //   }
+  // }
+  // return array;
 }
 
 export {
