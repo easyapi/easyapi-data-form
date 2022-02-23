@@ -6,9 +6,10 @@
       :ifArray="ifArray"
       :ifObject="ifObject"
       :jsonClass="jsonClass"
-      :haveRoot="haveRoot"
-      :parameter="parameter"
       :modelData="modelData"
+      :parameter="parameter"
+      :ifRequired="ifRequired"
+      :ifDefault="ifDefault"
       ref="jsonForm"
     ></easyapi-data-form>
     <div class="tools-btn pure-form">
@@ -34,7 +35,6 @@ export default {
       ifObject: false,
       haveRoot: true,
       modelData: null,
-      parameter: null,
       jsonClass: "jsonClass",
       jsonData: [
         {
@@ -44,7 +44,7 @@ export default {
           description: "博客",
           required: true,
           demo: null,
-          // defaultValue: "",
+          defaultValue: "",
           childs: [
             {
               // id: 10,
@@ -113,6 +113,9 @@ export default {
           parentId: 0,
         },
       ],
+      parameter: "path",
+      ifRequired: true,
+      ifDefault: true,
     };
   },
   watch: {
@@ -161,22 +164,22 @@ export default {
   mounted: function () {
     this.ifArray = true;
     this.ifObject = true;
-    // this.modelData = [
-    //   {
-    //     value: "宠物店",
-    //     label: "宠物店",
-    //     children: [
-    //       {
-    //         value: "pet",
-    //         label: "pet",
-    //       },
-    //       {
-    //         value: "tag",
-    //         label: "tag",
-    //       },
-    //     ],
-    //   },
-    // ];
+    this.modelData = [
+      {
+        value: "宠物店",
+        label: "宠物店",
+        children: [
+          {
+            value: "pet",
+            label: "pet",
+          },
+          {
+            value: "tag",
+            label: "tag",
+          },
+        ],
+      },
+    ];
   },
 };
 </script>
