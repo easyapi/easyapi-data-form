@@ -8,6 +8,7 @@
       :jsonClass="jsonClass"
       :haveRoot="haveRoot"
       ref="jsonForm"
+      :parameter="parameter"
     ></easyapi-data-form>
     <div class="tools-btn pure-form">
       <el-button class="pure-button" @click="addNew">addNew</el-button>
@@ -111,6 +112,7 @@ export default {
           parentId: 0,
         },
       ],
+      parameter:'path'
     };
   },
   watch: {

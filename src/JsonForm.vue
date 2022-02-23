@@ -18,7 +18,9 @@
           <easyapi-env-input
             v-if="!scope.row.inArray"
             style="width: 100%"
-            :disabled="scope.row.level === 1 && haveRoot"
+            :disabled="
+              (scope.row.level === 1 && haveRoot) || parameter == 'path'
+            "
             v-model="scope.row.name"
             placeholder="参数名"
             :aggregateEnvs="aggregateEnvs"
@@ -62,6 +64,7 @@
         <template slot-scope="scope">
           <el-checkbox
             size="small"
+            :disabled="parameter == 'path'"
             v-if="!scope.row.inArray"
             v-model="scope.row.required"
           ></el-checkbox>
@@ -213,6 +216,7 @@ export default {
     "haveRoot",
     "aggregateEnvs",
     "jsonClass",
+    "parameter",
   ],
   created() {
     this.initViewData();
@@ -235,6 +239,7 @@ export default {
       // this.renderData = val;
       this.initViewData();
     },
+
     ifArray: function (val) {
       this.initViewData();
     },
@@ -245,6 +250,7 @@ export default {
       this.initViewData();
     },
   },
+
   methods: {
     gotoEdit() {
       this.ifEdit = true;
@@ -339,6 +345,7 @@ export default {
         value.childs = [];
       }
     },
+
     initViewData() {
       if (this.haveRoot) {
         //如果是根节点，那么只显示一个数据
@@ -361,8 +368,7 @@ export default {
         this.renderData = fillId([this.jsonData[0]]);
       } else {
         this.renderData = fillId(this.jsonData);
-
-        if (this.renderData.length == 0) {
+        if (this.renderData.length == 0 && this.parameter !== "path") {
           this.addNew();
         }
 
@@ -371,11 +377,13 @@ export default {
             this.renderData[this.renderData.length - 1].name != "") ||
           this.renderData[this.renderData.length - 1].description != "" ||
           this.renderData[this.renderData.length - 1].defaultValue != "" ||
-          this.renderData[this.renderData.length - 1].demo != ""
+          (this.renderData[this.renderData.length - 1].demo != "" &&
+            this.parameter !== "path")
         ) {
           this.addNew();
         }
       }
+
       //初始化object
       if (!this.ifObject) {
         for (let i in this.paramType) {
@@ -553,7 +561,7 @@ export default {
         name: "",
         type: "string",
         description: "",
-        required: false,
+        required: this.parameter == "path" ? true : false,
         demo: "",
         defaultValue: "",
         childs: [],
@@ -581,6 +589,7 @@ export default {
       dealArr(tmp, id);
       this.renderData = tmp;
     },
+
     addTable() {
       if (this.haveRoot) return;
       let item = this.renderData;
@@ -594,6 +603,7 @@ export default {
         this.addNew();
       }
     },
+
     // 添加行
     addNew: function () {
       this.renderData.push({
@@ -601,7 +611,7 @@ export default {
         name: "",
         type: "string",
         description: "",
-        required: false,
+        required: this.parameter == "path" ? true : false,
         demo: "",
         defaultValue: "",
         childs: [],
@@ -831,7 +841,7 @@ export default {
       }
       //加上根节点
       let newData = {
-        根节点: json
+        根节点: json,
       };
       this.treeToTile();
       this.renderData = fillId(this.jsonParse(newData));
@@ -963,8 +973,15 @@ export default {
     cursor: pointer;
 
     &:hover {
-      color: rgba(0, 178, 200, 0.8);
+      color: #00b2c8cc;
     }
+  }
+  .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
+    background-color: #00b2c8;
+    border-color: #00b2c8;
+  }
+  .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+    border-color: #fff;
   }
 }
 
