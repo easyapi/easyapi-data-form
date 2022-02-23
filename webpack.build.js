@@ -16,8 +16,5 @@ config.output = {
   library: 'easyapi-data-form',
   libraryTarget: 'umd',
 };
-config.externals = {
-  vue: 'Vue',
-};
 
 module.exports = config
