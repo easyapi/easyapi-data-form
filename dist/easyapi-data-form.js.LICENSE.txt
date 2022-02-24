@@ -4,6 +4,8 @@
  * Released under the MIT License.
  */
 
+/*! For license information please see easyapi-env-input.js.LICENSE.txt */
+
 /**
  * Checks if an event is supported in the current execution environment.
  *
