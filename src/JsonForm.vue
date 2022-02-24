@@ -934,7 +934,16 @@ export default {
       }
 
       const json = {};
-      getJson(this.renderData, json);
+      if (
+        this.renderData &&
+        this.renderData.length > 0 &&
+        this.renderData[0].childs &&
+        this.renderData[0].childs.length > 0
+      ) {
+        getJson(this.renderData[0].childs, json);
+      } else {
+        getJson(this.renderData, json);
+      }
       return json;
     },
     importJSON: function (json) {
