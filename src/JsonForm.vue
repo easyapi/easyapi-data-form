@@ -373,7 +373,7 @@ export default {
     },
 
     getStr(v, arr, num) {
-      if (v.childs.length > 0) {
+      if (v.childs && v.childs.length > 0) {
         let symbol = "";
         for (var i = 0; i < num; i++) {
           symbol += ">";
