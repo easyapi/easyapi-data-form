@@ -53,7 +53,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column v-if="!ifRequired" prop="required" label="必填" width="70">
+      <el-table-column v-if="!unshownRequired" prop="required" label="必填" width="70">
         <template slot-scope="scope">
           <el-checkbox
             size="small"
@@ -103,7 +103,7 @@
           />
         </template>
       </el-table-column>
-      <el-table-column v-if="!ifDefault" prop="defaultValue" label="默认值">
+      <el-table-column v-if="!unshownDefault" prop="defaultValue" label="默认值">
         <template slot-scope="scope">
           <el-input
             style="width: 100%"
@@ -284,8 +284,8 @@ export default {
     "jsonClass",
     "parameter",
     "modelData",
-    "ifRequired",
-    "ifDefault"
+    "unshownRequired",
+    "unshownDefault"
   ],
   created() {
     this.initViewData();

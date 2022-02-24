@@ -8,8 +8,8 @@
       :jsonClass="jsonClass"
       :modelData="modelData"
       :parameter="parameter"
-      :ifRequired="ifRequired"
-      :ifDefault="ifDefault"
+      :unshownRequired="unshownRequired"
+      :unshownDefault="unshownDefault"
       ref="jsonForm"
     ></easyapi-data-form>
     <div class="tools-btn pure-form">
@@ -114,8 +114,8 @@ export default {
         },
       ],
       parameter: "path",
-      ifRequired: true,
-      ifDefault: true,
+      unshownRequired: true,
+      unshownDefault: true,
     };
   },
   watch: {
