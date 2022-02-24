@@ -152,7 +152,16 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="options" width="100" align="right">
+
+      <el-table-column v-if="parameter == 'path'" width="100" align="right">
+      </el-table-column>
+
+      <el-table-column
+        v-if="parameter != 'path'"
+        prop="options"
+        width="100"
+        align="right"
+      >
         <template slot="header">
           <div class="setting-edit" @click="gotoEdit">批量修改</div>
         </template>
@@ -462,7 +471,7 @@ export default {
         if (this.renderData.length == 0 && this.parameter !== "path") {
           this.addNew();
         }
-        
+
         if (this.parameter !== "path") {
           if (
             (this.renderData.length > 0 &&
@@ -705,7 +714,7 @@ export default {
         name: "",
         type: "string",
         description: "",
-        required: this.parameter == "path" ? true : false,
+        required: false,
         demo: "",
         defaultValue: "",
         childs: [],
