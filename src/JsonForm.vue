@@ -53,7 +53,12 @@
           />
         </template>
       </el-table-column>
-      <el-table-column v-if="!unshownRequired" prop="required" label="必填" width="70">
+      <el-table-column
+        v-if="!unshownRequired"
+        prop="required"
+        label="必填"
+        width="70"
+      >
         <template slot-scope="scope">
           <el-checkbox
             size="small"
@@ -103,7 +108,11 @@
           />
         </template>
       </el-table-column>
-      <el-table-column v-if="!unshownDefault" prop="defaultValue" label="默认值">
+      <el-table-column
+        v-if="!unshownDefault"
+        prop="defaultValue"
+        label="默认值"
+      >
         <template slot-scope="scope">
           <el-input
             style="width: 100%"
@@ -285,7 +294,7 @@ export default {
     "parameter",
     "modelData",
     "unshownRequired",
-    "unshownDefault"
+    "unshownDefault",
   ],
   created() {
     this.initViewData();
@@ -453,15 +462,15 @@ export default {
         if (this.renderData.length == 0 && this.parameter !== "path") {
           this.addNew();
         }
-
-        if (
-          (this.renderData.length > 0 &&
-            this.renderData[this.renderData.length - 1].name != "") ||
-          this.renderData[this.renderData.length - 1].description != "" ||
-          this.renderData[this.renderData.length - 1].defaultValue != "" ||
-          this.renderData[this.renderData.length - 1].demo != ""
-        ) {
-          if (this.parameter !== "path") {
+        
+        if (this.parameter !== "path") {
+          if (
+            (this.renderData.length > 0 &&
+              this.renderData[this.renderData.length - 1].name != "") ||
+            this.renderData[this.renderData.length - 1].description != "" ||
+            this.renderData[this.renderData.length - 1].defaultValue != "" ||
+            this.renderData[this.renderData.length - 1].demo != ""
+          ) {
             this.addNew();
           }
         }
