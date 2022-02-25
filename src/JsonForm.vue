@@ -418,7 +418,7 @@ export default {
     },
 
     getValue(v, arr, level) {
-      console.log(v, arr, level);
+      // console.log(v, arr, level);
     },
 
     confirmEdit() {
@@ -1010,7 +1010,7 @@ export default {
             opt.demo = "";
           } else {
             opt.childs = null;
-            opt.demo = parsedVal + "";
+            opt.demo = parsedVal === null ? parsedVal : parsedVal.toString();
           }
 
           result.push(opt);
@@ -1047,7 +1047,7 @@ export default {
             opt.demo = "";
           } else {
             opt.childs = null;
-            opt.demo = parsedVal;
+            opt.demo = parsedVal === null ? parsedVal : parsedVal.toString();
           }
 
           result.push(opt);

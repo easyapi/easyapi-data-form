@@ -7,9 +7,7 @@
       :ifObject="ifObject"
       :jsonClass="jsonClass"
       :modelData="modelData"
-      :parameter="parameter"
-      :unshownRequired="unshownRequired"
-      :unshownDefault="unshownDefault"
+      :haveRoot="haveRoot"
       ref="jsonForm"
     ></easyapi-data-form>
     <div class="tools-btn pure-form">
@@ -146,19 +144,51 @@ export default {
       this.ifArray = !this.ifArray;
     },
     importJSON: function () {
-      this.$refs.jsonForm.importJSON(
-        //   [{
-        //   aaa: 123,
-        //   bbb: {
-        //     ccc: 32,
-        //     ddd: 45,
-        //     fff: [123, 4556, 67]
-        //   }
-        // }]
-        {
-          aaa: 123,
-        }
-      );
+      let obj = {
+        code: 1,
+        message: "获取成功",
+        content: [
+          {
+            addTime: "2021-12-21 17:40:56",
+            door: "大门",
+            inTime: "2021-12-21 17:40:59",
+            outTime: "2021-12-22 17:41:02",
+            remark: "0",
+            updateTime: "2021-12-21 17:40:58",
+            user: {
+              addTime: "2021-10-29 00:00:44",
+              age: null,
+              id: 459,
+              intro: null,
+              male: true,
+              mobile: null,
+              nickname: "张磊@EasyAPI",
+              photo:
+                "https://thirdwx.qlogo.cn/mmopen/vi_32/ajNVdqHZLLBc6LY3bAVloK4XIYFsbdPmLSf7Fw9m8BSt4SAKHa0bAq8W3PmHN5eLX5wP5dXTGVFlAfqYt1KsRg/132",
+              type: null,
+              updateTime: "2021-11-26 08:41:10",
+              username: "13656171020",
+            },
+            visitorId: 1,
+          },
+        ],
+        number: 0,
+        size: 10,
+        numberOfElements: 1,
+        totalElements: 1,
+        totalPages: 1,
+        first: true,
+        last: true,
+        sort: {
+          empty: false,
+          sorted: true,
+          unsorted: false,
+        },
+      };
+      this.$refs.jsonForm.importJSON(obj);
+      setTimeout(() => {
+        console.log(this.jsonData, 8888);
+      }, 1000);
     },
   },
   mounted: function () {
