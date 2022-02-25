@@ -31,14 +31,29 @@
       </el-table-column>
       <el-table-column prop="type" label="类型" width="120">
         <template slot-scope="scope">
-          <el-cascader
+          <!-- <el-cascader
             size="small"
             @change="typeChanged(scope.row)"
             v-if="!scope.row.inArray"
             v-model="scope.row.type"
             :options="paramType"
             :show-all-levels="false"
-          ></el-cascader>
+          ></el-cascader> -->
+          <el-select
+            size="small"
+            @change="typeChanged(scope.row)"
+            v-if="!scope.row.inArray"
+            v-model="scope.row.type"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in paramType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column prop="description" label="说明">
@@ -72,7 +87,10 @@
         <template slot-scope="scope">
           <el-input
             style="width: 100%"
-            v-if="scope.row.type == 'int' && !scope.row.inArray"
+            v-if="
+              (scope.row.type == 'int' || scope.row.type == 'double') &&
+              !scope.row.inArray
+            "
             v-model="scope.row.demo"
             placeholder="参数示例"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
@@ -96,6 +114,7 @@
           <easyapi-env-input
             v-if="
               scope.row.type != 'int' &&
+              scope.row.type != 'double' &&
               scope.row.type != 'boolean' &&
               !scope.row.inArray
             "
@@ -116,7 +135,10 @@
         <template slot-scope="scope">
           <el-input
             style="width: 100%"
-            v-if="scope.row.type == 'int' && !scope.row.inArray"
+            v-if="
+              (scope.row.type == 'int' || scope.row.type == 'double') &&
+              !scope.row.inArray
+            "
             v-model="scope.row.defaultValue"
             placeholder="参数示例"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
@@ -140,6 +162,7 @@
           <easyapi-env-input
             v-if="
               scope.row.type != 'int' &&
+              scope.row.type != 'double' &&
               scope.row.type != 'boolean' &&
               !scope.row.inArray
             "
@@ -213,6 +236,7 @@
 
 <script>
 import Sortable from "sortablejs";
+import { optimizeParams } from "./utils/utils";
 import { fillId } from "./utils/fill";
 
 export default {
@@ -236,11 +260,11 @@ export default {
         },
       ],
       paramType: [
-        {
-          value: "引用类型",
-          label: "引用类型",
-          children: [],
-        },
+        // {
+        //   value: "引用类型",
+        //   label: "引用类型",
+        //   children: [],
+        // },
         {
           value: "string",
           label: "string",
@@ -338,7 +362,7 @@ export default {
     },
     modelData: function (val) {
       if (val && val.length > 0) {
-        this.paramType[0].children = val;
+        // this.paramType[0].children = val;
       }
     },
   },
@@ -437,8 +461,12 @@ export default {
         value.childs = [];
       }
       if (value.type == "int") {
-        value.demo = 1;
-        value.defaultValue = 1;
+        value.demo = 0;
+        value.defaultValue = 0;
+      }
+      if (value.type == "double") {
+        value.demo = 0;
+        value.defaultValue = 0;
       }
       if (value.type == "boolean") {
         value.demo = "";
@@ -911,7 +939,7 @@ export default {
             json[el.name] = {};
             getJson(el.childs, json[el.name]);
           } else {
-            json[el.name] = el.demo;
+            json[el.name] = optimizeParams(el.type, el.demo);
           }
         });
       }
