@@ -1029,10 +1029,11 @@ export default {
           } else if (this.getType(val) === "array") {
             parsedVal = parseArray([val[0]]);
           }
-
+          
           let opt = {
             // name: null,3
-            name: val,
+            
+            name: this.getType(val) === "object" ? "" : val,
             type: this.getType(val),
             defaultValue: "",
             description:
