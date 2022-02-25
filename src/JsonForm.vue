@@ -934,17 +934,7 @@ export default {
       }
 
       const json = {};
-      if (
-        this.renderData &&
-        this.renderData.length > 0 &&
-        this.renderData[0].childs &&
-        this.renderData[0].childs.length > 0
-      ) {
-        getJson(this.renderData[0].childs, json);
-      } else {
-        getJson(this.renderData, json);
-      }
-      return json;
+      return json[this.renderData[0].name];
     },
     importJSON: function (json) {
       //如果是数组，只显示第一个
