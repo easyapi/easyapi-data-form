@@ -967,7 +967,7 @@ export default {
     },
     importJSON: function (json) {
       //如果是数组，只显示第一个
-      if (json.constructor === Array) {
+      if (json.constructor === Array && json.length > 0) {
         json = [json[0]];
       }
       //加上根节点
@@ -992,7 +992,9 @@ export default {
           if (this.getType(val) === "object") {
             parsedVal = parseJson(val);
           } else if (this.getType(val) === "array") {
-            parsedVal = parseArray([val[0]]);
+            if (val.length > 0) {
+              parsedVal = parseArray([val[0]]);
+            }
           }
 
           let opt = {
@@ -1029,10 +1031,10 @@ export default {
           } else if (this.getType(val) === "array") {
             parsedVal = parseArray([val[0]]);
           }
-          
+
           let opt = {
             // name: null,3
-            
+
             name: this.getType(val) === "object" ? "" : val,
             type: this.getType(val),
             defaultValue: "",
