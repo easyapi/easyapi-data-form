@@ -1097,6 +1097,10 @@ export default {
     -webkit-appearance: none !important;
   }
 
+  .el-icon-arrow-right:before {
+    content: "\e791" !important;
+  }
+
   .el-table__row td:nth-of-type(6) {
     border-right: none !important;
   }
@@ -1150,7 +1154,7 @@ export default {
     height: 25px !important;
     line-height: 25px !important;
     .env-input {
-      padding: 0 15px;
+      padding: 0 15px 0 4px !important;
       border: 0px solid #dcdfe6 !important;
       height: 25px !important;
       line-height: 25px !important;
