@@ -19,7 +19,10 @@
             v-if="!scope.row.inArray"
             style="width: 100%"
             :disabled="
-              (scope.row.level === 1 && haveRoot) || parameter == 'path'
+              (scope.row.level === 1 && haveRoot) ||
+              parameter == 'path' ||
+              scope.row.name == '根节点' ||
+              (scope.row.name && scope.row.name.indexOf('[0]') != -1)
             "
             v-model="scope.row.name"
             placeholder="参数名"
@@ -993,7 +996,7 @@ export default {
             parsedVal = parseJson(val);
           } else if (this.getType(val) === "array") {
             if (val.length > 0) {
-              parsedVal = parseArray([val[0]]);
+              parsedVal = parseArray([val[0]], k);
             }
           }
 
@@ -1021,7 +1024,7 @@ export default {
       };
 
       //
-      const parseArray = (arrayObj) => {
+      const parseArray = (arrayObj, k) => {
         const result = [];
         for (let i = 0; i < arrayObj.length; ++i) {
           let val = arrayObj[i];
@@ -1035,7 +1038,7 @@ export default {
           let opt = {
             // name: null,3
 
-            name: this.getType(val) === "object" ? "" : val,
+            name: this.getType(val) === "object" ? (k ? `${k}[0]` : "") : val,
             type: this.getType(val),
             defaultValue: "",
             description:
