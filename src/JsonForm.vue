@@ -22,7 +22,7 @@
               (scope.row.level === 1 && haveRoot) ||
               parameter == 'path' ||
               scope.row.name == '根节点' ||
-              (scope.row.name && scope.row.name.indexOf('[0]') != -1)
+              (scope.row.name && scope.row.name.indexOf('[0]') != -1) ? true : false
             "
             v-model="scope.row.name"
             placeholder="参数名"
@@ -186,9 +186,10 @@
         v-if="parameter != 'path'"
         prop="options"
         width="100"
-        align="right"
+        :align="ifBulkEdit ? 'right' : ''"
+        label="操作"
       >
-        <template slot="header">
+        <template slot="header" v-if="ifBulkEdit">
           <div class="setting-edit" @click="gotoEdit">批量修改</div>
         </template>
         <template slot-scope="scope">
@@ -331,6 +332,7 @@ export default {
     "modelData",
     "unshownRequired",
     "unshownDefault",
+    "ifBulkEdit"
   ],
   created() {
     this.initViewData();

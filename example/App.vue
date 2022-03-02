@@ -8,6 +8,7 @@
       :jsonClass="jsonClass"
       :modelData="modelData"
       :haveRoot="haveRoot"
+      :ifBulkEdit="ifBulkEdit"
       ref="jsonForm"
     ></easyapi-data-form>
     <div class="tools-btn pure-form">
@@ -33,6 +34,7 @@ export default {
       ifObject: false,
       haveRoot: true,
       modelData: null,
+      ifBulkEdit: false,
       jsonClass: "jsonClass",
       jsonData: [
         {
