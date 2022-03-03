@@ -22,7 +22,9 @@
               (scope.row.level === 1 && haveRoot) ||
               parameter == 'path' ||
               scope.row.name == '根节点' ||
-              (scope.row.name && scope.row.name.indexOf('[0]') != -1) ? true : false
+              (scope.row.name && scope.row.name.indexOf('[0]') != -1)
+                ? true
+                : false
             "
             v-model="scope.row.name"
             placeholder="参数名"
@@ -190,7 +192,20 @@
         label="操作"
       >
         <template slot="header" v-if="ifBulkEdit">
-          <div class="setting-edit" @click="gotoEdit">批量修改</div>
+          <div class="setting-edit">
+            <div @click="gotoEdit">批量修改</div>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="快速添加"
+              placement="top"
+            >
+              <span
+                class="el-icon-circle-plus-outline"
+                @click="openModal"
+              ></span>
+            </el-tooltip>
+          </div>
         </template>
         <template slot-scope="scope">
           <el-button
@@ -235,6 +250,35 @@
         字段之间以英文逗号(,)分隔，多条记录以换行分隔
       </div>
     </div>
+
+    <el-dialog
+      title="快速添加"
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      width="50%"
+    >
+      <el-radio-group v-model="quickAddType">
+        <el-radio label="URL">URL请求</el-radio>
+        <el-radio label="JSON">JSON</el-radio>
+      </el-radio-group>
+      <el-input
+        type="textarea"
+        placeholder="请输入内容"
+        v-model="quickText"
+        rows="8"
+        show-word-limit
+        style="margin-top: 20px"
+      ></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="confirmQuickAdd(quickAddType, quickText)"
+          size="small"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -247,6 +291,9 @@ export default {
   name: "JsonForm",
   data: function () {
     return {
+      dialogVisible: false,
+      quickText: "",
+      quickAddType: "URL",
       // 字段类型
       ifEdit: false,
       options: [
@@ -332,7 +379,7 @@ export default {
     "modelData",
     "unshownRequired",
     "unshownDefault",
-    "ifBulkEdit"
+    "ifBulkEdit",
   ],
   created() {
     this.initViewData();
@@ -373,6 +420,12 @@ export default {
   },
 
   methods: {
+    //打开弹窗
+    openModal() {
+      this.dialogVisible = true;
+      this.type = "URL";
+      this.quickText = "";
+    },
     gotoEdit() {
       this.ifEdit = true;
       if (!this.haveRoot) {
@@ -774,6 +827,7 @@ export default {
               this.renderData[0].childs.push(item);
             }
           }
+          this.dialogVisible = false;
           // this.renderData = [...this.renderData, ..._urlParams];
         } catch (e) {
           this.$message.error("请输入合法的JSON");
@@ -814,6 +868,7 @@ export default {
               });
             }
           }
+          this.dialogVisible = false;
         } catch (e) {
           this.$message.error("请输入合法的URL");
         }
@@ -1138,13 +1193,22 @@ export default {
   }
 
   .setting-edit {
-    display: inline-block;
-    text-align: right;
-    color: #00b2c8;
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    div {
+      color: #00b2c8;
+      cursor: pointer;
 
-    &:hover {
-      color: #00b2c8cc;
+      &:hover {
+        color: #00b2c8cc;
+      }
+    }
+    span {
+      color: #666;
+      cursor: pointer;
+      font-size: 20px;
+      vertical-align: middle;
     }
   }
   .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {

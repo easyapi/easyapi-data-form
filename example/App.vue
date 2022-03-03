@@ -34,7 +34,7 @@ export default {
       ifObject: false,
       haveRoot: true,
       modelData: null,
-      ifBulkEdit: false,
+      ifBulkEdit: true,
       jsonClass: "jsonClass",
       jsonData: [
         {
