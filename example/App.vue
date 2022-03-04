@@ -120,9 +120,7 @@ export default {
   },
   watch: {
     jsonData: {
-      handler(newName, oldName) {
-        console.log(this.jsonData);
-      },
+      handler(newName, oldName) {},
       immediate: true,
       deep: true,
     },
@@ -133,11 +131,9 @@ export default {
     },
     getJSONFormData() {
       let d = this.$refs.jsonForm.getJSONFormData();
-      console.log(d);
     },
     exportJSON() {
       let d = this.$refs.jsonForm.exportJSON();
-      console.log(d);
     },
     ifObjectFun() {
       this.ifObject = !this.ifObject;
@@ -188,9 +184,7 @@ export default {
         },
       };
       this.$refs.jsonForm.importJSON(obj);
-      setTimeout(() => {
-        console.log(this.jsonData, 8888);
-      }, 1000);
+      setTimeout(() => {}, 1000);
     },
   },
   mounted: function () {

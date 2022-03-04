@@ -519,12 +519,12 @@ export default {
         value.childs = [];
       }
       if (value.type == "int") {
-        value.demo = 0;
-        value.defaultValue = 0;
+        value.demo = "";
+        value.defaultValue = "";
       }
       if (value.type == "double") {
-        value.demo = 0;
-        value.defaultValue = 0;
+        value.demo = "";
+        value.defaultValue = "";
       }
       if (value.type == "boolean") {
         value.demo = "";
