@@ -97,7 +97,7 @@
               !scope.row.inArray
             "
             v-model="scope.row.demo"
-            placeholder="参数示例"
+            placeholder="(NULL)"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             size="small"
             type="number"
@@ -145,7 +145,7 @@
               !scope.row.inArray
             "
             v-model="scope.row.defaultValue"
-            placeholder="参数示例"
+            placeholder="(NULL)"
             :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
             size="small"
             type="number"
@@ -519,12 +519,12 @@ export default {
         value.childs = [];
       }
       if (value.type == "int") {
-        value.demo = "";
-        value.defaultValue = "";
+        value.demo = null;
+        value.defaultValue = null;
       }
       if (value.type == "double") {
-        value.demo = "";
-        value.defaultValue = "";
+        value.demo = null;
+        value.defaultValue = null;
       }
       if (value.type == "boolean") {
         value.demo = "";
@@ -1072,7 +1072,15 @@ export default {
             opt.demo = "";
           } else {
             opt.childs = null;
-            opt.demo = parsedVal === null ? parsedVal : parsedVal.toString();
+            if (parsedVal === null) {
+              if (opt.type == "int" || opt.type == "double") {
+                opt.demo = null;
+              } else {
+                opt.demo = "(NULL)";
+              }
+            } else {
+              opt.demo = parsedVal.toString();
+            }
           }
 
           result.push(opt);
@@ -1094,7 +1102,6 @@ export default {
 
           let opt = {
             // name: null,3
-
             name: this.getType(val) === "object" ? (k ? `${k}[0]` : "") : val,
             type: this.getType(val),
             defaultValue: "",
@@ -1110,7 +1117,15 @@ export default {
             opt.demo = "";
           } else {
             opt.childs = null;
-            opt.demo = parsedVal === null ? parsedVal : parsedVal.toString();
+            if (parsedVal === null) {
+              if (opt.type == "int" || opt.type == "double") {
+                opt.demo = null;
+              } else {
+                opt.demo = "(NULL)";
+              }
+            } else {
+              opt.demo = parsedVal.toString();
+            }
           }
 
           result.push(opt);
@@ -1239,6 +1254,7 @@ export default {
       border: 0px solid #000 !important;
       height: 25px !important;
       line-height: 25px !important;
+      padding: 0 4px !important;
     }
     .el-input__icon {
       line-height: 25px !important;

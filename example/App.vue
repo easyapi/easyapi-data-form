@@ -134,6 +134,7 @@ export default {
     },
     exportJSON() {
       let d = this.$refs.jsonForm.exportJSON();
+      console.log(d)
     },
     ifObjectFun() {
       this.ifObject = !this.ifObject;

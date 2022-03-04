@@ -3,10 +3,18 @@
  */
 export function optimizeParams(type, value) {
   if (type == "int" || type == "double") {
-    return Number(value);
+    if (value) {
+      return Number(value);
+    } else {
+      return null;
+    }
   } else if (type == "boolean") {
     return value == "true" ? true : value == "" ? "" : false;
   } else {
-    return value;
+    if (value == "(NULL)") {
+      return null;
+    } else {
+      return value;
+    }
   }
 }
