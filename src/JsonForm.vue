@@ -13,6 +13,14 @@
       size="small"
       class="data-form-container"
     >
+      <el-table-column width="40" v-if="!haveRoot">
+        <template slot-scope="scope">
+          <i
+            v-if="scope.$index != renderData.length - 1"
+            class="el-icon-s-operation"
+          ></i>
+        </template>
+      </el-table-column>
       <el-table-column prop="name" label="参数名">
         <template slot-scope="scope">
           <easyapi-env-input
@@ -1176,8 +1184,16 @@ export default {
     content: "\e791" !important;
   }
 
-  .el-table__row td:nth-of-type(6) {
-    border-right: none !important;
+  // .el-table__row td:nth-of-type(6) {
+  //   border-right: none !important;
+  // }
+
+  .el-icon-s-operation {
+    font-size: 16px;
+    text-align: center;
+    cursor: move;
+    margin: 0 auto;
+    color: #666;
   }
 
   .el-table__row {
@@ -1203,9 +1219,9 @@ export default {
     }
   }
 
-  thead th:nth-of-type(6) {
-    border-right: none !important;
-  }
+  // thead th:nth-of-type(6) {
+  //   border-right: none !important;
+  // }
 
   .setting-edit {
     display: flex;
