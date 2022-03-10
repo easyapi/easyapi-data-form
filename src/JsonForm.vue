@@ -16,7 +16,7 @@
       <el-table-column width="40" v-if="!haveRoot">
         <template slot-scope="scope">
           <i
-            v-if="scope.$index != renderData.length - 1"
+            v-if="scope.$index != renderData.length - 1 || parameter == 'path'"
             class="el-icon-s-operation"
           ></i>
         </template>
