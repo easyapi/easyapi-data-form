@@ -188,6 +188,18 @@
           />
         </template>
       </el-table-column>
+      <el-table-column v-if="ifMock" label="Mock">
+        <template slot-scope="scope">
+          <el-autocomplete
+            :disabled="scope.row.name == '根节点'"
+            style="width: 100%"
+            v-model="scope.row.mock"
+            size="small"
+            :fetch-suggestions="mockSearch"
+            :trigger-on-focus="false"
+          ></el-autocomplete>
+        </template>
+      </el-table-column>
 
       <el-table-column v-if="parameter == 'path'" width="100" align="right">
       </el-table-column>
@@ -388,9 +400,20 @@ export default {
     "unshownRequired",
     "unshownDefault",
     "ifBulkEdit",
+    "mockValues",
+    "ifMock"
   ],
   created() {
     this.initViewData();
+  },
+  computed: {
+    mockValuesItems() {
+      let mockValuesItems = [];
+      this.mockValues.map(function (item) {
+        mockValuesItems.push(item);
+      });
+      return mockValuesItems;
+    },
   },
   mounted() {
     this.initData();
@@ -1169,6 +1192,24 @@ export default {
           break;
       }
     },
+
+    // Mock
+    mockSearch(queryString, cb) {
+      var mockValues = this.mockValues;
+      var results = queryString
+        ? mockValues.filter(this.createFilter(queryString))
+        : mockValues;
+      cb(results);
+    },
+
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (
+          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) !=
+          -1
+        );
+      };
+    },
   },
 };
 </script>
@@ -1184,10 +1225,6 @@ export default {
     content: "\e791" !important;
   }
 
-  // .el-table__row td:nth-of-type(6) {
-  //   border-right: none !important;
-  // }
-
   .el-icon-s-operation {
     font-size: 16px;
     text-align: center;
@@ -1199,6 +1236,13 @@ export default {
   .el-table__row {
     td {
       padding: 4px 0 !important;
+
+      .is-disabled {
+        background-color: #fff !important;
+        .el-input__inner {
+          background-color: #fff !important;
+        }
+      }
     }
     &:hover td {
       .env-input-container {
@@ -1218,10 +1262,6 @@ export default {
       }
     }
   }
-
-  // thead th:nth-of-type(6) {
-  //   border-right: none !important;
-  // }
 
   .setting-edit {
     display: flex;
@@ -1286,6 +1326,7 @@ export default {
   border-color: #ebeef5;
 }
 </style>
+
 <style lang="less" scoped>
 .tools {
   padding: 8px 10px;
