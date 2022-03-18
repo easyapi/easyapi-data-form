@@ -9,6 +9,8 @@
       :modelData="modelData"
       :haveRoot="haveRoot"
       :ifBulkEdit="ifBulkEdit"
+      :mockValues="mockValues"
+      :ifMock='true'
       ref="jsonForm"
     ></easyapi-data-form>
     <div class="tools-btn pure-form">
@@ -45,6 +47,7 @@ export default {
           required: true,
           demo: null,
           defaultValue: "",
+          mock: "@666",
           childs: [
             {
               // id: 10,
@@ -54,6 +57,7 @@ export default {
               required: true,
               demo: "我和我的祖国",
               defaultValue: "",
+              mock: "@abc",
               childs: [
                 {
                   // id: 100,
@@ -116,6 +120,40 @@ export default {
       parameter: "path",
       unshownRequired: true,
       unshownDefault: true,
+      mockValues: [
+        { value: "Accept" },
+        { value: "Accept-Charset" },
+        { value: "Accept-Encoding" },
+        { value: "Accept-Language" },
+        { value: "Accept-Ranges" },
+        { value: "Authorization" },
+        { value: "Cache-Control" },
+        { value: "Connection" },
+        { value: "Cookie" },
+        { value: "Content-Length" },
+        { value: "Content-Type" },
+        { value: "Date" },
+        { value: "Expect" },
+        { value: "From" },
+        { value: "Host" },
+        { value: "If-Match" },
+        { value: "If-Modified-Since" },
+        { value: "If-None-Match" },
+        { value: "If-Range" },
+        { value: "If-Unmodified-Since" },
+        { value: "Max-Forwards" },
+        { value: "Pragma" },
+        { value: "Proxy-Authorization" },
+        { value: "Range" },
+        { value: "Referer" },
+        { value: "TE" },
+        { value: "Upgrade" },
+        { value: "User-Agent" },
+        { value: "Via" },
+        { value: "Warning" },
+        { value: "X-Requested-With" },
+        { value: "X-Request-ID" },
+      ],
     };
   },
   watch: {
