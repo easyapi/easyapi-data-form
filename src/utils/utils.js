@@ -2,19 +2,15 @@
  * 根据参数类型优化参数
  */
 export function optimizeParams(type, value) {
-  if (type == "int" || type == "double") {
+  if (type === "int" || type === "double") {
     if (value) {
       return Number(value);
     } else {
       return null;
     }
-  } else if (type == "boolean") {
-    return value == "true" ? true : value == "" ? "" : false;
+  } else if (type === "boolean") {
+    return value === "true" ? true : value === "" ? "" : false;
   } else {
-    if (value == "(NULL)") {
-      return null;
-    } else {
-      return value;
-    }
+    return value === "(NULL)" ? null : value;
   }
 }
