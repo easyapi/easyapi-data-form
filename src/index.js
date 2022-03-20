@@ -6,6 +6,9 @@ import "./assets/styles/common.less";
 import Element from "element-ui";
 import EnvInput from "easyapi-env-input";
 
+import x2js from "x2js";
+Vue.prototype.$x2js = new x2js();
+
 Vue.use(Element);
 Vue.use(EnvInput);
 

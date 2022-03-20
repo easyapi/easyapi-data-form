@@ -10,7 +10,7 @@
       :haveRoot="haveRoot"
       :ifBulkEdit="ifBulkEdit"
       :mockValues="mockValues"
-      :ifMock='true'
+      :ifMock="true"
       ref="jsonForm"
     ></easyapi-data-form>
     <div class="tools-btn pure-form">
@@ -22,6 +22,8 @@
       <el-button class="pure-button" @click="ifArrayFun">ifArray</el-button>
       <el-button class="pure-button" @click="ifObjectFun">ifObject</el-button>
       <el-button class="pure-button" @click="importJSON">importJSON</el-button>
+      <el-button class="pure-button" @click="importXML">importXML</el-button>
+      <el-button class="pure-button" @click="exportXML">exportXML</el-button>
     </div>
   </div>
 </template>
@@ -179,6 +181,14 @@ export default {
     },
     ifArrayFun() {
       this.ifArray = !this.ifArray;
+    },
+    importXML: function () {
+      let xml = `<?xml version="1.0" encoding="ISO-8859-1"?><nitf><head><title>Colombia Earthquake</title></head><body><headline><hl1>143 Dead in Colombia Earthquake</hl1></headline><byline><bytag>By Jared Kotler, Associated Press Writer</bytag></byline><dateline><location>Bogota, Colombia</location><date>Monday January 25 1999 7:28 ET</date></dateline></body></nitf>`;
+      this.$refs.jsonForm.importXML(xml);
+    },
+    exportXML() {
+      let xml = this.$refs.jsonForm.exportXML();
+      console.log(xml);
     },
     importJSON: function () {
       let obj = {

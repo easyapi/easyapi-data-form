@@ -401,7 +401,7 @@ export default {
     "unshownDefault",
     "ifBulkEdit",
     "mockValues",
-    "ifMock"
+    "ifMock",
   ],
   created() {
     this.initViewData();
@@ -1020,6 +1020,10 @@ export default {
       return this.renderData;
     },
 
+    exportXML() {
+      return this.$x2js.js2xml(this.exportJSON());
+    },
+
     exportJSON() {
       function getJson(targets, json) {
         targets.forEach((el) => {
@@ -1056,6 +1060,32 @@ export default {
       getJson(this.renderData, json);
       return json[this.renderData[0].name];
     },
+
+    importXML: function (xml) {
+      //xml转json
+      let json = this.$x2js.xml2js(xml);
+      //优化json数据
+      if (json) {
+        this.optimizeJson(json);
+      }
+      this.importJSON(json);
+    },
+
+    optimizeJson(json) {
+      for (let key in json) {
+        if (!json[key].__text && json[key].constructor === Object) {
+          this.optimizeJson(json[key]);
+        }
+        if (json[key].constructor === Array && json[key].length > 0) {
+          json[key].forEach((item) => {
+            this.optimizeJson(item);
+          });
+        }
+        if (json[key].__text) json[key] = json[key].__text;
+        if (key.indexOf("_") != -1) delete json[key];
+      }
+    },
+
     importJSON: function (json) {
       //如果是数组，只显示第一个
       if (json.constructor === Array && json.length > 0) {
