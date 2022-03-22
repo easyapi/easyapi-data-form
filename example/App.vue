@@ -24,6 +24,9 @@
       <el-button class="pure-button" @click="importJSON">importJSON</el-button>
       <el-button class="pure-button" @click="importXML">importXML</el-button>
       <el-button class="pure-button" @click="exportXML">exportXML</el-button>
+      <el-button class="pure-button" @click="getDataFormRoot"
+        >getDataFormRoot</el-button
+      >
     </div>
   </div>
 </template>
@@ -166,11 +169,16 @@ export default {
     },
   },
   methods: {
+    getDataFormRoot() {
+      let root = this.$refs.jsonForm.getDataFormRoot();
+      console.log(root);
+    },
     addNew() {
       this.$refs.jsonForm.addNew();
     },
     getJSONFormData() {
       let d = this.$refs.jsonForm.getJSONFormData();
+      console.log(d);
     },
     exportJSON() {
       let d = this.$refs.jsonForm.exportJSON();

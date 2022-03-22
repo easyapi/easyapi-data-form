@@ -55,7 +55,23 @@
           <el-select
             size="small"
             @change="typeChanged(scope.row)"
-            v-if="!scope.row.inArray"
+            v-if="!scope.row.inArray && scope.row.name == '根节点' && haveRoot"
+            v-model="scope.row.type"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in rootType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+
+          <el-select
+            size="small"
+            @change="typeChanged(scope.row)"
+            v-if="!scope.row.inArray && scope.row.name != '根节点'"
             v-model="scope.row.type"
             placeholder="请选择"
           >
@@ -238,7 +254,7 @@
           </el-button>
           <i
             v-if="
-              scope.row.level !== 1 ||
+              scope.row.name !== '根节点' ||
               (!haveRoot && scope.$index != renderData.length - 1)
             "
             @click="delRow(scope)"
@@ -306,6 +322,9 @@
 import Sortable from "sortablejs";
 import { optimizeParams } from "./utils/utils";
 import { fillId } from "./utils/fill";
+import x2js from "x2js";
+
+const $x2js = new x2js();
 
 export default {
   name: "JsonForm",
@@ -328,6 +347,16 @@ export default {
         {
           value: "",
           label: "",
+        },
+      ],
+      rootType: [
+        {
+          value: "array",
+          label: "array",
+        },
+        {
+          value: "object",
+          label: "object",
         },
       ],
       paramType: [
@@ -451,6 +480,12 @@ export default {
   },
 
   methods: {
+    getDataFormRoot() {
+      return {
+        type: this.renderData[0].type,
+        description: this.renderData[0].description,
+      };
+    },
     //打开弹窗
     openModal() {
       this.dialogVisible = true;
@@ -1017,19 +1052,23 @@ export default {
     },
 
     getJSONFormData() {
-      return this.renderData;
+      return this.renderData[0].childs;
     },
 
     exportXML() {
-      return this.$x2js.js2xml(this.exportJSON());
+      return $x2js.js2xml(this.exportJSON());
     },
 
     exportJSON() {
       function getJson(targets, json) {
         targets.forEach((el) => {
           if (el.type === "array") {
-            json[el.name] = [];
-            pushArray(el.childs, json[el.name]);
+            if (el.childs && el.childs.length > 0) {
+              json[el.name] = [{}];
+              pushArray(el.childs, json[el.name]);
+            } else {
+              json[el.name] = [];
+            }
           } else if (el.type === "object") {
             json[el.name] = {};
             getJson(el.childs, json[el.name]);
@@ -1042,16 +1081,23 @@ export default {
       function pushArray(targets, arr) {
         targets.forEach((el) => {
           if (el.type === "array") {
-            let tmpArr = [];
-            arr.push(tmpArr);
-            pushArray(el.childs, tmpArr);
+            if (el.childs && el.childs.length > 0) {
+              let tmpArr = [{}];
+              arr[0][el.name] = tmpArr;
+              // arr.push(tmpArr);
+              pushArray(el.childs, tmpArr);
+            } else {
+              arr[0][el.name] = [];
+            }
           } else if (el.type === "object") {
             json[el.name] = {};
             let tmpObj = {};
-            arr.push(tmpObj);
+            // arr.push(tmpObj);
+            arr[0][el.name] = tmpObj;
             getJson(el.childs, tmpObj);
           } else {
-            arr.push(el.demo);
+            // arr.push(el.demo);
+            arr[0][el.name] = optimizeParams(el.type, el.demo);
           }
         });
       }
@@ -1063,7 +1109,7 @@ export default {
 
     importXML: function (xml) {
       //xml转json
-      let json = this.$x2js.xml2js(xml);
+      let json = $x2js.xml2js(xml);
       //优化json数据
       if (json) {
         this.optimizeJson(json);
@@ -1114,7 +1160,7 @@ export default {
             parsedVal = parseJson(val);
           } else if (this.getType(val) === "array") {
             if (val.length > 0) {
-              parsedVal = parseArray([val[0]], k);
+              parsedVal = parseArray([val[0]]);
             }
           }
 
@@ -1150,7 +1196,7 @@ export default {
       };
 
       //
-      const parseArray = (arrayObj, k) => {
+      const parseArray = (arrayObj) => {
         const result = [];
         for (let i = 0; i < arrayObj.length; ++i) {
           let val = arrayObj[i];
@@ -1163,7 +1209,7 @@ export default {
 
           let opt = {
             // name: null,3
-            name: this.getType(val) === "object" ? (k ? `${k}[0]` : "") : val,
+            name: this.getType(val) === "object" ? "" : val,
             type: this.getType(val),
             defaultValue: "",
             description:
@@ -1191,7 +1237,7 @@ export default {
 
           result.push(opt);
         }
-        return result;
+        return result[0].childs;
       };
 
       // --
