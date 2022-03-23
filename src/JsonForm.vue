@@ -129,7 +129,7 @@
           <el-select
             v-model="scope.row.demo"
             v-if="scope.row.type == 'boolean' && !scope.row.inArray"
-            placeholder="请选择"
+            placeholder=""
             size="small"
           >
             <el-option
@@ -177,7 +177,7 @@
           <el-select
             v-model="scope.row.defaultValue"
             v-if="scope.row.type == 'boolean' && !scope.row.inArray"
-            placeholder="请选择"
+            placeholder=""
             size="small"
           >
             <el-option
@@ -337,16 +337,16 @@ export default {
       ifEdit: false,
       options: [
         {
+          value: "",
+          label: "",
+        },
+        {
           value: "true",
           label: "true",
         },
         {
           value: "false",
           label: "false",
-        },
-        {
-          value: "",
-          label: "",
         },
       ],
       rootType: [
