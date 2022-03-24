@@ -1051,15 +1051,19 @@ export default {
       this.selectedRow = row;
     },
 
-    getJSONFormData() {
-      return this.renderData[0].childs;
+    getJSONFormData(type) {
+      if (type == "XML") {
+        return this.renderData;
+      } else if (type == "JSON") {
+        return this.renderData[0].childs;
+      }
     },
 
     exportXML() {
-      return $x2js.js2xml(this.exportJSON());
+      return $x2js.js2xml(this.exportJSON("xml"));
     },
 
-    exportJSON() {
+    exportJSON(type) {
       function getJson(targets, json) {
         targets.forEach((el) => {
           if (el.type === "array") {
@@ -1104,7 +1108,11 @@ export default {
 
       const json = {};
       getJson(this.renderData, json);
-      return json[this.renderData[0].name];
+      if (type && type == "xml") {
+        return json;
+      } else {
+        return json[this.renderData[0].name];
+      }
     },
 
     importXML: function (xml) {
@@ -1114,7 +1122,7 @@ export default {
       if (json) {
         this.optimizeJson(json);
       }
-      this.importJSON(json);
+      this.importJSON(json, "xml");
     },
 
     optimizeJson(json) {
@@ -1132,17 +1140,23 @@ export default {
       }
     },
 
-    importJSON: function (json) {
+    importJSON: function (json, type) {
       //如果是数组，只显示第一个
       if (json.constructor === Array && json.length > 0) {
         json = [json[0]];
       }
       //加上根节点
-      let newData = {
-        根节点: json,
-      };
-      this.treeToTile();
-      this.renderData = fillId(this.jsonParse(newData));
+      if (type && type == "xml") {
+        let newData = json;
+        this.treeToTile();
+        this.renderData = fillId(this.jsonParse(newData));
+      } else {
+        let newData = {
+          根节点: json,
+        };
+        this.treeToTile();
+        this.renderData = fillId(this.jsonParse(newData));
+      }
     },
 
     jsonParse: function (jsonStr) {

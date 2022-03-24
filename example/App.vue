@@ -177,7 +177,7 @@ export default {
       this.$refs.jsonForm.addNew();
     },
     getJSONFormData() {
-      let d = this.$refs.jsonForm.getJSONFormData();
+      let d = this.$refs.jsonForm.getJSONFormData("JSON");
       console.log(d);
     },
     exportJSON() {
