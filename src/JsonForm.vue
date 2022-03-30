@@ -27,9 +27,8 @@
             v-if="!scope.row.inArray"
             style="width: 100%"
             :disabled="
-              (scope.row.level === 1 && haveRoot) ||
+              (scope.row.name == '根节点' && haveRoot) ||
               parameter == 'path' ||
-              scope.row.name == '根节点' ||
               (scope.row.name && scope.row.name.indexOf('[0]') != -1)
                 ? true
                 : false
@@ -489,7 +488,7 @@ export default {
     //打开弹窗
     openModal() {
       this.dialogVisible = true;
-      this.type = "URL";
+      this.quickAddType = "URL";
       this.quickText = "";
     },
     gotoEdit() {
@@ -606,7 +605,7 @@ export default {
           //给一个默认的值
           this.jsonData.push({
             id: 1,
-            name: "根节点",
+            name: this.type && this.type == "XML" ? "root" : "根节点",
             type: "object",
             description: "",
             required: false,
