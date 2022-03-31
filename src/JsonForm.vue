@@ -72,6 +72,7 @@
             @change="typeChanged(scope.row)"
             v-if="!scope.row.inArray && scope.row.name != '根节点'"
             v-model="scope.row.type"
+            filterable
             placeholder="请选择"
           >
             <el-option
@@ -980,7 +981,7 @@ export default {
                 Math.random() * 1000
               )}`,
               name: el,
-              type: typeof el,
+              type: this.getType(el),
               description: "",
               required: false,
               demo: el,
@@ -1034,7 +1035,7 @@ export default {
                 Math.random() * 1000
               )}`,
               name: key,
-              type: typeof data[key],
+              type: this.getType(data[key]),
               description: "",
               required: false,
               demo: data[key],
