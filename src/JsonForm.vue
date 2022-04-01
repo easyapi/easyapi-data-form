@@ -223,7 +223,6 @@
       <el-table-column
         v-if="parameter != 'path'"
         prop="options"
-        width="100"
         :align="ifBulkEdit ? 'right' : ''"
         label="操作"
       >
@@ -251,6 +250,14 @@
             v-if="scope.row.type === 'object' || scope.row.type === 'array'"
             style="margin-right: 10px"
             >插入
+          </el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="openDataStructureModal"
+            v-if="haveRoot && scope.row.name == ''"
+            style="margin-right: 10px"
+            >引用数据结构
           </el-button>
           <i
             v-if="
@@ -315,6 +322,8 @@
         >
       </span>
     </el-dialog>
+    <!-- 数据结构 -->
+    <DataStructureModal :visible.sync="dataStructureModal" />
   </div>
 </template>
 
@@ -323,16 +332,21 @@ import Sortable from "sortablejs";
 import { optimizeParams } from "./utils/utils";
 import { fillId } from "./utils/fill";
 import x2js from "x2js";
+import DataStructureModal from "./components/dataStructureModal.vue";
 
 const $x2js = new x2js();
 
 export default {
   name: "JsonForm",
+  components: {
+    DataStructureModal,
+  },
   data: function () {
     return {
       dialogVisible: false,
       quickText: "",
       quickAddType: "URL",
+      dataStructureModal: false,
       // 字段类型
       ifEdit: false,
       options: [
@@ -480,6 +494,9 @@ export default {
   },
 
   methods: {
+    openDataStructureModal() {
+      this.dataStructureModal = true;
+    },
     getDataFormRoot() {
       return {
         type: this.renderData[0].type,
