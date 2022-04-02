@@ -251,14 +251,14 @@
             style="margin-right: 10px"
             >插入
           </el-button>
-          <el-button
+          <!-- <el-button
             type="text"
             size="small"
             @click="openDataStructureModal"
             v-if="haveRoot && scope.row.name == ''"
             style="margin-right: 10px"
             >引用数据结构
-          </el-button>
+          </el-button> -->
           <i
             v-if="
               scope.row.name !== '根节点' ||
@@ -896,20 +896,47 @@ export default {
       if (type == "JSON") {
         let _urlParams = [];
         try {
-          let jsonData = JSON.parse(quickText);
-          if (Object.prototype.toString.call(jsonData) === "[object Array]") {
-            this.parseArray(jsonData, _urlParams);
-          }
-          if (Object.prototype.toString.call(jsonData) === "[object Object]") {
-            this.parseJson(jsonData, _urlParams);
-          }
-          for (let item of _urlParams) {
-            if (!this.haveRoot) {
-              this.renderData.splice(this.renderData.length - 1, 0, item);
-            } else {
+          if (this.haveRoot) {
+            let jsonData = JSON.parse(quickText);
+            if (Object.prototype.toString.call(jsonData) === "[object Array]") {
+              this.parseArray(jsonData, _urlParams);
+            }
+            if (Object.prototype.toString.call(jsonData) === "[object Object]") {
+              this.parseJson(jsonData, _urlParams);
+            }
+            for (let item of _urlParams) {
               this.renderData[0].childs.push(item);
             }
+          } else {
+            let jsonData = JSON.parse(quickText);
+            if (Object.prototype.toString.call(jsonData) === "[object Object]") {
+              for (let key in jsonData) {
+                this.renderData.splice(this.renderData.length - 1, 0, {
+                  id: +`${this.renderData.length + 1}${new Date().getTime()}`,
+                  name: key,
+                  type:
+                    this.getType(jsonData[key]) == "array" ||
+                    this.getType(jsonData[key]) == "object"
+                      ? "string"
+                      : this.getType(jsonData[key]),
+                  category: "Query",
+                  description: "",
+                  required: false,
+                  demo:
+                    this.getType(jsonData[key]) == "array" ||
+                    this.getType(jsonData[key]) == "object"
+                      ? jsonData[key].toString()
+                      : jsonData[key],
+                  defaultValue: "",
+                  childs: [],
+                  level: 1,
+                  parentId: 0,
+                });
+              }
+            }
+            // this.renderData.splice(this.renderData.length - 1, 0, item);
           }
+
           this.dialogVisible = false;
           // this.renderData = [...this.renderData, ..._urlParams];
         } catch (e) {
