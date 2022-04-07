@@ -142,6 +142,8 @@ export default {
         return;
       }
       this.handleClose();
+      this.$parent.getDataStructure(this.dataInfo);
+      this.$refs.multipleTable.clearSelection();
     },
   },
 };

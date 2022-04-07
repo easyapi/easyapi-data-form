@@ -29,7 +29,8 @@
             :disabled="
               (scope.row.name == '根节点' && haveRoot) ||
               parameter == 'path' ||
-              (scope.row.name && scope.row.name.indexOf('[0]') != -1)
+              (scope.row.name && scope.row.name.indexOf('[0]') != -1) ||
+              scope.row.disabled
                 ? true
                 : false
             "
@@ -251,14 +252,19 @@
             style="margin-right: 10px"
             >插入
           </el-button>
-          <!-- <el-button
+          <el-button
             type="text"
             size="small"
-            @click="openDataStructureModal"
-            v-if="haveRoot && scope.row.name == ''"
+            @click="openDataStructureModal(scope)"
+            v-if="
+              haveRoot &&
+              scope.row.name == '' &&
+              scope.row.type != 'object' &&
+              scope.row.type != 'array'
+            "
             style="margin-right: 10px"
             >引用数据结构
-          </el-button> -->
+          </el-button>
           <i
             v-if="
               scope.row.name !== '根节点' ||
@@ -428,6 +434,7 @@ export default {
       tableKey: "",
       sortable: null,
       renderValue: "",
+      row: [],
     };
   },
   props: [
@@ -494,7 +501,32 @@ export default {
   },
 
   methods: {
-    openDataStructureModal() {
+    getDataStructure(val) {
+      this.updateRenderData(this.renderData, val);
+
+      // setTimeout((el) => {
+      //   console.log(this.renderData, 465);
+      // }, 1000);
+    },
+    updateRenderData(value, val) {
+      value.forEach((el) => {
+        if (el === this.row) {
+          el.name = val[0].name;
+          el.type = val[0].type;
+          el.defaultValue = val[0].defaultValue;
+          el.demo = val[0].demo;
+          el.description = val[0].description;
+          el.childs = val[0].childs;
+          el.disabled = true;
+          return;
+        }
+        if (el.childs.length > 0) {
+          this.updateRenderData(el.childs, val);
+        }
+      });
+    },
+    openDataStructureModal(scope) {
+      this.row = scope.row;
       this.dataStructureModal = true;
     },
     getDataFormRoot() {
@@ -901,7 +933,9 @@ export default {
             if (Object.prototype.toString.call(jsonData) === "[object Array]") {
               this.parseArray(jsonData, _urlParams);
             }
-            if (Object.prototype.toString.call(jsonData) === "[object Object]") {
+            if (
+              Object.prototype.toString.call(jsonData) === "[object Object]"
+            ) {
               this.parseJson(jsonData, _urlParams);
             }
             for (let item of _urlParams) {
@@ -909,7 +943,9 @@ export default {
             }
           } else {
             let jsonData = JSON.parse(quickText);
-            if (Object.prototype.toString.call(jsonData) === "[object Object]") {
+            if (
+              Object.prototype.toString.call(jsonData) === "[object Object]"
+            ) {
               for (let key in jsonData) {
                 this.renderData.splice(this.renderData.length - 1, 0, {
                   id: +`${this.renderData.length + 1}${new Date().getTime()}`,
