@@ -13,7 +13,7 @@
       size="small"
       class="data-form-container"
     >
-      <el-table-column width="40" v-if="!haveRoot">
+      <el-table-column width="40" v-if="!haveRoot && !ifStruct">
         <template slot-scope="scope">
           <i
             v-if="scope.$index != renderData.length - 1 || parameter == 'path'"
@@ -30,7 +30,7 @@
               (scope.row.name == '根节点' && haveRoot) ||
               parameter == 'path' ||
               (scope.row.name && scope.row.name.indexOf('[0]') != -1) ||
-              scope.row.disabled
+              scope.row.ifStruct
                 ? true
                 : false
             "
@@ -248,8 +248,11 @@
             @click="insertRow(scope)"
             type="text"
             size="small"
-            v-if="scope.row.type === 'object' || scope.row.type === 'array'"
-            style="margin-right: 10px"
+            v-if="
+              (scope.row.type === 'object' || scope.row.type === 'array') &&
+              !scope.row.struct &&
+              !scope.row.ifStruct
+            "
             >插入
           </el-button>
           <el-button
@@ -257,18 +260,34 @@
             size="small"
             @click="openDataStructureModal(scope)"
             v-if="
-              haveRoot &&
-              scope.row.name == '' &&
-              scope.row.type != 'object' &&
-              scope.row.type != 'array'
+              ifStruct &&
+              (scope.row.type == 'object' || scope.row.type == 'array') &&
+              !scope.row.struct &&
+              !scope.row.ifStruct
             "
             style="margin-right: 10px"
             >引用数据结构
           </el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="delectStruct(scope)"
+            v-if="scope.row.struct"
+            >删除
+          </el-button>
+          <el-button
+            type="text"
+            size="small"
+            @click="cancelStruct(scope)"
+            v-if="scope.row.struct"
+            style="margin-right: 10px"
+            >取消
+          </el-button>
           <i
             v-if="
-              scope.row.name !== '根节点' ||
-              (!haveRoot && scope.$index != renderData.length - 1)
+              (scope.row.name !== '根节点' ||
+                (!haveRoot && scope.$index != renderData.length - 1)) &&
+              !scope.row.ifStruct
             "
             @click="delRow(scope)"
             class="el-icon-delete"
@@ -329,7 +348,7 @@
       </span>
     </el-dialog>
     <!-- 数据结构 -->
-    <DataStructureModal :visible.sync="dataStructureModal" />
+    <DataStructureModal :visible.sync="dataStructureModal" :struct="struct" />
   </div>
 </template>
 
@@ -452,6 +471,8 @@ export default {
     "ifBulkEdit",
     "mockValues",
     "ifMock",
+    "ifStruct",
+    "struct",
   ],
   created() {
     this.initViewData();
@@ -502,22 +523,15 @@ export default {
 
   methods: {
     getDataStructure(val) {
-      this.updateRenderData(this.renderData, val);
-
-      // setTimeout((el) => {
-      //   console.log(this.renderData, 465);
-      // }, 1000);
+      let arr = JSON.parse(JSON.stringify(val));
+      this.updateRenderData(this.renderData, arr);
     },
     updateRenderData(value, val) {
       value.forEach((el) => {
         if (el === this.row) {
-          el.name = val[0].name;
-          el.type = val[0].type;
-          el.defaultValue = val[0].defaultValue;
-          el.demo = val[0].demo;
-          el.description = val[0].description;
-          el.childs = val[0].childs;
-          el.disabled = true;
+          this.updateChilds(val[0].fields, true);
+          el.struct = val[0].name;
+          el.childs = val[0].fields;
           return;
         }
         if (el.childs.length > 0) {
@@ -525,14 +539,63 @@ export default {
         }
       });
     },
+    updateChilds(val, value) {
+      if (val && val.length > 0) {
+        val.forEach((item) => {
+          item.ifStruct = value;
+          this.updateChilds(item.childs, value);
+        });
+      }
+    },
     openDataStructureModal(scope) {
       this.row = scope.row;
       this.dataStructureModal = true;
+    },
+    delectStruct(scope) {
+      this.$confirm(
+        `是否要删除该数据结构的引用？该操作仅删除数据结构与API文档的关联，并不会删除实际的数据结构。`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(() => {
+        scope.row.childs = [];
+        scope.row.struct = null;
+      });
+    },
+    updateCancelStruct(value, val) {
+      value.forEach((el) => {
+        if (el === val) {
+          this.updateChilds(val.childs, false);
+          el.struct = null;
+          el.childs = val.childs;
+          return;
+        }
+        if (el.childs.length > 0) {
+          this.updateCancelStruct(el.childs, val);
+        }
+      });
+    },
+    cancelStruct(scope) {
+      this.$confirm(
+        `是否要独立保存该数据结构的信息到API文档中，并且取消该数据结构与API文档的关联？取消与数据结构的关联之后，数据结构的改动将不会再同步到API文档中。`,
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      ).then(() => {
+        this.updateCancelStruct(this.renderData, scope.row);
+      });
     },
     getDataFormRoot() {
       return {
         type: this.renderData[0].type,
         description: this.renderData[0].description,
+        struct: this.renderData[0].struct,
       };
     },
     //打开弹窗
@@ -747,7 +810,7 @@ export default {
             });
         }
       };
-      expanded(this.renderData);
+      expanded(fillId(this.renderData));
     },
     initData() {
       if (this.sortable && this.sortable.tbody) {

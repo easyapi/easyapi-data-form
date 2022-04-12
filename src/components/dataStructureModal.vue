@@ -9,7 +9,7 @@
     >
       <div>
         <el-table
-          :data="data"
+          :data="struct"
           border
           @selection-change="handleSelectionChange"
           :header-cell-style="{ background: '#f5f5f5', fontSize: '12px' }"
@@ -18,14 +18,22 @@
           style="width: 100%"
         >
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="类型" prop="type"> </el-table-column>
+          <el-table-column label="类型" prop="type">
+            <template>
+              <span>JSON</span>
+            </template>
+          </el-table-column>
           <el-table-column label="数据结构名称" prop="name"> </el-table-column>
           <el-table-column label="描述" prop="description"> </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="innerVisible = true"
-                >查看详情</el-button
+              <el-button
+                type="text"
+                size="small"
+                @click="openDetailModal(scope.row)"
               >
+                查看详情
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -38,7 +46,8 @@
       >
         <div>
           <el-table
-            :data="dataInfo"
+            v-if="innerVisible"
+            :data="structInfo"
             style="width: 100%; margin-bottom: 20px"
             row-key="id"
             border
@@ -67,61 +76,21 @@
 </template>
 
 <script>
+import { fillId } from "../utils/fill";
 export default {
-  props: ["visible"],
+  props: ["visible", "struct"],
   data() {
     return {
       innerVisible: false,
       selectData: [],
-      dataInfo: [
-        {
-          id: 1,
-          name: "login_info",
-          type: "object",
-          description: "用户登录信息",
-          required: true,
-          demo: "",
-          defaultValue: "",
-          mock: "",
-          childs: [
-            {
-              id: 10,
-              name: "user_name",
-              type: "string",
-              description: "用户名",
-              required: true,
-              demo: "",
-              defaultValue: "",
-              mock: "",
-            },
-            {
-              id: 11,
-              name: "user_password",
-              type: "string",
-              description: "密码",
-              required: true,
-              demo: "",
-              defaultValue: "",
-              mock: "",
-            },
-          ],
-        },
-      ],
-      data: [
-        {
-          type: "JSON",
-          name: "user_info",
-          description: "用户信息",
-        },
-        {
-          type: "JSON",
-          name: "user_info",
-          description: "用户信息",
-        },
-      ],
+      structInfo: [],
     };
   },
   methods: {
+    openDetailModal(row) {
+      this.innerVisible = true;
+      this.structInfo = fillId(row.fields);
+    },
     /**
      * 关闭
      */
@@ -141,8 +110,12 @@ export default {
         this.$message.warning("请选择数据结构");
         return;
       }
+      if (this.selectData.length > 1) {
+        this.$message.warning("当前限制选择 1 数据结构");
+        return;
+      }
       this.handleClose();
-      this.$parent.getDataStructure(this.dataInfo);
+      this.$parent.getDataStructure(this.selectData);
       this.$refs.multipleTable.clearSelection();
     },
   },
