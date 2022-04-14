@@ -9,6 +9,7 @@
       border
       default-expand-all
       :tree-props="{ children: 'childs', hasChildren: 'hasChildren' }"
+      :span-method="objectSpanMethod"
       ref="singleTable"
       size="small"
       class="data-form-container"
@@ -58,6 +59,7 @@
             v-if="!scope.row.inArray && scope.row.name == '根节点' && haveRoot"
             v-model="scope.row.type"
             placeholder="请选择"
+            :disabled="scope.row.ifStruct ? true : false"
           >
             <el-option
               v-for="item in rootType"
@@ -75,6 +77,7 @@
             v-model="scope.row.type"
             filterable
             placeholder="请选择"
+            :disabled="scope.row.ifStruct ? true : false"
           >
             <el-option
               v-for="item in paramType"
@@ -95,6 +98,7 @@
             placeholder="参数说明"
             :aggregateEnvs="aggregateEnvs"
             @input="addTable"
+            :disabled="scope.row.ifStruct ? true : false"
           />
         </template>
       </el-table-column>
@@ -107,7 +111,7 @@
         <template slot-scope="scope">
           <el-checkbox
             size="small"
-            :disabled="parameter == 'path'"
+            :disabled="parameter == 'path' || scope.row.ifStruct ? true : false"
             v-if="!scope.row.inArray"
             v-model="scope.row.required"
           ></el-checkbox>
@@ -123,7 +127,13 @@
             "
             v-model="scope.row.demo"
             placeholder="(NULL)"
-            :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
+            :disabled="
+              scope.row.type == 'object' ||
+              scope.row.type == 'array' ||
+              scope.row.ifStruct
+                ? true
+                : false
+            "
             size="small"
             type="number"
           ></el-input>
@@ -132,6 +142,7 @@
             v-if="scope.row.type == 'boolean' && !scope.row.inArray"
             placeholder=""
             size="small"
+            :disabled="scope.row.ifStruct ? true : false"
           >
             <el-option
               v-for="item in options"
@@ -150,7 +161,13 @@
             "
             style="width: 100%"
             v-model="scope.row.demo"
-            :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
+            :disabled="
+              scope.row.type == 'object' ||
+              scope.row.type == 'array' ||
+              scope.row.ifStruct
+                ? true
+                : false
+            "
             placeholder="参数示例"
             :aggregateEnvs="aggregateEnvs"
             @input="addTable"
@@ -171,7 +188,13 @@
             "
             v-model="scope.row.defaultValue"
             placeholder="(NULL)"
-            :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
+            :disabled="
+              scope.row.type == 'object' ||
+              scope.row.type == 'array' ||
+              scope.row.ifStruct
+                ? true
+                : false
+            "
             size="small"
             type="number"
           ></el-input>
@@ -180,6 +203,7 @@
             v-if="scope.row.type == 'boolean' && !scope.row.inArray"
             placeholder=""
             size="small"
+            :disabled="scope.row.ifStruct ? true : false"
           >
             <el-option
               v-for="item in options"
@@ -198,7 +222,13 @@
             "
             style="width: 100%"
             v-model="scope.row.defaultValue"
-            :disabled="scope.row.type == 'object' || scope.row.type == 'array'"
+            :disabled="
+              scope.row.type == 'object' ||
+              scope.row.type == 'array' ||
+              scope.row.ifStruct
+                ? true
+                : false
+            "
             placeholder="参数默认值"
             :aggregateEnvs="aggregateEnvs"
             @input="addTable"
@@ -208,7 +238,9 @@
       <el-table-column v-if="ifMock" label="Mock">
         <template slot-scope="scope">
           <el-autocomplete
-            :disabled="scope.row.name == '根节点'"
+            :disabled="
+              scope.row.name == '根节点' || scope.row.ifStruct ? true : false
+            "
             style="width: 100%"
             v-model="scope.row.mock"
             size="small"
@@ -268,26 +300,35 @@
             style="margin-right: 10px"
             >引用数据结构
           </el-button>
-          <el-button
-            type="text"
-            size="small"
-            @click="delectStruct(scope)"
-            v-if="scope.row.struct"
-            >删除
-          </el-button>
-          <el-button
-            type="text"
-            size="small"
-            @click="cancelStruct(scope)"
-            v-if="scope.row.struct"
-            style="margin-right: 10px"
-            >取消
-          </el-button>
+          <div
+            v-if="scope.row.struct && !scope.row.ifStruct"
+            style="display: flex; flex-flow: column; text-align: left"
+          >
+            <div>
+              <el-button type="text" size="small" @click="delectStruct(scope)"
+                >删除该数据结构
+              </el-button>
+            </div>
+            <div>
+              <el-button type="text" size="small" @click="cancelStruct(scope)"
+                >取消该数据结构的关联
+              </el-button>
+            </div>
+            <i
+              v-if="
+                scope.row.name !== '根节点' ||
+                (!haveRoot && scope.$index != renderData.length - 1)
+              "
+              @click="delRow(scope)"
+              class="el-icon-delete"
+            ></i>
+          </div>
           <i
             v-if="
               (scope.row.name !== '根节点' ||
                 (!haveRoot && scope.$index != renderData.length - 1)) &&
-              !scope.row.ifStruct
+              !scope.row.ifStruct &&
+              !scope.row.struct
             "
             @click="delRow(scope)"
             class="el-icon-delete"
@@ -522,6 +563,39 @@ export default {
   },
 
   methods: {
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      let num = 7;
+      if (this.unshownRequired && this.unshownDefault) {
+        num -= 2;
+      }
+      if (!this.ifMock) {
+        num -= 1;
+      }
+      if (columnIndex === num) {
+        if (row.struct && !row.ifStruct) {
+          return {
+            rowspan: this.getDataLength(row.childs, []).length + 1,
+            colspan: 1,
+          };
+        } else {
+          return {
+            rowspan: 1,
+            colspan: 1,
+          };
+        }
+      }
+    },
+    getDataLength(value, arr) {
+      if (value && value.length > 0) {
+        value.forEach((item) => {
+          arr.push(item);
+          if (item.childs) {
+            this.getDataLength(item.childs, arr);
+          }
+        });
+      }
+      return arr;
+    },
     getDataStructure(val) {
       let arr = JSON.parse(JSON.stringify(val));
       this.updateRenderData(this.renderData, arr);
@@ -534,7 +608,7 @@ export default {
           el.childs = val[0].fields;
           return;
         }
-        if (el.childs.length > 0) {
+        if (el.childs && el.childs.length > 0) {
           this.updateRenderData(el.childs, val);
         }
       });
@@ -543,6 +617,9 @@ export default {
       if (val && val.length > 0) {
         val.forEach((item) => {
           item.ifStruct = value;
+          if (!value) {
+            item.struct = null;
+          }
           this.updateChilds(item.childs, value);
         });
       }
@@ -573,7 +650,7 @@ export default {
           el.childs = val.childs;
           return;
         }
-        if (el.childs.length > 0) {
+        if (el.childs && el.childs.length > 0) {
           this.updateCancelStruct(el.childs, val);
         }
       });
