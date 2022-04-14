@@ -13,6 +13,7 @@
       ref="singleTable"
       size="small"
       class="data-form-container"
+      :style="{ fontSize: fontSize }"
     >
       <el-table-column width="40" v-if="!haveRoot && !ifStruct">
         <template slot-scope="scope">
@@ -39,20 +40,13 @@
             placeholder="参数名"
             :aggregateEnvs="aggregateEnvs"
             @input="addTable"
+            :style="{ fontSize: fontSize }"
           />
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
       </el-table-column>
       <el-table-column prop="type" label="类型" width="120">
         <template slot-scope="scope">
-          <!-- <el-cascader
-            size="small"
-            @change="typeChanged(scope.row)"
-            v-if="!scope.row.inArray"
-            v-model="scope.row.type"
-            :options="paramType"
-            :show-all-levels="false"
-          ></el-cascader> -->
           <el-select
             size="small"
             @change="typeChanged(scope.row)"
@@ -60,12 +54,14 @@
             v-model="scope.row.type"
             placeholder="请选择"
             :disabled="scope.row.ifStruct ? true : false"
+            :class="getClassName()"
           >
             <el-option
               v-for="item in rootType"
               :key="item.value"
               :label="item.label"
               :value="item.value"
+              :style="{ fontSize: fontSize }"
             >
             </el-option>
           </el-select>
@@ -78,12 +74,14 @@
             filterable
             placeholder="请选择"
             :disabled="scope.row.ifStruct ? true : false"
+            :class="getClassName()"
           >
             <el-option
               v-for="item in paramType"
               :key="item.value"
               :label="item.label"
               :value="item.value"
+              :style="{ fontSize: fontSize }"
             >
             </el-option>
           </el-select>
@@ -99,6 +97,7 @@
             :aggregateEnvs="aggregateEnvs"
             @input="addTable"
             :disabled="scope.row.ifStruct ? true : false"
+            :style="{ fontSize: fontSize }"
           />
         </template>
       </el-table-column>
@@ -121,6 +120,7 @@
         <template slot-scope="scope">
           <el-input
             style="width: 100%"
+            :style="{ fontSize: fontSize }"
             v-if="
               (scope.row.type == 'int' || scope.row.type == 'double') &&
               !scope.row.inArray
@@ -143,12 +143,14 @@
             placeholder=""
             size="small"
             :disabled="scope.row.ifStruct ? true : false"
+            :class="getClassName()"
           >
             <el-option
               v-for="item in options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
+              :style="{ fontSize: fontSize }"
             >
             </el-option>
           </el-select>
@@ -160,6 +162,7 @@
               !scope.row.inArray
             "
             style="width: 100%"
+            :style="{ fontSize: fontSize }"
             v-model="scope.row.demo"
             :disabled="
               scope.row.type == 'object' ||
@@ -182,6 +185,7 @@
         <template slot-scope="scope">
           <el-input
             style="width: 100%"
+            :style="{ fontSize: fontSize }"
             v-if="
               (scope.row.type == 'int' || scope.row.type == 'double') &&
               !scope.row.inArray
@@ -204,12 +208,14 @@
             placeholder=""
             size="small"
             :disabled="scope.row.ifStruct ? true : false"
+            :class="getClassName()"
           >
             <el-option
               v-for="item in options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
+              :style="{ fontSize: fontSize }"
             >
             </el-option>
           </el-select>
@@ -221,6 +227,7 @@
               !scope.row.inArray
             "
             style="width: 100%"
+            :style="{ fontSize: fontSize }"
             v-model="scope.row.defaultValue"
             :disabled="
               scope.row.type == 'object' ||
@@ -246,6 +253,7 @@
             size="small"
             :fetch-suggestions="mockSearch"
             :trigger-on-focus="false"
+            :class="getClassName()"
           ></el-autocomplete>
         </template>
       </el-table-column>
@@ -260,7 +268,7 @@
         label="操作"
       >
         <template slot="header" v-if="ifBulkEdit">
-          <div class="setting-edit">
+          <div class="setting-edit" :style="{ fontSize: fontSize }">
             <div @click="gotoEdit">批量修改</div>
             <el-tooltip
               class="item"
@@ -280,6 +288,7 @@
             @click="insertRow(scope)"
             type="text"
             size="small"
+            :style="{ fontSize: fontSize }"
             v-if="
               (scope.row.type === 'object' || scope.row.type === 'array') &&
               !scope.row.struct &&
@@ -291,6 +300,7 @@
             type="text"
             size="small"
             @click="openDataStructureModal(scope)"
+            :style="{ fontSize: fontSize }"
             v-if="
               ifStruct &&
               (scope.row.type == 'object' || scope.row.type == 'array') &&
@@ -305,12 +315,20 @@
             style="display: flex; flex-flow: column; text-align: left"
           >
             <div>
-              <el-button type="text" size="small" @click="delectStruct(scope)"
+              <el-button
+                :style="{ fontSize: fontSize }"
+                type="text"
+                size="small"
+                @click="delectStruct(scope)"
                 >删除该数据结构
               </el-button>
             </div>
             <div>
-              <el-button type="text" size="small" @click="cancelStruct(scope)"
+              <el-button
+                :style="{ fontSize: fontSize }"
+                type="text"
+                size="small"
+                @click="cancelStruct(scope)"
                 >取消该数据结构的关联
               </el-button>
             </div>
@@ -353,6 +371,7 @@
         :autosize="{ minRows: 4 }"
         type="textarea"
         v-model="renderValue"
+        :style="{ fontSize: fontSize }"
       >
       </el-input>
       <div class="bulk-edit_footer">
@@ -514,6 +533,7 @@ export default {
     "ifMock",
     "ifStruct",
     "struct",
+    "fontSize",
   ],
   created() {
     this.initViewData();
@@ -563,6 +583,19 @@ export default {
   },
 
   methods: {
+    getClassName() {
+      switch (this.fontSize) {
+        case "12px":
+          return "fontSize-12";
+          break;
+        case "14px":
+          return "fontSize-14";
+          break;
+        case "16px":
+          return "fontSize-16";
+          break;
+      }
+    },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       let num = 7;
       if (this.unshownRequired && this.unshownDefault) {
@@ -1529,6 +1562,24 @@ export default {
   // 取消input的上下箭头
   input::-webkit-inner-spin-button {
     -webkit-appearance: none !important;
+  }
+
+  .fontSize-12 {
+    .el-input__inner {
+      font-size: 12px;
+    }
+  }
+
+  .fontSize-14 {
+    .el-input__inner {
+      font-size: 14px;
+    }
+  }
+
+  .fontSize-16 {
+    .el-input__inner {
+      font-size: 16px;
+    }
   }
 
   .el-icon-arrow-right:before {

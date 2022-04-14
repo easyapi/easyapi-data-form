@@ -13,6 +13,7 @@
       :ifMock="true"
       :ifStruct="true"
       :struct="struct"
+      :fontSize="fontSize"
       ref="jsonForm"
     ></easyapi-data-form>
     <div class="tools-btn pure-form">
@@ -45,6 +46,7 @@ export default {
       modelData: null,
       ifBulkEdit: true,
       jsonClass: "jsonClass",
+      fontSize: "12px",
       struct: [
         {
           addTime: "2022-04-07 17:13:55",
