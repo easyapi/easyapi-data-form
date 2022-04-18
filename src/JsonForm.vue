@@ -952,6 +952,11 @@ export default {
         onMove: function ({ dragged, related }) {
           const oldRow = _this.renderDataRows[dragged.rowIndex];
           const newRow = _this.renderDataRows[related.rowIndex];
+
+          if (oldRow.ifStruct) {
+            return false;
+          }
+
           // if (
           //   oldRow.level !== newRow.level ||
           //   oldRow.parentId !== newRow.parentId
