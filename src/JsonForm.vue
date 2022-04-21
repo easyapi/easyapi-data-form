@@ -72,12 +72,14 @@
             v-if="!scope.row.inArray && scope.row.name != '根节点'"
             v-model="scope.row.type"
             filterable
+            :filter-method="(value) => dataFilter(value, scope.row)"
             placeholder="请选择"
             :disabled="scope.row.ifStruct ? true : false"
             :class="getClassName()"
+            @focus="dataFocus"
           >
             <el-option
-              v-for="item in paramType"
+              v-for="item in paramTypeCopy"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -458,6 +460,7 @@ export default {
           label: "object",
         },
       ],
+      paramTypeCopy: [],
       paramType: [
         // {
         //   value: "引用类型",
@@ -583,6 +586,24 @@ export default {
   },
 
   methods: {
+    dataFocus() {
+      this.paramTypeCopy = this.paramType;
+    },
+    dataFilter(val, row) {
+      if (val) {
+        this.paramTypeCopy = this.paramType.filter((item) => {
+          if (
+            !!~item.label.indexOf(val) ||
+            !!~item.label.toUpperCase().indexOf(val.toUpperCase())
+          ) {
+            return true;
+          }
+        });
+        if (this.paramTypeCopy.length > 0) row.type = val;
+      } else {
+        this.paramTypeCopy = this.paramType;
+      }
+    },
     getClassName() {
       switch (this.fontSize) {
         case "12px":

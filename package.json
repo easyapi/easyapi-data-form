@@ -1,6 +1,6 @@
 {
   "name": "easyapi-data-form",
-  "version": "1.2.20",
+  "version": "1.2.21",
   "description": "EasyAPI（JSON、XML）表单组件",
   "author": "easyapi",
   "keywords": [
@@ -32,7 +32,7 @@
     "lodash": "^4.17.21",
     "vuedraggable": "^2.24.3",
     "easyapi-js-sandbox": "^1.0.4",
-    "easyapi-env-input": "^1.1.10",
+    "easyapi-env-input": "^1.1.11",
     "x2js": "^3.4.3"
   },
   "devDependencies": {
