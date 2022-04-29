@@ -9,7 +9,7 @@ export function optimizeParams(type, value) {
       return null;
     }
   } else if (type === "boolean") {
-    return value === "true" ? true : value === "" ? "" : false;
+    return value === "true" ? true : value === "" ? null : false;
   } else {
     return value === "(NULL)" ? null : value;
   }

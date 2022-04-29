@@ -991,10 +991,9 @@ export default {
           const newRow = _this.renderDataRows[newIndex];
 
           if (newIndex !== oldIndex && oldRow.level === newRow.level) {
-            //递归找到父类的数据
+            // //递归找到父类的数据
             let renderDataArrNew = [];
             let renderDataArrOld = [];
-
             if (oldRow.parentId === 0) {
               renderDataArrNew = _this.renderData;
             } else {
@@ -1024,7 +1023,6 @@ export default {
             if (oldRow.parentId === newRow.parentId) {
               renderDataArrOld = renderDataArrNew;
             }
-
             //根据ID找出树状图的坐标
             let oldIndexTree = renderDataArrOld.findIndex(
               (x) => x.id === oldRow.id
@@ -1032,7 +1030,6 @@ export default {
             let newIndexTree = renderDataArrNew.findIndex(
               (x) => x.id === newRow.id
             );
-
             if (oldRow.parentId !== newRow.parentId) {
               if (oldIndex < newIndex) {
                 newIndexTree += 1;
@@ -1040,10 +1037,9 @@ export default {
               renderDataArrOld[oldIndexTree].parentId =
                 renderDataArrNew[0].parentId;
             }
-
             const currRow = renderDataArrOld.splice(oldIndexTree, 1)[0];
-            renderDataArrNew.splice(newIndexTree, 0, currRow);
 
+            renderDataArrNew.splice(newIndexTree, 0, currRow);
             _this.initData();
           }
         },

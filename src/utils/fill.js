@@ -3,40 +3,31 @@
  * @param array 原数组
  */
 let fillId = function (array) {
-  return childs(array, 0, 1)
-}
+  return childs(array, 0, 1, 1);
+};
 
 /**
  * 子元素处理
  * @param array 数组
  * @param parentId 父级ID
  * @param level 第几级（从1开始）
+ * @param id id（从1开始）
+ *
  */
-function childs(array, parentId, level) {
-
-  const parseJson = (json, parentId) => {
+function childs(array, parentId, level, id) {
+  const parseJson = (json, parentId, level) => {
     let result = json;
     result.forEach((k, index) => {
-      k.id = level++;
+      k.id = id++;
       k.parentId = parentId;
+      k.level = level;
       if (k.childs && k.childs.length > 0) {
-        k.childs = parseJson(k.childs, k.id);
+        k.childs = parseJson(k.childs, k.id, k.level + 1);
       }
     });
     return result;
   };
-  return parseJson(array,parentId);
-
-  // for (let i=0;i<array.length; i++) {
-  //   array[i].id = parseInt(level + "" + i);
-  //   array[i].parentId = parentId;
-  //   if (array[i].childs && array[i].childs.length > 0) {
-  //     childs(array[i].childs, array[i].id, level + 1)
-  //   }
-  // }
-  // return array;
+  return parseJson(array, parentId, level);
 }
 
-export {
-  fillId
-}
+export { fillId };
