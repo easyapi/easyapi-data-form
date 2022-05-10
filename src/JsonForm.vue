@@ -247,6 +247,7 @@
       <el-table-column v-if="ifMock" label="Mock">
         <template slot-scope="scope">
           <el-autocomplete
+            popper-class="my-autocomplete"
             :disabled="
               scope.row.name == '根节点' || scope.row.ifStruct ? true : false
             "
@@ -256,7 +257,12 @@
             :fetch-suggestions="mockSearch"
             :trigger-on-focus="false"
             :class="getClassName()"
-          ></el-autocomplete>
+          >
+            <template slot-scope="{ item }">
+              <span class="value">{{ item.value }}</span>
+              <span class="label">{{ item.label }}</span>
+            </template>
+          </el-autocomplete>
         </template>
       </el-table-column>
 
@@ -1580,6 +1586,29 @@ export default {
 </script>
 
 <style lang="less">
+.my-autocomplete {
+  width: 400px !important;
+  li {
+    line-height: normal;
+    display: flex;
+    justify-content: space-between;
+
+    .value {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 240px;
+    }
+
+    .label {
+      color: #b4b4b4;
+    }
+
+    .highlighted .label {
+      color: #ddd;
+    }
+  }
+}
+
 .data-form-container {
   // 取消input的上下箭头
   input::-webkit-inner-spin-button {
