@@ -46,7 +46,7 @@ export default {
       modelData: null,
       ifBulkEdit: true,
       jsonClass: "jsonClass",
-      fontSize: "12px",
+      fontSize: 12,
       struct: [
         {
           addTime: "2022-04-07 17:13:55",
@@ -697,7 +697,26 @@ export default {
       this.ifArray = !this.ifArray;
     },
     importXML: function () {
-      let xml = `<?xml version="1.0" encoding="ISO-8859-1"?><nitf><head><title>Colombia Earthquake</title></head><body><headline><hl1>143 Dead in Colombia Earthquake</hl1></headline><byline><bytag>By Jared Kotler, Associated Press Writer</bytag></byline><dateline><location>Bogota, Colombia</location><date>Monday January 25 1999 7:28 ET</date></dateline></body></nitf>`;
+      let xml = `<bookstore>
+<book category="COOKING">
+  <title lang="en">Everyday Italian</title> 
+  <author>Giada De Laurentiis</author> 
+  <year>2005</year> 
+  <price>30.00</price> 
+</book>
+<book category="CHILDREN">
+  <title lang="en">Harry Potter</title> 
+  <author>J K. Rowling</author> 
+  <year>2005</year> 
+  <price>29.99</price> 
+</book>
+<book category="WEB">
+  <title lang="en">Learning XML</title> 
+  <author>Erik T. Ray</author> 
+  <year>2003</year> 
+  <price>39.95</price> 
+</book>
+</bookstore>`;
       this.$refs.jsonForm.importXML(xml);
     },
     exportXML() {

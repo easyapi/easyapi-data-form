@@ -13,7 +13,7 @@
       ref="singleTable"
       size="small"
       class="data-form-container"
-      :style="{ fontSize: fontSize }"
+      :style="{ fontSize: fontSize + 'px' }"
     >
       <el-table-column width="40" v-if="!haveRoot && !ifStruct">
         <template slot-scope="scope">
@@ -40,7 +40,7 @@
             placeholder="参数名"
             :aggregateEnvs="aggregateEnvs"
             @input="addTable"
-            :style="{ fontSize: fontSize }"
+            :style="{ fontSize: fontSize + 'px' }"
           />
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
@@ -61,7 +61,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-              :style="{ fontSize: fontSize }"
+              :style="{ fontSize: fontSize + 'px' }"
             >
             </el-option>
           </el-select>
@@ -83,7 +83,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-              :style="{ fontSize: fontSize }"
+              :style="{ fontSize: fontSize + 'px' }"
             >
             </el-option>
           </el-select>
@@ -99,7 +99,7 @@
             :aggregateEnvs="aggregateEnvs"
             @input="addTable"
             :disabled="scope.row.ifStruct ? true : false"
-            :style="{ fontSize: fontSize }"
+            :style="{ fontSize: fontSize + 'px' }"
           />
         </template>
       </el-table-column>
@@ -122,7 +122,7 @@
         <template slot-scope="scope">
           <el-input
             style="width: 100%"
-            :style="{ fontSize: fontSize }"
+            :style="{ fontSize: fontSize + 'px' }"
             v-if="
               (scope.row.type == 'int' || scope.row.type == 'double') &&
               !scope.row.inArray
@@ -152,7 +152,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-              :style="{ fontSize: fontSize }"
+              :style="{ fontSize: fontSize + 'px' }"
             >
             </el-option>
           </el-select>
@@ -164,7 +164,7 @@
               !scope.row.inArray
             "
             style="width: 100%"
-            :style="{ fontSize: fontSize }"
+            :style="{ fontSize: fontSize + 'px' }"
             v-model="scope.row.demo"
             :disabled="
               scope.row.type == 'object' ||
@@ -187,7 +187,7 @@
         <template slot-scope="scope">
           <el-input
             style="width: 100%"
-            :style="{ fontSize: fontSize }"
+            :style="{ fontSize: fontSize + 'px' }"
             v-if="
               (scope.row.type == 'int' || scope.row.type == 'double') &&
               !scope.row.inArray
@@ -217,7 +217,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
-              :style="{ fontSize: fontSize }"
+              :style="{ fontSize: fontSize + 'px' }"
             >
             </el-option>
           </el-select>
@@ -229,7 +229,7 @@
               !scope.row.inArray
             "
             style="width: 100%"
-            :style="{ fontSize: fontSize }"
+            :style="{ fontSize: fontSize + 'px' }"
             v-model="scope.row.defaultValue"
             :disabled="
               scope.row.type == 'object' ||
@@ -296,7 +296,7 @@
             @click="insertRow(scope)"
             type="text"
             size="small"
-            :style="{ fontSize: fontSize }"
+            :style="{ fontSize: fontSize + 'px' }"
             v-if="
               (scope.row.type === 'object' || scope.row.type === 'array') &&
               !scope.row.struct &&
@@ -308,7 +308,7 @@
             type="text"
             size="small"
             @click="openDataStructureModal(scope)"
-            :style="{ fontSize: fontSize }"
+            :style="{ fontSize: fontSize + 'px' }"
             v-if="
               ifStruct &&
               (scope.row.type == 'object' || scope.row.type == 'array') &&
@@ -379,7 +379,7 @@
         :autosize="{ minRows: 4 }"
         type="textarea"
         v-model="renderValue"
-        :style="{ fontSize: fontSize }"
+        :style="{ fontSize: fontSize + 'px' }"
       >
       </el-input>
       <div class="bulk-edit_footer">
@@ -612,13 +612,13 @@ export default {
     },
     getClassName() {
       switch (this.fontSize) {
-        case "12px":
+        case 12:
           return "fontSize-12";
           break;
-        case "14px":
+        case 14:
           return "fontSize-14";
           break;
-        case "16px":
+        case 16:
           return "fontSize-16";
           break;
       }
@@ -1349,8 +1349,14 @@ export default {
         targets.forEach((el) => {
           if (el.type === "array") {
             if (el.childs && el.childs.length > 0) {
-              json[el.name] = [{}];
-              pushArray(el.childs, json[el.name]);
+              console.log(el.name);
+              if (type == "xml") {
+                json[el.name] = [{}, {}];
+                pushArray(el.childs, json[el.name]);
+              } else {
+                json[el.name] = [{}];
+                pushArray(el.childs, json[el.name]);
+              }
             } else {
               json[el.name] = [];
             }
@@ -1368,21 +1374,41 @@ export default {
           if (el.type === "array") {
             if (el.childs && el.childs.length > 0) {
               let tmpArr = [{}];
-              arr[0][el.name] = tmpArr;
+              if (type == "xml") {
+                arr[0][el.name] = tmpArr;
+                arr[1][el.name] = tmpArr;
+              } else {
+                arr[0][el.name] = tmpArr;
+              }
               // arr.push(tmpArr);
               pushArray(el.childs, tmpArr);
             } else {
-              arr[0][el.name] = [];
+              if (type == "xml") {
+                arr[0][el.name] = [];
+                arr[1][el.name] = [];
+              } else {
+                arr[0][el.name] = [];
+              }
             }
           } else if (el.type === "object") {
             json[el.name] = {};
             let tmpObj = {};
             // arr.push(tmpObj);
-            arr[0][el.name] = tmpObj;
+            if (type == "xml") {
+              arr[0][el.name] = tmpObj;
+              arr[1][el.name] = tmpObj;
+            } else {
+              arr[0][el.name] = tmpObj;
+            }
             getJson(el.childs, tmpObj);
           } else {
             // arr.push(el.demo);
-            arr[0][el.name] = optimizeParams(el.type, el.demo);
+            if (type == "xml") {
+              arr[0][el.name] = optimizeParams(el.type, el.demo);
+              arr[1][el.name] = optimizeParams(el.type, el.demo);
+            } else {
+              arr[0][el.name] = optimizeParams(el.type, el.demo);
+            }
           }
         });
       }
