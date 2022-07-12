@@ -393,18 +393,44 @@
       :visible.sync="dialogVisible"
       width="50%"
     >
-      <el-radio-group v-model="quickAddType">
+      <el-radio-group v-model="quickAddType" @change="changeQuickAddType">
         <el-radio label="URL">URL请求</el-radio>
         <el-radio label="JSON">JSON</el-radio>
+        <!-- <el-radio label="JAVA">JAVA实体类</el-radio> -->
       </el-radio-group>
-      <el-input
-        type="textarea"
-        placeholder="请输入内容"
-        v-model="quickText"
-        rows="8"
-        show-word-limit
-        style="margin-top: 20px"
-      ></el-input>
+
+      <div v-if="quickAddType != 'JAVA'">
+        <el-input
+          type="textarea"
+          :placeholder="placeholder"
+          v-model="quickText"
+          rows="8"
+          show-word-limit
+          style="margin-top: 20px"
+        ></el-input>
+      </div>
+
+      <div v-else>
+        <el-upload
+          class="upload-demo"
+          :multiple="false"
+          :auto-upload="true"
+          list-type="text"
+          :show-file-list="true"
+          :before-upload="beforeUpload"
+          :drag="true"
+          action="#"
+          :limit="1"
+          :on-exceed="handleExceed"
+          :http-request="uploadFile"
+          :on-remove="handleRemove"
+          style="margin-top: 20px"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        </el-upload>
+      </div>
+
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
         <el-button
@@ -440,6 +466,7 @@ export default {
       quickText: "",
       quickAddType: "URL",
       dataStructureModal: false,
+      placeholder: "例如?a=1&b=2",
       // 字段类型
       ifEdit: false,
       options: [
@@ -592,6 +619,45 @@ export default {
   },
 
   methods: {
+    changeQuickAddType() {
+      if (this.quickAddType == "URL") {
+        this.placeholder = "例如?a=1&b=2";
+      } else {
+        this.placeholder = "例如{'a': 1,'b': 2}";
+      }
+    },
+    //上传文件之前判断上传文件格式
+    beforeUpload(file) {
+      // let type = file.name.split(".")[1];
+      // if (type == "json" || type == "yaml") {
+      //   return true;
+      // } else {
+      //   this.$message.error(`请上传正确格式的swagger文件`);
+      //   return false;
+      // }
+    },
+    // 上传文件个数超过定义的数量
+    handleExceed() {
+      this.$message.warning(`当前限制选择 1 个文件,请删除后继续上传`);
+      return false;
+    },
+    // 上传文件
+    uploadFile(item) {
+      let fileSelect = item.file; //找到文件上传的元素
+      let reader = new FileReader();
+      reader.readAsText(fileSelect);
+      reader.onload = (e) => {
+        // let str = e.target.result;
+        // let test = /(public\s[a-zA-Z])/;
+        // let arr = str.match(test);
+        // console.log(arr);
+        this.uploadData = e.target.result;
+      };
+    },
+    //移除上传文件
+    handleRemove() {
+      this.uploadData = null;
+    },
     dataFocus() {
       this.paramTypeCopy = this.paramType;
     },
