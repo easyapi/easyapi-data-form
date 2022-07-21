@@ -1701,6 +1701,12 @@ export default {
   }
 }
 
+.data-form {
+  .el-table .cell {
+    overflow: visible;
+  }
+}
+
 .data-form-container {
   // 取消input的上下箭头
   input::-webkit-inner-spin-button {
@@ -1795,13 +1801,13 @@ export default {
   }
 
   .env-input-container {
-    height: 25px !important;
-    line-height: 25px !important;
+    height: 32px !important;
+    line-height: 32px !important;
     .env-input {
       padding: 0 15px 0 4px !important;
       border: 0px solid #dcdfe6 !important;
-      height: 25px !important;
-      line-height: 25px !important;
+      min-height: 32px !important;
+      line-height: 32px !important;
     }
     .is-disabled[data-v-6d9ac156] {
       background-color: #fff !important;
