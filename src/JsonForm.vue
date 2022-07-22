@@ -27,7 +27,6 @@
         <template slot-scope="scope">
           <easyapi-env-input
             v-if="!scope.row.inArray"
-            style="width: 100%"
             :disabled="
               (scope.row.name == '根节点' && haveRoot) ||
               parameter == 'path' ||
@@ -40,7 +39,10 @@
             placeholder="参数名"
             :aggregateEnvs="aggregateEnvs"
             @input="addTable"
-            :style="{ fontSize: fontSize + 'px' }"
+            :style="{
+              fontSize: fontSize + 'px',
+              maxWidth: getMaxWidth(scope),
+            }"
           />
           <p v-else>{{ `[ Object ]` }}</p>
         </template>
@@ -619,6 +621,17 @@ export default {
   },
 
   methods: {
+    getMaxWidth(row) {
+      let maxWidth = "";
+      if (row.treeNode) {
+        maxWidth =
+          "calc( 100% - " + (20 + 12 * row.treeNode.level) + "px" + " )";
+      } else {
+        maxWidth = "100%";
+      }
+      console.log(maxWidth);
+      return maxWidth;
+    },
     changeQuickAddType() {
       if (this.quickAddType == "URL") {
         this.placeholder = "例如?a=1&b=2";
@@ -1702,8 +1715,14 @@ export default {
 }
 
 .data-form {
-  .el-table .cell {
+  .el-table,
+  .el-table .cell,
+  .el-table__body-wrapper {
     overflow: visible;
+  }
+
+  .el-table__body-wrapper {
+    position: static !important;
   }
 }
 
@@ -1804,8 +1823,8 @@ export default {
     height: 32px !important;
     line-height: 32px !important;
     .env-input {
-      padding: 0 15px 0 4px !important;
-      border: 0px solid #dcdfe6 !important;
+      padding: 0 4px 0 4px !important;
+      // border: 0px solid #dcdfe6 !important;
       min-height: 32px !important;
       line-height: 32px !important;
     }
