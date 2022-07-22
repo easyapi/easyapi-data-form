@@ -398,40 +398,18 @@
       <el-radio-group v-model="quickAddType" @change="changeQuickAddType">
         <el-radio label="URL">URL请求</el-radio>
         <el-radio label="JSON">JSON</el-radio>
-        <!-- <el-radio label="JAVA">JAVA实体类</el-radio> -->
+        <el-radio label="JAVA">实体类</el-radio>
+        <el-radio label="SQL">SQL语句</el-radio>
       </el-radio-group>
 
-      <div v-if="quickAddType != 'JAVA'">
-        <el-input
-          type="textarea"
-          :placeholder="placeholder"
-          v-model="quickText"
-          rows="8"
-          show-word-limit
-          style="margin-top: 20px"
-        ></el-input>
-      </div>
-
-      <div v-else>
-        <el-upload
-          class="upload-demo"
-          :multiple="false"
-          :auto-upload="true"
-          list-type="text"
-          :show-file-list="true"
-          :before-upload="beforeUpload"
-          :drag="true"
-          action="#"
-          :limit="1"
-          :on-exceed="handleExceed"
-          :http-request="uploadFile"
-          :on-remove="handleRemove"
-          style="margin-top: 20px"
-        >
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        </el-upload>
-      </div>
+      <el-input
+        type="textarea"
+        :placeholder="placeholder"
+        v-model="quickText"
+        rows="8"
+        show-word-limit
+        style="margin-top: 20px"
+      ></el-input>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
@@ -454,6 +432,7 @@ import { optimizeParams } from "./utils/utils";
 import { fillId } from "./utils/fill";
 import x2js from "x2js";
 import DataStructureModal from "./components/dataStructureModal.vue";
+import { parseJavaEntity } from "./utils/parseJava";
 
 const $x2js = new x2js();
 
@@ -629,51 +608,26 @@ export default {
       } else {
         maxWidth = "100%";
       }
-      console.log(maxWidth);
       return maxWidth;
     },
+
     changeQuickAddType() {
       if (this.quickAddType == "URL") {
         this.placeholder = "例如?a=1&b=2";
-      } else {
+      } else if (this.quickAddType == "JSON") {
         this.placeholder = "例如{'a': 1,'b': 2}";
+      } else if (this.quickAddType == "JAVA") {
+        this.placeholder =
+          "支持Java语法，单行注释（上行，行尾） //……，块注释/*……*/上一行注释，文档注释/**……*/，如果不满足您的需求，请联系客服";
+      } else if (this.quickAddType == "SQL") {
+        this.placeholder = "";
       }
     },
-    //上传文件之前判断上传文件格式
-    beforeUpload(file) {
-      // let type = file.name.split(".")[1];
-      // if (type == "json" || type == "yaml") {
-      //   return true;
-      // } else {
-      //   this.$message.error(`请上传正确格式的swagger文件`);
-      //   return false;
-      // }
-    },
-    // 上传文件个数超过定义的数量
-    handleExceed() {
-      this.$message.warning(`当前限制选择 1 个文件,请删除后继续上传`);
-      return false;
-    },
-    // 上传文件
-    uploadFile(item) {
-      let fileSelect = item.file; //找到文件上传的元素
-      let reader = new FileReader();
-      reader.readAsText(fileSelect);
-      reader.onload = (e) => {
-        // let str = e.target.result;
-        // let test = /(public\s[a-zA-Z])/;
-        // let arr = str.match(test);
-        // console.log(arr);
-        this.uploadData = e.target.result;
-      };
-    },
-    //移除上传文件
-    handleRemove() {
-      this.uploadData = null;
-    },
+
     dataFocus() {
       this.paramTypeCopy = this.paramType;
     },
+
     dataFilter(val, row) {
       if (val) {
         this.paramTypeCopy = this.paramType.filter((item) => {
@@ -689,6 +643,7 @@ export default {
         this.paramTypeCopy = this.paramType;
       }
     },
+
     getClassName() {
       switch (this.fontSize) {
         case 12:
@@ -702,6 +657,7 @@ export default {
           break;
       }
     },
+
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       let num = 7;
       if (this.unshownRequired && this.unshownDefault) {
@@ -724,6 +680,7 @@ export default {
         }
       }
     },
+
     getDataLength(value, arr) {
       if (value && value.length > 0) {
         value.forEach((item) => {
@@ -735,10 +692,12 @@ export default {
       }
       return arr;
     },
+
     getDataStructure(val) {
       let arr = JSON.parse(JSON.stringify(val));
       this.updateRenderData(this.renderData, arr);
     },
+
     updateRenderData(value, val) {
       value.forEach((el) => {
         if (el === this.row) {
@@ -752,6 +711,7 @@ export default {
         }
       });
     },
+
     updateChilds(val, value) {
       if (val && val.length > 0) {
         val.forEach((item) => {
@@ -763,10 +723,12 @@ export default {
         });
       }
     },
+
     openDataStructureModal(scope) {
       this.row = scope.row;
       this.dataStructureModal = true;
     },
+
     delectStruct(scope) {
       this.$confirm(
         `是否要删除该数据结构的引用？该操作仅删除数据结构与API文档的关联，并不会删除实际的数据结构。`,
@@ -781,6 +743,7 @@ export default {
         scope.row.struct = null;
       });
     },
+
     updateCancelStruct(value, val) {
       value.forEach((el) => {
         if (el === val) {
@@ -794,6 +757,7 @@ export default {
         }
       });
     },
+
     cancelStruct(scope) {
       this.$confirm(
         `是否要独立保存该数据结构的信息到API文档中，并且取消该数据结构与API文档的关联？取消与数据结构的关联之后，数据结构的改动将不会再同步到API文档中。`,
@@ -807,6 +771,7 @@ export default {
         this.updateCancelStruct(this.renderData, scope.row);
       });
     },
+
     getDataFormRoot() {
       return {
         type: this.renderData[0].type,
@@ -814,12 +779,14 @@ export default {
         struct: this.renderData[0].struct,
       };
     },
+
     //打开弹窗
     openModal() {
       this.dialogVisible = true;
       this.quickAddType = "URL";
       this.quickText = "";
     },
+
     gotoEdit() {
       this.ifEdit = true;
       if (!this.haveRoot) {
@@ -1298,6 +1265,8 @@ export default {
         } catch (e) {
           this.$message.error("请输入合法的URL");
         }
+      } else if (type == "JAVA") {
+        parseJavaEntity(quickText);
       }
     },
 
@@ -1428,7 +1397,6 @@ export default {
         targets.forEach((el) => {
           if (el.type === "array") {
             if (el.childs && el.childs.length > 0) {
-              console.log(el.name);
               if (type == "xml") {
                 json[el.name] = [{}, {}];
                 pushArray(el.childs, json[el.name]);
