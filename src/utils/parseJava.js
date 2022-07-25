@@ -1,4 +1,5 @@
-import { optimizeType } from "./utils";
+import {optimizeType} from "./utils";
+
 /**
  *  解析JAVA实体类
  */
@@ -117,14 +118,14 @@ function getComments(value, type) {
  *  获取数据 返回name type
  */
 function getData(value) {
-  let regExp = /\public.*?\;/;
+  let regExp = /\public|private|\s.*?\;/;
   let resultList = value.match(regExp);
   let arr = [];
   if (resultList.length > 0) {
     arr = resultList[0].replace(";", "").match(/[A-Za-z]+/g);
   }
   return {
-    name: arr[2],
-    type: optimizeType(arr[1]),
+    name: arr[arr.length - 1],
+    type: optimizeType(arr[arr.length - 2]),
   };
 }
