@@ -428,6 +428,7 @@
 
 <script>
 import Sortable from "sortablejs";
+import parser from "js-sql-parser";
 import { optimizeParams } from "./utils/utils";
 import { fillId } from "./utils/fill";
 import x2js from "x2js";
@@ -1266,7 +1267,45 @@ export default {
           this.$message.error("请输入合法的URL");
         }
       } else if (type == "JAVA") {
-        parseJavaEntity(quickText);
+        let data = parseJavaEntity(quickText);
+        for (let item of data) {
+          if (!this.haveRoot) {
+            this.renderData.splice(this.renderData.length - 1, 0, {
+              id: +`${this.renderData.length + 1}${new Date().getTime()}`,
+              name: item.name,
+              type: item.type,
+              category: "Query",
+              description: item.description,
+              required: false,
+              demo: "",
+              defaultValue: "",
+              childs: [],
+              level: 1,
+              parentId: 0,
+            });
+          } else {
+            this.renderData[0].childs.push({
+              id: +`${
+                this.renderData[0].childs.length + 1
+              }${new Date().getTime()}`,
+              name: item.name,
+              type: item.type,
+              category: "Query",
+              description: item.description,
+              required: false,
+              demo: "",
+              defaultValue: "",
+              childs: [],
+              level: this.renderData[0].childs.length + 1,
+              parentId: 0,
+            });
+          }
+        }
+        this.dialogVisible = false;
+      } else if (type == "SQL") {
+        let ast = parser.parse(quickText);
+        console.log(ast);
+        console.log(JSON.stringify(ast));
       }
     },
 

@@ -33,7 +33,8 @@
     "vuedraggable": "^2.24.3",
     "easyapi-js-sandbox": "^1.0.4",
     "easyapi-env-input": "^1.1.14",
-    "x2js": "^3.4.3"
+    "x2js": "^3.4.3",
+    "js-sql-parser": "1.4.1"
   },
   "devDependencies": {
     "vue": "^2.6.14",
