@@ -1,4 +1,4 @@
-import {optimizeType} from "./utils";
+import { optimizeType } from "./utils";
 
 /**
  *  解析JAVA实体类
@@ -24,6 +24,7 @@ function endLineComments(value) {
       data.push({
         name: getData(item).name,
         type: getData(item).type,
+        demo: getData(item).demo,
         description: getComments(item, 1),
       });
     });
@@ -43,6 +44,7 @@ function upLinkComments(value) {
       data.push({
         name: getData(item).name,
         type: getData(item).type,
+        demo: getData(item).demo,
         description: getComments(item, 4),
       });
     });
@@ -62,6 +64,7 @@ function blockComments(value) {
       data.push({
         name: getData(item).name,
         type: getData(item).type,
+        demo: getData(item).demo,
         description: getComments(item, 2),
       });
     });
@@ -81,6 +84,7 @@ function docComments(value) {
       data.push({
         name: getData(item).name,
         type: getData(item).type,
+        demo: getData(item).demo,
         description: getComments(item, 3),
       });
     });
@@ -118,14 +122,30 @@ function getComments(value, type) {
  *  获取数据 返回name type
  */
 function getData(value) {
-  let regExp = /\public|private|\s.*?\;/;
+  // let regExp = /\public|private|\s.*?\;/g;
+  let regExp = /([^\r\n]+[\S]+[^\r\n]+;)/g;
   let resultList = value.match(regExp);
   let arr = [];
-  if (resultList.length > 0) {
-    arr = resultList[0].replace(";", "").match(/[A-Za-z]+/g);
-  }
-  return {
-    name: arr[arr.length - 1],
-    type: optimizeType(arr[arr.length - 2]),
+  let obj = {
+    name: "",
+    type: "",
+    demo: "",
   };
+  if (resultList.length > 0) {
+    if (resultList[0].indexOf("=") != -1) {
+      arr = resultList[0]
+        .replace(";", "")
+        .split("=")[0]
+        .match(/[A-Za-z0-9_]+/g);
+      obj.name = arr[arr.length - 1];
+      obj.type = optimizeType(arr[arr.length - 2]);
+      obj.demo = resultList[0].replace(";", "").split("=")[1];
+    } else {
+      arr = resultList[0].replace(";", "").match(/[A-Za-z0-9_]+/g);
+      obj.name = arr[arr.length - 1];
+      obj.type = optimizeType(arr[arr.length - 2]);
+      obj.demo = "";
+    }
+  }
+  return obj;
 }

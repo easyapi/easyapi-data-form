@@ -399,7 +399,7 @@
         <el-radio label="URL">URL请求</el-radio>
         <el-radio label="JSON">JSON</el-radio>
         <el-radio label="JAVA">实体类</el-radio>
-        <el-radio label="SQL">SQL语句</el-radio>
+        <!-- <el-radio label="SQL">SQL语句</el-radio> -->
       </el-radio-group>
 
       <el-input
@@ -410,14 +410,12 @@
         show-word-limit
         style="margin-top: 20px"
       ></el-input>
-
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="confirmQuickAdd(quickAddType, quickText)"
-          size="small"
-          >确 定</el-button
+        <el-button @click="confirmQuickAdd('替换')" size="small"
+          >替 换</el-button
+        >
+        <el-button type="primary" @click="confirmQuickAdd('追加')" size="small"
+          >追 加</el-button
         >
       </span>
     </el-dialog>
@@ -785,6 +783,7 @@ export default {
     openModal() {
       this.dialogVisible = true;
       this.quickAddType = "URL";
+      this.placeholder = "例如?a=1&b=2";
       this.quickText = "";
     },
 
@@ -1172,12 +1171,12 @@ export default {
       });
     },
 
-    confirmQuickAdd: function (type, quickText) {
-      if (type == "JSON") {
+    confirmQuickAdd: function (type) {
+      if (this.quickAddType == "JSON") {
         let _urlParams = [];
         try {
           if (this.haveRoot) {
-            let jsonData = JSON.parse(quickText);
+            let jsonData = JSON.parse(this.quickText);
             if (Object.prototype.toString.call(jsonData) === "[object Array]") {
               this.parseArray(jsonData, _urlParams);
             }
@@ -1186,16 +1185,20 @@ export default {
             ) {
               this.parseJson(jsonData, _urlParams);
             }
-            for (let item of _urlParams) {
-              this.renderData[0].childs.push(item);
+            if (type == "替换") {
+              this.renderData[0].childs = _urlParams;
+            } else {
+              for (let item of _urlParams) {
+                this.renderData[0].childs.push(item);
+              }
             }
           } else {
-            let jsonData = JSON.parse(quickText);
+            let jsonData = JSON.parse(this.quickText);
             if (
               Object.prototype.toString.call(jsonData) === "[object Object]"
             ) {
               for (let key in jsonData) {
-                this.renderData.splice(this.renderData.length - 1, 0, {
+                _urlParams.push({
                   id: +`${this.renderData.length + 1}${new Date().getTime()}`,
                   name: key,
                   type:
@@ -1217,21 +1220,27 @@ export default {
                   parentId: 0,
                 });
               }
+              if (type == "替换") {
+                this.renderData = _urlParams;
+                this.addNew();
+              } else {
+                for (let item of _urlParams) {
+                  this.renderData.splice(this.renderData.length - 1, 0, item);
+                }
+              }
             }
-            // this.renderData.splice(this.renderData.length - 1, 0, item);
           }
-
           this.dialogVisible = false;
-          // this.renderData = [...this.renderData, ..._urlParams];
         } catch (e) {
           this.$message.error("请输入合法的JSON");
         }
-      } else if (type == "URL") {
+      } else if (this.quickAddType == "URL") {
+        let _urlParams = [];
         try {
-          let data = quickText.split("?")[1].split("&");
-          for (let item of data) {
-            if (!this.haveRoot) {
-              this.renderData.splice(this.renderData.length - 1, 0, {
+          let data = this.quickText.split("?")[1].split("&");
+          if (!this.haveRoot) {
+            for (let item of data) {
+              _urlParams.push({
                 id: +`${this.renderData.length + 1}${new Date().getTime()}`,
                 name: item.split("=")[0],
                 type: "string",
@@ -1244,8 +1253,18 @@ export default {
                 level: 1,
                 parentId: 0,
               });
+            }
+            if (type == "替换") {
+              this.renderData = _urlParams;
+              this.addNew();
             } else {
-              this.renderData[0].childs.push({
+              for (let item of _urlParams) {
+                this.renderData.splice(this.renderData.length - 1, 0, item);
+              }
+            }
+          } else {
+            for (let item of data) {
+              _urlParams.push({
                 id: +`${
                   this.renderData[0].childs.length + 1
                 }${new Date().getTime()}`,
@@ -1261,16 +1280,24 @@ export default {
                 parentId: 0,
               });
             }
+            if (type == "替换") {
+              this.renderData[0].childs = _urlParams;
+            } else {
+              for (let item of _urlParams) {
+                this.renderData[0].childs.push(item);
+              }
+            }
           }
           this.dialogVisible = false;
         } catch (e) {
           this.$message.error("请输入合法的URL");
         }
-      } else if (type == "JAVA") {
-        let data = parseJavaEntity(quickText);
-        for (let item of data) {
-          if (!this.haveRoot) {
-            this.renderData.splice(this.renderData.length - 1, 0, {
+      } else if (this.quickAddType == "JAVA") {
+        let data = parseJavaEntity(this.quickText);
+        let _urlParams = [];
+        if (!this.haveRoot) {
+          for (let item of data) {
+            _urlParams.push({
               id: +`${this.renderData.length + 1}${new Date().getTime()}`,
               name: item.name,
               type: item.type,
@@ -1283,8 +1310,18 @@ export default {
               level: 1,
               parentId: 0,
             });
+          }
+          if (type == "替换") {
+            this.renderData = _urlParams;
+            this.addNew();
           } else {
-            this.renderData[0].childs.push({
+            for (let item of _urlParams) {
+              this.renderData.splice(this.renderData.length - 1, 0, item);
+            }
+          }
+        } else {
+          for (let item of data) {
+            _urlParams.push({
               id: +`${
                 this.renderData[0].childs.length + 1
               }${new Date().getTime()}`,
@@ -1300,12 +1337,19 @@ export default {
               parentId: 0,
             });
           }
+          if (type == "替换") {
+            this.renderData[0].childs = _urlParams;
+          } else {
+            for (let item of _urlParams) {
+              this.renderData[0].childs.push(item);
+            }
+          }
         }
         this.dialogVisible = false;
-      } else if (type == "SQL") {
-        let ast = parser.parse(quickText);
-        console.log(ast);
-        console.log(JSON.stringify(ast));
+      } else if (this.quickAddType == "SQL") {
+        // let ast = parser.parse(this.quickText);
+        // console.log(ast);
+        // console.log(JSON.stringify(ast));
       }
     },
 
