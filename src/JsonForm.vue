@@ -1822,9 +1822,9 @@ export default {
       padding: 4px 0 !important;
 
       .is-disabled {
-        background-color: #fff !important;
+        background-color: #f5f7fa !important;
         .el-input__inner {
-          background-color: #fff !important;
+          background-color: #f5f7fa !important;
         }
       }
     }
@@ -1883,10 +1883,13 @@ export default {
       min-height: 32px !important;
       line-height: 32px !important;
     }
-    .is-disabled[data-v-6d9ac156] {
-      background-color: #fff !important;
-      color: #909399;
+    .env-input_wrap {
+      line-height: 30px !important;
     }
+    // .is-disabled {
+    //   background-color: rgb(230, 34, 34) !important;
+    //   color: #909399;
+    // }
   }
 
   .el-input--small {
