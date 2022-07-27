@@ -1820,11 +1820,10 @@ export default {
   .el-table__row {
     td {
       padding: 4px 0 !important;
-
       .is-disabled {
         background-color: #f5f7fa !important;
         .el-input__inner {
-          background-color: #f5f7fa !important;
+          background-color: #fff !important;
         }
       }
     }
@@ -1886,10 +1885,9 @@ export default {
     .env-input_wrap {
       line-height: 30px !important;
     }
-    // .is-disabled {
-    //   background-color: rgb(230, 34, 34) !important;
-    //   color: #909399;
-    // }
+    .is-disabled {
+      color: #909399;
+    }
   }
 
   .el-input--small {
