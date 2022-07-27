@@ -513,6 +513,10 @@ export default {
           label: "float",
         },
         {
+          value: "decimal",
+          label: "decimal",
+        },
+        {
           value: "date",
           label: "date",
         },
