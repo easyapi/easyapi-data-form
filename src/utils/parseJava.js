@@ -9,7 +9,8 @@ export function parseJavaEntity(value) {
     .concat(docComments(value))
     .concat(blockComments(value))
     .concat(endLineComments(value))
-    .concat(upLinkComments(value));
+    .concat(upLinkComments(value))
+    .concat(swaggerComments(value));
 }
 
 /**
@@ -93,6 +94,71 @@ function docComments(value) {
 }
 
 /**
+ *  swagger格式
+ */
+function swaggerComments(value) {
+  let data = [];
+  let test = /\@ApiModelProperty.*\s.*?\;/g;
+  let arr = value.match(test);
+  if (arr && arr.length > 0) {
+    arr.forEach((item) => {
+      data.push({
+        name: getSwaggerData(item).name,
+        type: getSwaggerData(item).type,
+        demo: getSwaggerData(item).demo,
+        description: getSwaggerData(item).description,
+        required: getSwaggerData(item).required,
+      });
+    });
+  }
+  return data;
+}
+
+/**
+ *  获取swagger数据
+ */
+function getSwaggerData(value) {
+  let obj = {
+    name: "",
+    type: "",
+    demo: "",
+    description: "",
+    required: false,
+  };
+  let regExp = /([^\r\n]+[\S]+[^\r\n]+;)/g;
+  let resultList = value.match(regExp);
+  let arr = [];
+  if (resultList && resultList.length > 0) {
+    arr = resultList[0].replace(";", "").match(/[A-Za-z0-9_]+/g);
+    obj.name = arr[arr.length - 1];
+    obj.type = optimizeType(arr[arr.length - 2]);
+  }
+  let commentRegExp = /\@ApiModelProperty.*?\)/g;
+  let commentResultList = value.match(commentRegExp);
+  let commentArr = [];
+  if (commentResultList && commentResultList.length > 0) {
+    commentArr = commentResultList[0].match(/\(.*?\)/g);
+    if (commentArr && commentArr.length > 0) {
+      try {
+        let list = commentArr[0].replace(/\(|\)/g, "").split(",");
+        let target = {};
+        if (list && list.length > 0) {
+          list.forEach((item) => {
+            target[item.split("=")[0]] = item.split("=")[1].replace(/\"/g, "");
+          });
+        }
+        obj.demo = optimizeDemo(obj.type, target.example) || "";
+        obj.description = target.value || "";
+        obj.required = target.required == "true" ? true : false || false;
+      } catch {
+        obj.description = commentArr[0].replace(/\"|\(|\)/g, "");
+      }
+    }
+  }
+  return obj;
+}
+
+/**
  *  获取注释
  *  type  1 单行 行尾 2 块注释  3 文档注释 4 单行 上行
  */
@@ -119,7 +185,7 @@ function getComments(value, type) {
 }
 
 /**
- *  获取数据 返回name type
+ *  获取数据 返回name type demo
  */
 function getData(value) {
   // let regExp = /\public|private|\s.*?\;/g;
@@ -136,16 +202,45 @@ function getData(value) {
       arr = resultList[0]
         .replace(";", "")
         .split("=")[0]
-        .match(/[A-Za-z0-9_]+/g);
+        .match(/[A-Za-z0-9_<>]+/g);
+      console.log(arr, 45);
       obj.name = arr[arr.length - 1];
       obj.type = optimizeType(arr[arr.length - 2]);
-      obj.demo = resultList[0].replace(";", "").split("=")[1];
+      obj.demo = optimizeDemo(
+        obj.type,
+        resultList[0].replace(";", "").split("=")[1]
+      );
     } else {
-      arr = resultList[0].replace(";", "").match(/[A-Za-z0-9_]+/g);
+      arr = resultList[0].replace(";", "").match(/[A-Za-z0-9_<>]+/g);
       obj.name = arr[arr.length - 1];
       obj.type = optimizeType(arr[arr.length - 2]);
       obj.demo = "";
     }
   }
   return obj;
+}
+
+// 优化示例值
+function optimizeDemo(type, value) {
+  if (type === "int" || type === "double") {
+    if (value) {
+      return Number(value);
+    } else {
+      return null;
+    }
+  } else if (type === "boolean") {
+    if (value) {
+      let str = value.toLowerCase();
+      if (str.indexOf("true") != -1) {
+        return true;
+      } else if (str.indexOf("false") != -1) {
+        return false;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+  return value;
 }

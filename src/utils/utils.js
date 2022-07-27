@@ -4,6 +4,7 @@
 export function optimizeParams(type, value) {
   if (type === "int" || type === "double") {
     if (value) {
+      console.log(value);
       return Number(value);
     } else {
       return null;
@@ -20,10 +21,23 @@ export function optimizeParams(type, value) {
  */
 export function optimizeType(type) {
   let lowerCaseType = type.toLowerCase();
-  let list = ["int", "datetime"];
-  let arr = list.filter((x) => lowerCaseType.indexOf(x) != -1);
+  let list = [
+    {
+      key: "integer",
+      value: "int",
+    },
+    {
+      key: "localdate",
+      value: "date",
+    },
+    {
+      key: "localdatetime",
+      value: "datetime",
+    },
+  ];
+  let arr = list.filter((x) => x.key == lowerCaseType);
   if (arr.length > 0) {
-    return arr[0];
+    return arr[0].value;
   } else {
     return lowerCaseType;
   }

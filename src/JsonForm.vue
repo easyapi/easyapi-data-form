@@ -412,7 +412,7 @@
       ></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="confirmQuickAdd('替换')" size="small"
-          >替 换</el-button
+          >全部替换</el-button
         >
         <el-button type="primary" @click="confirmQuickAdd('追加')" size="small"
           >追 加</el-button
@@ -429,6 +429,8 @@ import Sortable from "sortablejs";
 import parser from "js-sql-parser";
 import { optimizeParams } from "./utils/utils";
 import { fillId } from "./utils/fill";
+import { paramTypes } from "./utils/paramsType";
+import { appendStruct } from "./utils/appendStruct";
 import x2js from "x2js";
 import DataStructureModal from "./components/dataStructureModal.vue";
 import { parseJavaEntity } from "./utils/parseJava";
@@ -474,57 +476,7 @@ export default {
         },
       ],
       paramTypeCopy: [],
-      paramType: [
-        // {
-        //   value: "引用类型",
-        //   label: "引用类型",
-        //   children: [],
-        // },
-        {
-          value: "string",
-          label: "string",
-        },
-        {
-          value: "int",
-          label: "int",
-        },
-        {
-          value: "boolean",
-          label: "boolean",
-        },
-        {
-          value: "double",
-          label: "double",
-        },
-        {
-          value: "byte",
-          label: "byte",
-        },
-        {
-          value: "short",
-          label: "short",
-        },
-        {
-          value: "long",
-          label: "long",
-        },
-        {
-          value: "float",
-          label: "float",
-        },
-        {
-          value: "decimal",
-          label: "decimal",
-        },
-        {
-          value: "date",
-          label: "date",
-        },
-        {
-          value: "datetime",
-          label: "datetime",
-        },
-      ],
+      paramType: paramTypes,
       renderData: [],
       renderDataRows: [],
       quickAddParams: false,
@@ -1301,19 +1253,20 @@ export default {
         let _urlParams = [];
         if (!this.haveRoot) {
           for (let item of data) {
-            _urlParams.push({
+            let obj = {
               id: +`${this.renderData.length + 1}${new Date().getTime()}`,
               name: item.name,
               type: item.type,
               category: "Query",
               description: item.description,
-              required: false,
-              demo: "",
+              required: item.required || false,
+              demo: item.demo,
               defaultValue: "",
               childs: [],
               level: 1,
               parentId: 0,
-            });
+            };
+            _urlParams.push(appendStruct(false, obj, this.struct));
           }
           if (type == "替换") {
             this.renderData = _urlParams;
@@ -1325,7 +1278,7 @@ export default {
           }
         } else {
           for (let item of data) {
-            _urlParams.push({
+            let obj = {
               id: +`${
                 this.renderData[0].childs.length + 1
               }${new Date().getTime()}`,
@@ -1333,13 +1286,14 @@ export default {
               type: item.type,
               category: "Query",
               description: item.description,
-              required: false,
-              demo: "",
+              required: item.required || false,
+              demo: item.demo,
               defaultValue: "",
               childs: [],
               level: this.renderData[0].childs.length + 1,
               parentId: 0,
-            });
+            };
+            _urlParams.push(appendStruct(true, obj, this.struct));
           }
           if (type == "替换") {
             this.renderData[0].childs = _urlParams;
