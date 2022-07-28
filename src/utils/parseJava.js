@@ -203,7 +203,6 @@ function getData(value) {
         .replace(";", "")
         .split("=")[0]
         .match(/[A-Za-z0-9_<>]+/g);
-      console.log(arr, 45);
       obj.name = arr[arr.length - 1];
       obj.type = optimizeType(arr[arr.length - 2]);
       obj.demo = optimizeDemo(

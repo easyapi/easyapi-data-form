@@ -11,9 +11,9 @@ export function appendStruct(haveRoot, value, struct) {
     if (!haveRoot) {
       obj.type = "string";
     } else {
-      let testRegex = /\list.*?\>/g;
+      let testRegex = /\List|Set.*?\>/g;
       if (testRegex.test(obj.type)) {
-        let name = obj.name;
+        let name = obj.type.match(/\<.*?\>/g)[0].replace(/\<|\>/g, "");
         let arr = struct.filter((x) => x.name == name);
         obj.type = "array";
         if (arr.length > 0) {

@@ -1,3 +1,4 @@
+import { paramTypes } from "./paramsType";
 /**
  * 根据参数类型优化参数
  */
@@ -39,6 +40,10 @@ export function optimizeType(type) {
   if (arr.length > 0) {
     return arr[0].value;
   } else {
-    return lowerCaseType;
+    if (paramTypes.filter((x) => x.value == lowerCaseType).length > 0) {
+      return lowerCaseType;
+    } else {
+      return type;
+    }
   }
 }
