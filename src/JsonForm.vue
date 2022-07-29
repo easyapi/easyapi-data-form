@@ -1780,6 +1780,9 @@ export default {
           background-color: #fff !important;
         }
       }
+      .env-input_nowrap {
+        border: 0px solid #fff !important;
+      }
     }
     &:hover td {
       .env-input-container {
