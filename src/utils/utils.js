@@ -5,7 +5,6 @@ import { paramTypes } from "./paramsType";
 export function optimizeParams(type, value) {
   if (type === "int" || type === "double") {
     if (value) {
-      console.log(value);
       return Number(value);
     } else {
       return null;
@@ -34,6 +33,10 @@ export function optimizeType(type) {
     {
       key: "localdatetime",
       value: "datetime",
+    },
+    {
+      key: "bigdecimal",
+      value: "decimal",
     },
   ];
   let arr = list.filter((x) => x.key == lowerCaseType);

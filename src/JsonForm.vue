@@ -1775,7 +1775,7 @@ export default {
     td {
       padding: 4px 0 !important;
       .is-disabled {
-        background-color: #f5f7fa !important;
+        background-color: transparent !important;
         .el-input__inner {
           background-color: #fff !important;
         }
