@@ -1774,11 +1774,21 @@ export default {
   .el-table__row {
     td {
       padding: 4px 0 !important;
-      .is-disabled {
-        background-color: transparent !important;
-        .el-input__inner {
-          background-color: #fff !important;
+
+      .env-input-container {
+        -webkit-transition: background-color 0.25s ease;
+        transition: background-color 0.25s ease;
+        background-color: #fff !important;
+        .is-disabled {
+          -webkit-transition: background-color 0.25s ease;
+          transition: background-color 0.25s ease;
+          background-color: transparent !important;
         }
+      }
+      .el-input__inner {
+        -webkit-transition: background-color 0.25s ease;
+        transition: background-color 0.25s ease;
+        background-color: #fff !important;
       }
       .env-input_nowrap {
         border: 0px solid #fff !important;
